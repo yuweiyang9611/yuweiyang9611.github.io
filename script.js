@@ -27,6 +27,7 @@ const cards = Array.from(document.querySelectorAll(".project-card"));
 const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 const resultsCount = document.querySelector("#results-count");
 const emptyState = document.querySelector("#empty-state");
+const projectsGrid = document.querySelector(".projects-grid");
 let activeFilter = "all";
 
 function updateProjects() {
@@ -43,6 +44,7 @@ function updateProjects() {
 
   resultsCount.textContent = "显示 " + visibleCount + " 个项目";
   emptyState.hidden = visibleCount !== 0;
+  projectsGrid.classList.toggle("is-filtered", activeFilter !== "all" || Boolean(query));
 }
 
 filterButtons.forEach((button) => {
@@ -75,6 +77,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const revealElements = Array.from(document.querySelectorAll(".reveal"));
 
 if (!reducedMotion && "IntersectionObserver" in window) {
   const observer = new IntersectionObserver((entries) => {
@@ -86,9 +89,10 @@ if (!reducedMotion && "IntersectionObserver" in window) {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+  root.classList.add("reveal-ready");
+  revealElements.forEach((element) => observer.observe(element));
 } else {
-  document.querySelectorAll(".reveal").forEach((element) => {
+  revealElements.forEach((element) => {
     element.classList.add("is-visible");
   });
 }
