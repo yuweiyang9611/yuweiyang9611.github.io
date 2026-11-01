@@ -1,0 +1,191 @@
+import assert from "node:assert/strict";
+import { existsSync } from "node:fs";
+import { readFile, stat } from "node:fs/promises";
+import { createServer } from "node:http";
+import { extname, join, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+import axe from "axe-core";
+import { chromium } from "playwright-core";
+
+const root = resolve(fileURLToPath(new URL("..", import.meta.url)));
+const types = { ".css": "text/css", ".html": "text/html", ".js": "text/javascript", ".png": "image/png", ".woff2": "font/woff2" };
+
+function browserExecutable() {
+  const candidates = [
+    process.env.CHROME_PATH,
+    "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
+    join(process.env.ProgramFiles ?? "", "Google", "Chrome", "Application", "chrome.exe"),
+    join(process.env["ProgramFiles(x86)"] ?? "", "Microsoft", "Edge", "Application", "msedge.exe"),
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+  ].filter(Boolean);
+  const executable = candidates.find(existsSync);
+  assert.ok(executable, `No Chrome or Edge found. Checked: ${candidates.join(", ")}`);
+  return executable;
+}
+
+const server = createServer(async (request, response) => {
+  try {
+    const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
+    let file = resolve(join(root, pathname));
+    if (file !== root && !file.startsWith(root + sep)) throw new Error("outside root");
+    if ((await stat(file)).isDirectory()) file = join(file, "index.html");
+    response.writeHead(200, { "content-type": types[extname(file)] ?? "application/octet-stream" });
+    response.end(await readFile(file));
+  } catch {
+    response.writeHead(404);
+    response.end();
+  }
+});
+await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
+const baseUrl = `http://127.0.0.1:${server.address().port}/`;
+
+const patterns = {
+  version: 3,
+  updatedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+  items: { "pattern:factory-method": { completed: { read: "t" }, updatedAt: "t" } },
+  resume: { itemId: "pattern:factory-method", taskId: "read", updatedAt: new Date(Date.now() - 2 * 86400000).toISOString() },
+};
+const frontend = {
+  app: "issueflow-learning-progress",
+  schemaVersion: 1,
+  days: [{ day: 1, completed: true, completedAt: new Date(Date.now() - 9 * 86400000).toISOString() }, { day: 2, completed: false, completedAt: null }],
+};
+const dotnet = { version: 1, experiments: ["a", "b"], assessments: {}, copies: [], lastReading: { title: "第 4 章", url: "guide/" } };
+const records = {
+  "csharp-design-patterns-progress-v3": JSON.stringify(patterns),
+  "issueflow:frontend-learning-project:progress:v1": JSON.stringify(frontend),
+  "learn-dotnet-csharp-learning-data-v1": JSON.stringify(dotnet),
+};
+
+async function open(browser, { seed, viewport = { width: 1440, height: 900 }, colorScheme = "light", init } = {}) {
+  const context = await browser.newContext({ viewport, colorScheme });
+  if (seed) {
+    await context.addInitScript((data) => {
+      for (const [key, value] of Object.entries(data)) localStorage.setItem(key, value);
+    }, seed);
+  }
+  if (init) await context.addInitScript(init);
+  const page = await context.newPage();
+  const errors = [];
+  page.on("pageerror", (error) => errors.push(error.message));
+  page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
+  await page.goto(baseUrl);
+  return { context, page, errors };
+}
+
+async function assertAccessible(page, label) {
+  await page.addScriptTag({ content: axe.source });
+  const { violations } = await page.evaluate(() => window.axe.run(document, { resultTypes: ["violations"] }));
+  const serious = violations.filter((item) => ["serious", "critical"].includes(item.impact));
+  assert.deepEqual(serious.map((item) => item.id), [], `${label} has serious accessibility issues`);
+}
+
+const browser = await chromium.launch({ executablePath: browserExecutable(), headless: true });
+try {
+  // First visit: no records, and nothing invented.
+  {
+    const { context, page, errors } = await open(browser);
+    assert.equal(await page.locator(".entry").count(), 6);
+    assert.match(await page.locator("#resume-line").textContent(), /还没有学习记录/u);
+    assert.equal(await page.locator(".entry[data-record]").count(), 0);
+    assert.equal(await page.locator(".entry[aria-current]").count(), 0);
+    assert.equal(await page.locator('a[href="/LightGBM-NativeCUDA/"]').count(), 1);
+
+    await page.locator('[data-filter="ai"]').click();
+    assert.equal(await page.locator(".entry:visible").count(), 1);
+    await page.locator('[data-filter="all"]').click();
+    await page.keyboard.press("/");
+    assert.equal(await page.evaluate(() => document.activeElement.id), "project-search");
+    await page.keyboard.type("算法");
+    assert.equal(await page.locator(".entry:visible").count(), 1);
+    await page.keyboard.type("不存在的项目");
+    assert.equal(await page.locator("#empty-state").isVisible(), true);
+    await page.keyboard.press("Escape");
+    assert.equal(await page.locator(".entry:visible").count(), 6);
+    await assertAccessible(page, "empty state");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Returning visit: courses' records appear, and the newest one is the place to continue.
+  {
+    const { context, page, errors } = await open(browser, { seed: records });
+    const link = page.locator("#resume-line a");
+    assert.match(await link.textContent(), /Factory Method/u);
+    assert.match(await link.textContent(), /运行并核对输出/u);
+    assert.equal(await link.getAttribute("href"), "/CSharp_Implementation_of_DesignPatterns/patterns/factory-method.html#evidence-run");
+    assert.equal(await page.locator(".entry .nb-stopped").count(), 1);
+    assert.equal(await page.locator(".entry[data-record]").count(), 3);
+    assert.equal(await page.locator('.entry[data-course="patterns"]').getAttribute("aria-current"), "true");
+    assert.match(await page.locator('.entry[data-course="frontend"] [data-state]').textContent(), /1 \/ 2 天/u);
+
+    const before = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
+    await page.reload();
+    const after = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
+    assert.equal(after, before, "the index must never change another site's records");
+    await assertAccessible(page, "returning state");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Damaged or future-format records must not break the page.
+  {
+    const { context, page, errors } = await open(browser, {
+      seed: {
+        "csharp-design-patterns-progress-v3": "{not json",
+        "issueflow:frontend-learning-project:progress:v1": JSON.stringify({ schemaVersion: 2 }),
+        "learn-dotnet-csharp-learning-data-v1": "null",
+      },
+    });
+    assert.match(await page.locator("#resume-line").textContent(), /还没有学习记录/u);
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Blocked storage leaves the page working.
+  {
+    const { context, page, errors } = await open(browser, {
+      init: () => Object.defineProperty(window, "localStorage", { get() { throw new DOMException("Blocked", "SecurityError"); } }),
+    });
+    assert.equal(await page.locator(".entry").count(), 6);
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Theme follows the system, and the choice sticks.
+  {
+    const { context, page } = await open(browser, { colorScheme: "dark" });
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), "dark");
+    await assertAccessible(page, "dark theme");
+    await page.locator(".nb-theme").click();
+    assert.equal(await page.evaluate(() => localStorage.getItem("site-theme")), "light");
+    await page.reload();
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), "light");
+    await context.close();
+  }
+
+  // Phone width
+  {
+    const { context, page, errors } = await open(browser, { seed: records, viewport: { width: 390, height: 844 } });
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+    assert.equal(overflow, false, "no horizontal scrolling on a phone");
+    const heights = await page.locator(".filter").evaluateAll((items) => items.map((item) => item.getBoundingClientRect().height));
+    assert.ok(heights.every((height) => height >= 44), `filter touch targets too small: ${heights}`);
+    await assertAccessible(page, "phone");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Every font the kit declares must ship.
+  {
+    const css = await readFile(join(root, "kit", "v1", "fonts.css"), "utf8");
+    const files = [...css.matchAll(/url\((fonts\/[^)]+)\)/gu)].map((match) => match[1]);
+    assert.ok(files.length > 50, "expected the sliced heading font");
+    for (const file of files) await stat(join(root, "kit", "v1", file));
+  }
+  console.log("Home checks passed.");
+} finally {
+  await browser.close();
+  server.close();
+}
