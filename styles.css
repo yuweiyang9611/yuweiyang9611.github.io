@@ -72,9 +72,8 @@
 .entry:hover h3 a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; }
 .entry-note { grid-column: 2; grid-row: 1 / span 2; color: var(--nb-ink-soft); font-size: .9375rem; line-height: 1.65; max-width: var(--nb-measure); }
 .entry .nb-stopped { grid-column: 1; }
-.entry-state { grid-column: 3; grid-row: 1; color: var(--nb-ink); font-size: .875rem; font-variant-numeric: tabular-nums; }
-.entry[data-record] .entry .nb-stopped { grid-column: 1; }
-.entry-state { color: var(--nb-ink); }
+.entry-state { grid-column: 3; grid-row: 1; color: var(--nb-ink-soft); font-size: .875rem; font-variant-numeric: tabular-nums; }
+.entry[data-record] .entry-state { color: var(--nb-ink); }
 
 .empty { padding: 1.5rem 0; color: var(--nb-ink-soft); }
 
