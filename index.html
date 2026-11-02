@@ -1,263 +1,114 @@
 <!doctype html>
-<html lang="zh-CN" data-theme="light">
+<html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yuwei Yang 的个人项目索引：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
-  <meta name="theme-color" content="#f4f1e8">
+  <meta name="description" content="Yuwei Yang 的项目目录：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
+  <meta name="theme-color" content="#f4efe4">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="探索我的项目 · Yuwei Yang">
-  <meta property="og:description" content="浏览我的开发项目与公开实践。">
+  <meta property="og:title" content="项目目录 · Yuwei Yang">
+  <meta property="og:description" content="设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
   <meta property="og:url" content="https://yuweiyang9611.github.io/">
   <meta property="og:image" content="https://yuweiyang9611.github.io/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="探索我的项目 · Yuwei Yang">
-  <meta name="twitter:description" content="浏览我的开发项目与公开实践。">
+  <meta name="twitter:title" content="项目目录 · Yuwei Yang">
+  <meta name="twitter:description" content="设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
   <meta name="twitter:image" content="https://yuweiyang9611.github.io/og.png">
-  <title>探索我的项目 · Yuwei Yang</title>
-  <script>
-    (function () {
-      try {
-        const savedTheme = localStorage.getItem("site-theme");
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = savedTheme || (prefersDark ? "dark" : "light");
-      } catch (error) {
-        document.documentElement.dataset.theme = "light";
-      }
-    })();
-  </script>
+  <title>项目目录 · Yuwei Yang</title>
+  <link rel="canonical" href="https://yuweiyang9611.github.io/">
+  <link rel="icon" href="kit/v1/favicon.svg" type="image/svg+xml">
+  <script src="kit/v1/theme.js"></script>
+  <link rel="stylesheet" href="kit/v1/notebook.css">
   <link rel="stylesheet" href="styles.css">
   <script src="script.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#projects">跳到项目列表</a>
+  <a class="skip-link" href="#contents">跳到目录</a>
 
-  <header class="site-header shell">
-    <a class="brand" href="#top" aria-label="返回首页顶部">
-      <span class="brand-mark" aria-hidden="true">Y<i>/</i></span>
-      <span class="brand-copy">
-        <strong>Yuwei Yang</strong>
-        <small>Project Index</small>
-      </span>
-    </a>
-
-    <div class="header-actions">
-      <nav class="site-nav" aria-label="主导航">
-        <a href="#projects">项目</a>
-        <a href="#about">关于</a>
-        <a href="https://github.com/yuweiyang9611" target="_blank" rel="noreferrer">GitHub ↗</a>
-      </nav>
-      <button class="theme-toggle" type="button" aria-label="切换至深色模式">
-        <span class="theme-state">暗色</span>
-      </button>
-    </div>
+  <header class="nb-head">
+    <a class="nb-brand" href="./">Yuwei Yang</a>
+    <nav class="nb-nav" aria-label="主导航">
+      <a href="#contents">目录</a>
+      <a href="#about">关于</a>
+      <a href="https://github.com/yuweiyang9611">GitHub</a>
+    </nav>
   </header>
 
-  <main id="top">
-    <section class="hero shell" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span>Personal projects · 2026</p>
-        <h1 id="hero-title">探索我的项目</h1>
-        <p class="hero-intro">
-          这是我的个人项目索引。每个入口都通向一份可以在线浏览、持续完善的开发实践。
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="#projects">浏览项目 <span aria-hidden="true">↓</span></a>
-          <a class="button" href="https://github.com/yuweiyang9611" target="_blank" rel="noreferrer">查看 GitHub <span aria-hidden="true">↗</span></a>
-        </div>
-        <div class="hero-meta" aria-label="项目概览">
-          <span>06 个在线项目</span>
-          <span>持续更新</span>
-          <span>Code · Build · Share</span>
-        </div>
-      </div>
+  <main class="page">
+    <h1>项目目录</h1>
 
-      <div class="hero-poster" aria-hidden="true">
-        <div class="poster-top"><span>YUWEI / INDEX</span><span>VOL. 01</span></div>
-        <div class="poster-blue"></div>
-        <div class="poster-circle"></div>
-        <div class="poster-coral"></div>
-        <div class="poster-type"><span>MAKE.</span><span>LEARN.</span></div>
-        <div class="poster-number">06</div>
-        <div class="poster-bottom"><span>BUILD → SHIP → REFINE</span><span>2026</span></div>
-      </div>
+    <section class="resume" aria-labelledby="resume-label">
+      <h2 class="resume-label" id="resume-label">接着做</h2>
+      <p class="resume-line" id="resume-line">这个浏览器里还没有学习记录，从下面选一门开始。</p>
     </section>
 
-    <section class="projects-section" id="projects" aria-labelledby="projects-title">
-      <div class="shell">
-        <div class="section-heading reveal">
-          <div>
-            <p class="section-label">Selected Projects / 精选项目</p>
-            <h2 id="projects-title">选择一个入口。</h2>
-          </div>
-          <p class="section-note">按主题筛选，或直接输入关键词。项目涵盖软件设计、算法、现代前端与 .NET。</p>
+    <section id="contents" aria-label="项目列表">
+      <div class="tools">
+        <div class="filters" role="group" aria-label="按主题筛选">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button class="filter" type="button" data-filter="engineering" data-hue="purple" aria-pressed="false">工程</button>
+          <button class="filter" type="button" data-filter="algorithm" data-hue="cyan" aria-pressed="false">算法</button>
+          <button class="filter" type="button" data-filter="frontend" data-hue="green" aria-pressed="false">前端</button>
+          <button class="filter" type="button" data-filter="ai" data-hue="blue" aria-pressed="false">AI</button>
         </div>
-
-        <div class="project-tools" role="search">
-          <div class="filters" aria-label="项目分类">
-            <button class="filter-button" type="button" data-filter="all" aria-pressed="true">全部</button>
-            <button class="filter-button" type="button" data-filter="engineering" aria-pressed="false">工程</button>
-            <button class="filter-button" type="button" data-filter="algorithm" aria-pressed="false">算法</button>
-            <button class="filter-button" type="button" data-filter="frontend" aria-pressed="false">前端</button>
-            <button class="filter-button" type="button" data-filter="ai" aria-pressed="false">AI</button>
-          </div>
-          <label class="search-wrap">
-            <span class="search-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">搜索项目</span>
-            <input class="search-input" id="project-search" type="search" placeholder="搜索项目或技术…" autocomplete="off">
-            <kbd aria-hidden="true">/</kbd>
-          </label>
+        <div class="search" role="search">
+          <label class="sr-only" for="project-search">搜索项目</label>
+          <input class="nb-input" id="project-search" type="search" placeholder="搜索项目或技术" autocomplete="off">
+          <kbd aria-hidden="true">/</kbd>
         </div>
-
-        <div class="results-line" aria-live="polite">
-          <span id="results-count">显示 6 个项目</span>
-          <span>静态快照 · 2026.08.27</span>
-        </div>
-
-        <!-- Synced once from the GitHub API on 2026-08-27; intentionally kept static. -->
-        <div class="projects-grid">
-          <a class="project-card reveal" href="/CSharp_Implementation_of_DesignPatterns/" data-category="engineering" data-search="c# 设计模式 design patterns 工程 architecture">
-            <div class="card-art patterns-art" aria-hidden="true">
-              <span class="art-kicker">Pattern Library</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">23</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta">
-                <span>01 / C#</span>
-                <span class="featured">Featured</span>
-              </div>
-              <h3>C# 设计模式学习地图</h3>
-              <p>把抽象模式放回真实语境，用可视化路径理解创建、结构与行为之间的关系。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>C#</li>
-                <li>Design Patterns</li>
-                <li>Architecture</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-
-          <a class="project-card reveal" href="/DataStructureAndAlgorithm/" data-category="algorithm" data-search="数据结构 算法 algorithm data structure complexity">
-            <div class="card-art algorithms-art" aria-hidden="true">
-              <span class="art-kicker">Algorithm Lab</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">O(log n)</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta"><span>02 / Algorithm</span><span>Study</span></div>
-              <h3>算法研习室</h3>
-              <p>拆解数据结构与算法思想，在推演、实现和练习之间建立直觉。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>Data Structure</li>
-                <li>Algorithm</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-
-          <a class="project-card reveal" href="/frontend-learning-project/" data-category="frontend" data-search="issueflow 前端 frontend interaction workflow javascript">
-            <div class="card-art frontend-art" aria-hidden="true">
-              <span class="art-kicker">Frontend Practice</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">#12</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta"><span>03 / Web</span><span>Interactive</span></div>
-              <h3>IssueFlow 学习站</h3>
-              <p>围绕真实交互场景练习现代前端开发流程，把页面做成可用的产品界面。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>Frontend</li>
-                <li>Interaction</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-
-          <a class="project-card reveal" href="/LearnDotnetCSharp/" data-category="engineering" data-search=".net dotnet c# 学习 工程 learning">
-            <div class="card-art dotnet-art" aria-hidden="true">
-              <span class="art-kicker">Engineering Notes</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">.NET</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta"><span>04 / .NET</span><span>Notes</span></div>
-              <h3>LearnDotnetCSharp</h3>
-              <p>系统整理 .NET 与 C# 核心知识，让零散概念变成可以查阅和复习的路径。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>.NET</li>
-                <li>C#</li>
-                <li>Learning</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-
-          <a class="project-card reveal" href="/LearnLLM/" data-category="ai" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
-            <div class="card-art llm-art" aria-hidden="true">
-              <span class="art-kicker">AI From First Principles</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">LLM</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta"><span>05 / AI</span><span>Python</span></div>
-              <h3>LearnLLM</h3>
-              <p>从第一性原理出发，通过中文实战课程理解大语言模型的核心概念与实现路径。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>LLM</li>
-                <li>Python</li>
-                <li>AI</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-
-          <a class="project-card reveal" href="/LightGBM-WinNativeCUDA-SingleGPU/" data-category="engineering" data-search="lightgbm windows native cuda single gpu c++ machine learning">
-            <div class="card-art cuda-art" aria-hidden="true">
-              <span class="art-kicker">Native GPU Computing</span>
-              <span class="art-shape"></span>
-              <span class="art-symbol">CUDA</span>
-            </div>
-            <div class="card-content">
-              <div class="card-meta"><span>06 / GPU</span><span>C++</span></div>
-              <h3>LightGBM WinNative CUDA</h3>
-              <p>面向 Windows 单 NVIDIA GPU 的 LightGBM 原生 CUDA 后端，无需 Linux、WSL 或 NCCL。</p>
-              <ul class="tags" aria-label="项目标签">
-                <li>LightGBM</li>
-                <li>CUDA</li>
-                <li>C++</li>
-              </ul>
-              <div class="card-visit">进入项目 <span aria-hidden="true">↗</span></div>
-            </div>
-          </a>
-        </div>
-
-        <p class="empty-state" id="empty-state" hidden>没有找到匹配的项目。换个关键词试试，或选择“全部”。</p>
       </div>
+      <p class="sr-only" id="results-count" aria-live="polite"></p>
+
+      <ol class="entries">
+        <li class="entry nb-entry" data-category="engineering" data-course="patterns" data-search="c# 设计模式 design patterns 工程 architecture">
+          <h3><a href="/CSharp_Implementation_of_DesignPatterns/">C# 设计模式学习地图</a></h3>
+          <p class="entry-topic" data-hue="purple">工程</p>
+          <p class="entry-note">把抽象模式放回真实语境，用可视化路径理解创建、结构与行为之间的关系。</p>
+          <p class="entry-state" data-state>23 种模式</p>
+        </li>
+        <li class="entry nb-entry" data-category="algorithm" data-search="数据结构 算法 algorithm data structure complexity">
+          <h3><a href="/DataStructureAndAlgorithm/">算法研习室</a></h3>
+          <p class="entry-topic" data-hue="cyan">算法</p>
+          <p class="entry-note">拆解数据结构与算法思想，在推演、实现和练习之间建立直觉。</p>
+          <p class="entry-state" data-state>100 题主线</p>
+        </li>
+        <li class="entry nb-entry" data-category="frontend" data-course="frontend" data-search="issueflow 前端 frontend interaction workflow javascript">
+          <h3><a href="/frontend-learning-project/">IssueFlow 学习站</a></h3>
+          <p class="entry-topic" data-hue="green">前端</p>
+          <p class="entry-note">围绕真实交互场景练习现代前端开发流程，把页面做成可用的产品界面。</p>
+          <p class="entry-state" data-state>91 天课程</p>
+        </li>
+        <li class="entry nb-entry" data-category="engineering" data-course="dotnet" data-search=".net dotnet c# 学习 工程 learning">
+          <h3><a href="/LearnDotnetCSharp/">LearnDotnetCSharp</a></h3>
+          <p class="entry-topic" data-hue="purple">工程</p>
+          <p class="entry-note">系统整理 .NET 与 C# 核心知识，让零散概念变成可以查阅和复习的路径。</p>
+          <p class="entry-state" data-state>53 个实验</p>
+        </li>
+        <li class="entry nb-entry" data-category="ai" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
+          <h3><a href="/LearnLLM/">LearnLLM</a></h3>
+          <p class="entry-topic" data-hue="blue">AI</p>
+          <p class="entry-note">从第一性原理出发，通过中文实战课程理解大语言模型的核心概念与实现路径。</p>
+          <p class="entry-state" data-state>中文课程</p>
+        </li>
+        <li class="entry nb-entry" data-category="engineering" data-search="lightgbm native cuda windows linux gpu c++ machine learning">
+          <h3><a href="/LightGBM-NativeCUDA/">LightGBM NativeCUDA</a></h3>
+          <p class="entry-topic" data-hue="purple">工程</p>
+          <p class="entry-note">非官方 LightGBM 分支：修复 CUDA 正确性问题，用同一份源码在 Windows（MSVC、单 GPU）和 Linux（GCC）上原生构建。</p>
+          <p class="entry-state" data-state>构建文档</p>
+        </li>
+      </ol>
+      <p class="empty" id="empty-state" hidden>没有找到匹配的项目。换个关键词，或选择“全部”。</p>
     </section>
 
-    <section class="about shell" id="about" aria-labelledby="about-title">
-      <div class="about-index reveal"><span>About / 关于</span><span>07</span></div>
-      <div class="about-copy reveal">
-        <h2 id="about-title">把复杂问题，做成清晰体验。</h2>
-        <p>我用这些项目记录理解技术的过程：先拆开问题，再用清晰的结构重新组合。这里既是作品索引，也是持续更新的公开实践。</p>
-        <div class="principles" aria-label="创作原则">
-          <div class="principle"><b>01 / CLEAR</b><span>让复杂变清晰</span></div>
-          <div class="principle"><b>02 / USEFUL</b><span>让知识可使用</span></div>
-          <div class="principle"><b>03 / OPEN</b><span>让过程被看见</span></div>
-        </div>
-      </div>
+    <section class="about" id="about" aria-labelledby="about-title">
+      <h2 id="about-title">关于</h2>
+      <p>我用这些项目记录理解技术的过程：先拆开问题，再用清晰的结构重新组合。这里既是作品索引，也是持续更新的公开实践。</p>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-row shell">
-      <span>© <span id="year">2026</span> Yuwei Yang · Built with curiosity.</span>
-      <div class="footer-links">
-        <a href="https://github.com/yuweiyang9611" target="_blank" rel="noreferrer">GitHub ↗</a>
-        <a href="#top">回到顶部 ↑</a>
-      </div>
-    </div>
+  <footer class="page-foot">
+    <span>© 2026 Yuwei Yang</span>
+    <span>学习记录只保存在你自己的浏览器里</span>
   </footer>
 </body>
 </html>
