@@ -207,6 +207,25 @@ try {
     await context.close();
   }
 
+  // Touching marks: a curly quote beside a comma or full stop sets at half width, in the page and in text added later.
+  {
+    const { context, page, errors } = await open(browser);
+    assert.deepEqual(await page.locator("#empty-state .nb-halt").allTextContents(), ["”"]);
+    await page.evaluate(() => {
+      const note = document.createElement("p");
+      note.id = "later";
+      note.innerHTML = "先选“全部”，再看<code>“a”，b</code>";
+      document.querySelector("main").append(note);
+    });
+    await page.locator("#later .nb-halt").waitFor({ state: "attached" });
+    assert.deepEqual(await page.locator("#later .nb-halt").allTextContents(), ["”"]);
+    assert.equal(await page.locator("#later code .nb-halt").count(), 0, "code keeps its marks as typed");
+    assert.equal(await page.locator("#later").textContent(), "先选“全部”，再看“a”，b");
+    assert.equal(await page.locator("h2").first().evaluate((heading) => getComputedStyle(heading).wordBreak), "keep-all");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
   // One family at two weights: every font the kit declares must ship, and the page must use only those.
   {
     const css = await readFile(join(root, "kit", "v1", "fonts.css"), "utf8");

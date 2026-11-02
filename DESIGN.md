@@ -301,7 +301,7 @@ Known drift, do not copy: the course's continue link is underlined in blue befor
 
 **The One Family Rule.** Everything but code is set in Noto Sans SC at 400 or 600, the two weights in the shared font files, so a page never changes voice between its head and its text. The owner rejected a Noto Serif SC head over a Microsoft YaHei body on 2026-11-02 as awkward: two voices met in one row, YaHei draws quotation marks narrow, and Segoe UI digits sat lighter than YaHei bold in the same heading. `theme.js` adds `/kit/v1/fonts.css` on the production host only, so a local preview uses an installed Noto Sans SC or falls back to the system face.
 
-**The Whole Phrase Rule.** Page titles use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every first-level heading. Add the same pair to anything else that shows a course or lesson title, such as the continue link. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.
+**The Whole Phrase Rule.** Headings use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every heading from the first to the fourth level. Add the same pair to anything else that shows a course, lesson or section title, such as the continue link and a guide's contents entries, which without it broke 模板方法 into 模板方 and 法）. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.
 
 **The No Balance Rule.** Don't use `text-wrap: balance` on Chinese text. It was tried on headings and removed because it split 下单 in the middle of a word on the OnlineStore guide title: it looks for equal line lengths, and Chinese offers it a break between any two characters, with no word boundaries to respect. `text-wrap: pretty` stays on headings and paragraphs for last-line orphans, but it does not stop mid-word splits either, which is why the Whole Phrase Rule exists.
 
@@ -313,7 +313,9 @@ Measured in Chromium with the kit stylesheet at a 320px viewport, where the page
 | `pretty` without `keep-all` | 第 3 章 Adapter（适配 / 器）——填平接口与单位 / 差异 |
 | `balance` without `keep-all` | 第 3 章 Adapter / （适配器）——填 / 平接口与单位差异 |
 
-**The Chinese Reading Rule.** Every page sets `lang="zh-CN"` and lets the kit's body settings reach the text: `line-break: strict` for line-start and line-end punctuation, `text-spacing-trim: trim-start` so an opening `（` at the start of a line does not look indented, `text-autospace: normal` for spacing between Chinese and Latin, and line height 1.75. An engine's stylesheet must not override them.
+**The Chinese Reading Rule.** Every page sets `lang="zh-CN"` and lets the kit's body settings reach the text: `line-break: strict` for line-start and line-end punctuation, `text-spacing-trim: trim-start` so an opening `（` at the start of a line does not look indented, `text-autospace: normal` for spacing between Chinese and Latin, and line height 1.75. An engine's stylesheet must not override them. Copy never puts an ASCII space after a full-width mark: the course's quiz data had 30 of them, as in 时。 当前, and each opened a gap of one and a half characters.
+
+**The Touching Marks Rule.** When two full-width marks touch, the first sets at half width, so `”，` reads as one and a half characters, not two. Chromium does this itself for most pairs, such as `）、`, `。”` and `（“`, but leaves a curly quote beside a comma or full stop a full em apart: `”，`, `”。`, `”；`, `”：`, `，“` and `。“`. `theme.js` wraps the first mark of those pairs in `.nb-halt`, which turns on the font's `halt` feature, once on load and again for text that scripts add later. It skips code, `pre`, `kbd`, `samp`, text fields and SVG. Don't widen the pattern to pairs Chromium already squeezes: measured with Noto Sans SC at 20px, `halt` on the first mark of `”）` or `（“` takes a pair from 1.5em to 1em, which is too tight. The guide on C# fundamentals had 28 open pairs before this rule and has none after.
 
 **The Narrow Dot Rule.** Noto Sans SC draws `·` full width, which opens wide gaps in labels written as `a · b`. The kit's `NB Dot` face at the front of the sans stack takes that one character from a Latin face, using `unicode-range`. Keep that face first if an engine's font variable is replaced.
 
@@ -501,8 +503,8 @@ For every engine:
 - **Do** keep a wash to a short band, and mark the stopped place in a tall panel with a blue heading.
 - **Do** paste real output on the sheet between 1px hairlines.
 - **Do** give each command its own line on the cyan wash with `white-space: pre` and `overflow-x: auto`.
-- **Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on page titles, and write those titles with natural break points.
-- **Do** set `lang="zh-CN"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text.
+- **Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on headings, contents entries and anything else that shows a title, and write titles with natural break points.
+- **Do** set `lang="zh-CN"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text, and load `theme.js` so touching marks are squeezed.
 - **Do** pair every colored state with a written word, and keep the line form in records and verdicts.
 - **Do** check a new color value against `tests/home.mjs`, which holds every text color to 7:1 on paper, sheet and every wash in both schemes.
 - **Do** put the continue link first on a site's opening screen.

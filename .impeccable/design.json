@@ -790,7 +790,7 @@
       },
       {
         "name": "The Whole Phrase Rule",
-        "body": "Page titles use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every first-level heading. Add the same pair to anything else that shows a course or lesson title, such as the continue link. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.",
+        "body": "Headings use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every heading from the first to the fourth level. Add the same pair to anything else that shows a course, lesson or section title, such as the continue link and a guide's contents entries, which without it broke 模板方法 into 模板方 and 法）. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.",
         "section": "typography"
       },
       {
@@ -800,8 +800,12 @@
       },
       {
         "name": "The Chinese Reading Rule",
-        "body": "Every page sets `lang=\"zh-CN\"` and lets the kit's body settings reach the text: `line-break: strict` for line-start and line-end punctuation, `text-spacing-trim: trim-start` so an opening `（` at the start of a line does not look indented, `text-autospace: normal` for spacing between Chinese and Latin, and line height 1.75. An engine's stylesheet must not override them.",
+        "body": "Every page sets `lang=\"zh-CN\"` and lets the kit's body settings reach the text: `line-break: strict` for line-start and line-end punctuation, `text-spacing-trim: trim-start` so an opening `（` at the start of a line does not look indented, `text-autospace: normal` for spacing between Chinese and Latin, and line height 1.75. An engine's stylesheet must not override them. Copy never puts an ASCII space after a full-width mark: the course's quiz data had 30 of them, as in 时。 当前, and each opened a gap of one and a half characters.",
         "section": "typography"
+      },
+      {
+        "name": "The Touching Marks Rule",
+        "body": "When two full-width marks touch, the first sets at half width, so `”，` reads as one and a half characters, not two. Chromium does this itself for most pairs, such as `）、`, `。”` and `（“`, but leaves a curly quote beside a comma or full stop a full em apart: `”，`, `”。`, `”；`, `”：`, `，“` and `。“`. `theme.js` wraps the first mark of those pairs in `.nb-halt`, which turns on the font's `halt` feature, once on load and again for text that scripts add later. It skips code, `pre`, `kbd`, `samp`, text fields and SVG. Don't widen the pattern to pairs Chromium already squeezes: measured with Noto Sans SC at 20px, `halt` on the first mark of `”）` or `（“` takes a pair from 1.5em to 1em, which is too tight. The guide on C# fundamentals had 28 open pairs before this rule and has none after."
       },
       {
         "name": "The Narrow Dot Rule",
@@ -863,8 +867,8 @@
       "**Do** keep a wash to a short band, and mark the stopped place in a tall panel with a blue heading.",
       "**Do** paste real output on the sheet between 1px hairlines.",
       "**Do** give each command its own line on the cyan wash with `white-space: pre` and `overflow-x: auto`.",
-      "**Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on page titles, and write those titles with natural break points.",
-      "**Do** set `lang=\"zh-CN\"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text.",
+      "**Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on headings, contents entries and anything else that shows a title, and write titles with natural break points.",
+      "**Do** set `lang=\"zh-CN\"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text, and load `theme.js` so touching marks are squeezed.",
       "**Do** pair every colored state with a written word, and keep the line form in records and verdicts.",
       "**Do** check a new color value against `tests/home.mjs`, which holds every text color to 7:1 on paper, sheet and every wash in both schemes.",
       "**Do** put the continue link first on a site's opening screen.",
