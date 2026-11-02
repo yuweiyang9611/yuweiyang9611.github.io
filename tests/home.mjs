@@ -184,8 +184,8 @@ try {
           const [high, low] = [luminance(first), luminance(second)].sort((a, b) => b - a);
           return (high + 0.05) / (low + 0.05);
         };
-        const hues = ["red", "orange", "yellow", "green", "cyan", "blue", "purple"];
-        const backgrounds = ["paper", "sheet", ...hues.map((hue) => `${hue}-wash`)];
+        const hues = ["red", "green", "cyan", "blue", "purple"];
+        const backgrounds = ["paper", "sheet", "red-wash", "green-wash", "cyan-wash", "blue-wash"];
         const pairs = ["ink", "ink-soft", ...hues].flatMap((text) => backgrounds.map((back) => [text, back]));
         pairs.push(["on-fill", "fill"]);
         return pairs.filter(([text, back]) => ratio(token(text), token(back)) < 7).map((pair) => pair.join(" on "));

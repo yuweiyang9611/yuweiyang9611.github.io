@@ -1,53 +1,43 @@
 ---
 name: Lab Notebook
-description: "Shared visual language of the yuweiyang9611.github.io study sites: a record line in the gutter, ruled rows, pasted output and seven colors with one job each, in a day and a night scheme."
+description: "Shared visual language of the yuweiyang9611.github.io study sites: a record line in the gutter, ruled rows, pasted output and five colors with one job each, in a day and a night scheme."
 colors:
   ink: "#25211b"
   paper: "#f4efe4"
-  sheet: "#ece6d9"
-  ink-soft: "#4d463b"
-  rule: "#cfc6b3"
-  rule-strong: "#6f6656"
+  sheet: "#e7e0d0"
+  ink-soft: "#4a4338"
+  rule: "#bdb39e"
+  rule-strong: "#6a6152"
   rule-bold: "#25211b"
   select: "#d9d0ba"
-  red: "#950c26"
-  red-wash: "#fce0e0"
-  orange: "#743a00"
-  orange-wash: "#f8e3d5"
-  yellow: "#574900"
-  yellow-wash: "#f6ecc6"
-  green: "#005528"
-  green-wash: "#daeede"
-  cyan: "#02525a"
-  cyan-wash: "#d2eef1"
-  blue: "#03469a"
-  blue-wash: "#dce9fc"
-  purple: "#652f8c"
-  purple-wash: "#ede3f8"
-  fill: "#03469a"
+  red: "#90031e"
+  red-wash: "#ffdddb"
+  green: "#01521d"
+  green-wash: "#d5eed8"
+  cyan: "#034d58"
+  cyan-wash: "#c9eef6"
+  blue: "#103f9c"
+  blue-wash: "#dae7fe"
+  purple: "#66278a"
+  fill: "#103f9c"
   on-fill: "#f4efe4"
   night-ink: "#e2dac9"
   night-paper: "#1c1a17"
-  night-sheet: "#26231f"
-  night-ink-soft: "#bdb3a0"
-  night-rule: "#3d3932"
-  night-rule-strong: "#8f8675"
-  night-rule-bold: "#8f8675"
+  night-sheet: "#2c2924"
+  night-ink-soft: "#c4baa7"
+  night-rule: "#4c473e"
+  night-rule-strong: "#958c7b"
+  night-rule-bold: "#958c7b"
   night-select: "#4a4437"
-  night-red: "#fb9b9b"
-  night-red-wash: "#352221"
-  night-orange: "#eba674"
-  night-orange-wash: "#332419"
-  night-yellow: "#c9b563"
-  night-yellow-wash: "#2c2816"
-  night-green: "#80c593"
-  night-green-wash: "#1c2c20"
-  night-cyan: "#65c3ce"
-  night-cyan-wash: "#142c2f"
-  night-blue: "#92b7ef"
-  night-blue-wash: "#1e2836"
-  night-purple: "#c8a9e5"
-  night-purple-wash: "#2c2433"
+  night-red: "#ffa19d"
+  night-red-wash: "#3d2322"
+  night-green: "#88ca91"
+  night-green-wash: "#1d3120"
+  night-cyan: "#67c8db"
+  night-cyan-wash: "#0f3137"
+  night-blue: "#9abcf9"
+  night-blue-wash: "#202b3f"
+  night-purple: "#d1adec"
   night-fill: "#1e4e95"
   night-on-fill: "#f4efe4"
 typography:
@@ -168,14 +158,14 @@ components:
     textColor: "{colors.blue}"
     typography: "{typography.title}"
   ruled-row-stopped:
-    backgroundColor: "{colors.orange-wash}"
+    backgroundColor: "{colors.blue-wash}"
     textColor: "{colors.ink}"
     padding: "0.75rem 0"
   stopped-label:
-    textColor: "{colors.orange}"
+    textColor: "{colors.blue}"
     typography: "{typography.stopped}"
   resume-band:
-    backgroundColor: "{colors.orange-wash}"
+    backgroundColor: "{colors.blue-wash}"
     textColor: "{colors.ink-soft}"
     padding: "0.875rem 0.75rem"
   pasted-output:
@@ -201,10 +191,6 @@ components:
     backgroundColor: "{colors.red-wash}"
     textColor: "{colors.ink}"
     padding: "0.5rem"
-  note-highlight:
-    backgroundColor: "{colors.yellow-wash}"
-    textColor: "{colors.ink}"
-    padding: "0.625rem 0.875rem"
   inline-code:
     backgroundColor: "{colors.sheet}"
     textColor: "{colors.purple}"
@@ -220,14 +206,14 @@ components:
 
 A lab notebook is kept by the person using it. It holds what was run and what was checked, in order, and the next entry starts where the last one stopped. Each site in this family is such a notebook: opening it puts the owner back at the place they stopped, with the next thing to do in view. The record line in the page gutter and its "stopped here" mark are what a reader should remember.
 
-The material is warm paper, warm ink and thin ruling, with seven colors that each do one job, in a day and a night scheme. The colors are there to make reading easier, so they are dark enough to hold 7:1 as text and muted enough to be easy on the eyes. Pages are dense. Structure comes from hairlines and a shared left edge, not boxes, and nothing is there for decoration. The family rejects the template it shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.
+The material is warm paper, warm ink and thin ruling, with five colors that each do one job, in a day and a night scheme. The colors are there to make reading easier, so they are dark enough to hold 7:1 as text and muted enough to be easy on the eyes. Pages are dense. Structure comes from hairlines and a shared left edge, not boxes, and nothing is there for decoration. The family rejects the template it shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.
 
 The family shares a language, not a layout. Each site's structure follows its own content, so copy these rules and never a sibling's page. `kit/v1/notebook.css` is the source of truth for values, and this file explains how to use them. It was recorded from two built surfaces: the project index in this repository and the C# design patterns course (course index, lesson, guide, quiz, playground).
 
 **Key Characteristics:**
 
-- A record line in the gutter: solid green for what is done, dashed for what is not, with one orange tick where the owner stopped.
-- Seven colors, each with one job, each holding 7:1 as text, and always a word beside them.
+- A record line in the gutter: solid green for what is done, dashed for what is not, with one blue tick where the owner stopped.
+- Five colors, each with one job, each holding 7:1 as text, and always a word beside them.
 - Two named schemes, 白天 and 晚上, with night composed rather than inverted.
 - Ruled rows instead of cards, with a wash only on short bands.
 - Pasted output between hairlines, with no window chrome.
@@ -238,7 +224,7 @@ The family shares a language, not a layout. Each site's structure follows its ow
 
 ## Colors
 
-One warm ink on warm paper dimmer than white, seven colors that each do one job, and a night scheme of warm black and warm ink composed from the same roles. The owner asked for the seven to make reading easier, and for the two schemes, after seeing a one-ink, one-red pilot. A first seven-color version at about 5:1 was hard to read, so every text color now holds 7:1.
+One warm ink on warm paper dimmer than white, five colors that each do one job, and a night scheme of warm black and warm ink composed from the same roles. The owner asked for more color to make reading easier, and for the two schemes, after seeing a one-ink, one-red pilot. A first seven-color version at about 5:1 was hard to read, so every text color now holds 7:1. At that contrast orange and yellow turned brown, the same family as the warm paper, and the owner said a color close to the background should go, so they were removed.
 
 ### Primary
 
@@ -246,52 +232,50 @@ One warm ink on warm paper dimmer than white, seven colors that each do one job,
 
 ### Secondary
 
-Seven colors, each with one job. The kit names each by hue (`--nb-red`) and by job (`--nb-wrong`), and five of the washes by job too (`--nb-wrong-wash`). Site styles use the job name where there is one.
+Five colors, each with one job. The kit names each by hue (`--nb-red`) and by job (`--nb-wrong`), and the washes by job too (`--nb-wrong-wash`). Purple has no wash. Site styles use the job name where there is one.
 
 | Color | Job token | Day text, wash | Night text, wash | Day on paper, sheet, own wash | Night on paper, sheet, own wash |
 | --- | --- | --- | --- | --- | --- |
-| Wrong Red | `--nb-wrong` | #950c26, #fce0e0 | #fb9b9b, #352221 | 7.76, 7.16, 7.16 | 8.49, 7.64, 7.32 |
-| Stopped Orange | `--nb-stopped` | #743a00, #f8e3d5 | #eba674, #332419 | 7.80, 7.19, 7.22 | 8.47, 7.63, 7.28 |
-| Caution Yellow | `--nb-caution` | #574900, #f6ecc6 | #c9b563, #2c2816 | 7.77, 7.16, 7.52 | 8.49, 7.65, 7.22 |
-| Done Green | `--nb-done` | #005528, #daeede | #80c593, #1c2c20 | 7.86, 7.25, 7.41 | 8.54, 7.69, 7.22 |
-| Run Cyan | `--nb-run` | #02525a, #d2eef1 | #65c3ce, #142c2f | 7.77, 7.16, 7.31 | 8.48, 7.63, 7.16 |
-| Link Blue | `--nb-link` | #03469a, #dce9fc | #92b7ef, #1e2836 | 7.80, 7.20, 7.29 | 8.47, 7.63, 7.25 |
-| Code Purple | `--nb-code` | #652f8c, #ede3f8 | #c8a9e5, #2c2433 | 7.83, 7.22, 7.25 | 8.48, 7.64, 7.29 |
+| Wrong Red | `--nb-wrong` | #90031e, #ffdddb | #ffa19d, #3d2322 | 8.26, 7.20, 7.49 | 8.96, 7.47, 7.41 |
+| Done Green | `--nb-done` | #01521d, #d5eed8 | #88ca91, #1d3120 | 8.23, 7.17, 7.66 | 9.02, 7.52, 7.21 |
+| Run Cyan | `--nb-run` | #034d58, #c9eef6 | #67c8db, #0f3137 | 8.30, 7.24, 7.73 | 8.98, 7.49, 7.17 |
+| Link Blue | `--nb-link`, `--nb-stopped` | #103f9c, #dae7fe | #9abcf9, #202b3f | 8.28, 7.22, 7.61 | 9.04, 7.54, 7.39 |
+| Code Purple | `--nb-code` | #66278a, no wash | #d1adec, no wash | 8.24, 7.19, none | 9.01, 7.52, none |
 
-- **Wrong Red:** Wrong answers, failed checks, compiler diagnostics and destructive text actions such as 清空复习记录.
-- **Stopped Orange:** Stopped here, continue. The tick, the 停在这里 label, the heading of the step where the owner stopped, the 接着做 label and band once a record exists, the stopped row's wash and the underline of the course's continue link.
-- **Caution Yellow:** Caution. Guide quotes as a highlighter wash, search hits, due counts, the storage warning and the 何时避免 heading.
+- **Wrong Red:** Wrong answers, failed checks, compiler diagnostics, the storage warning, the 何时避免 heading and destructive text actions such as 清空复习记录.
 - **Done Green:** Done, passed, correct, verified. The solid record line, the check in a box, finished step headings, progress tracks, a verified entry's state, passed checks and the 正确 verdict. Never for work that is only started: the index's state column stays ink until a course is complete.
 - **Run Cyan:** Commands and things to run. Command rows on the wash, the command line in pasted output and the label above it, and the 运行并追踪 heading.
-- **Link Blue:** Links, which includes row titles, the current nav word, pressed filters, the pressed scheme word and the focus ring. `--nb-fill` and `--nb-on-fill` make solid buttons from it: warm paper on the day blue at 7.80:1, and warm paper on a deeper blue (#1e4e95) at night at 7.10:1. That night fill is only 2.13:1 against the paper, so solid buttons carry a 1px Link Blue edge.
-- **Code Purple:** Code names in guide prose (`--nb-code`) and keywords in code blocks.
+- **Link Blue:** Where to go. Links, which includes row titles, the current nav word, pressed filters, the pressed scheme word and the focus ring. Also the place to return to: the tick, the 停在这里 label, the heading of the step where the owner stopped, the 接着做 label and band once a record exists, the stopped row's wash, the underline of the course's continue link and search hits. `--nb-fill` and `--nb-on-fill` make solid buttons from it: warm paper on the day blue at 8.28:1, and warm paper on a deeper blue (#1e4e95) at night at 7.10:1. That night fill is only 2.13:1 against the paper, so solid buttons carry a 1px Link Blue edge.
+- **Code Purple:** Code names in guide prose (`--nb-code`), and keywords and numbers in code blocks.
 
 ### Neutral
 
 - **Warm Paper** (#f4efe4, night #1c1a17): The page, the running head and dialogs. `theme.js` also sets it as the browser's `theme-color`.
-- **Pasted Sheet** (#ece6d9, night #26231f): Only for things pasted into the notebook: run output, code blocks, inline code, the code editor and the commands of locked steps.
-- **Soft Ink** (#4d463b, night #bdb3a0): Notes, metadata, inactive nav and filters, placeholders. Contrast is 8.1:1 on paper and 7.5:1 on the sheet by day, 8.4:1 and 7.5:1 at night, and at least 7.0:1 on any wash.
-- **Ruling** (#cfc6b3, night #3d3932): Dividers between rows and sections. At 1.5:1 by day it is never the only edge of a control.
-- **Strong Ruling** (#6f6656, night #8f8675): The dashed part of the record line, control outlines, the hairlines around pasted output and link underlines. Contrast is 4.9:1 by day and 4.8:1 at night, so it is for lines, not text.
-- **Bold Ruling** (`--nb-rule-bold`, #25211b, night #8f8675): The heavy rule under the running head, above every list, and under a guide's second-level heads and table headers. By day it equals ink at 14.0:1, and at night it softens to 4.8:1.
+- **Pasted Sheet** (#e7e0d0, night #2c2924): Only for things pasted into the notebook: run output, code blocks, inline code, the code editor and the commands of locked steps. It is 1.15:1 against paper by day and 1.20:1 at night, dark enough to read as its own surface.
+- **Soft Ink** (#4a4338, night #c4baa7): Notes, metadata, inactive nav and filters, placeholders. Contrast is 8.5:1 on paper and 7.4:1 on the sheet by day, 9.0:1 and 7.5:1 at night, and at least 7.2:1 on any wash.
+- **Ruling** (#bdb39e, night #4c473e): Dividers between rows and sections. At 1.8:1 by day it is never the only edge of a control.
+- **Strong Ruling** (#6a6152, night #958c7b): The dashed part of the record line, control outlines, the hairlines around pasted output and link underlines. Contrast is 5.3:1 by day and 5.2:1 at night, so it is for lines, not text.
+- **Bold Ruling** (`--nb-rule-bold`, #25211b, night #958c7b): The heavy rule under the running head, above every list, and under a guide's second-level heads and table headers. By day it equals ink at 14.0:1, and at night it softens to 5.2:1.
 - **Selection Wash** (#d9d0ba, night #4a4437): Text selection, nothing else.
-- **Favicon tile:** Fixed in both schemes: an ink tile with the solid line in night green, the tick in night orange, and the dashes and rows in paper.
+- **Favicon tile:** Fixed in both schemes: an ink tile with the solid line in night green, the tick in night blue, and the dashes and rows in paper.
 
 ### Named Rules
 
-**The One Job Rule.** Each of the seven colors has the one job listed above, and none is used for emphasis, section accents or decoration. The one exception is a group's borrowed word, under the One Word Group Rule. Audit test: a page with no record has no tick, no 停在这里, no orange band and no solid green line.
+**The One Job Rule.** Each of the five colors has the one job listed above, and none is used for emphasis, section accents or decoration. The one exception is a group's borrowed word, under the One Word Group Rule. Audit test: a page with no record has no tick, no 停在这里, no blue band and no solid green line.
 
-**The Word Beside The Color Rule.** A color never carries a state alone: a written word always goes with it, and records and verdicts keep their line form too. A correct quiz answer gets a 2px solid green rule and 正确, a wrong one gets a 1px dashed red rule and 你的选择, and a locked step gets a dashed box. Every text color holds 7:1 on paper, on the sheet and on every wash in both schemes, with the lowest at 7.16:1 by day and 7.15:1 at night, and `tests/home.mjs` enforces it. Hue is less reliable than contrast. Measured as OKLab distance times 100, the closest pairs for normal vision are orange and yellow by day at 6.7 and red and orange at night at 7.0. Under simulated deuteranopia, orange and yellow come within 1.2 by day and 1.5 at night, and at night blue and purple come within 2.8. Under simulated protanopia, orange and yellow come within 2.3 by day, and blue and purple within 2.1 at night. Audit test: in grayscale the page still says what is done.
+**The Word Beside The Color Rule.** A color never carries a state alone: a written word always goes with it, and records and verdicts keep their line form too. A correct quiz answer gets a 2px solid green rule and 正确, a wrong one gets a 1px dashed red rule and 你的选择, and a locked step gets a dashed box. Every text color holds 7:1 on paper, on the sheet and on every wash in both schemes, with the lowest at 7.17:1 by day and 7.15:1 at night, and `tests/home.mjs` enforces it. Hue is less reliable than contrast. Measured as OKLab distance times 100, the closest pairs for normal vision are green and cyan by day at 10.0 and blue and purple at night at 7.8. Under simulated deuteranopia, blue and purple come within 3.9 by day and cyan and purple within 2.4 at night. Under simulated protanopia, blue and purple come within 3.8 by day and 2.4 at night. Audit test: in grayscale the page still says what is done.
 
-**The Short Band Rule.** Each color has a wash, and a wash is for short bands only: the resume band, a stopped row in a register, command rows, note highlights, quiz option verdicts and a pressed problem chip. Tall panels mark the stopped place with an orange heading, not a fill. On the index the resume band fills, so the stopped row below it does not fill again. The quiz's teaching text stays on plain paper with only a colored rule and verdict. Reading text on a wash stays ink, at 10.5:1 or better in both schemes. A wash is 1.03:1 to 1.18:1 against paper, so it is never the only sign of anything. The resume band and quiz verdicts reach past the text edge by their own padding, so their words stay on the shared left edge.
+**The Short Band Rule.** Red, green, cyan and blue each have a wash, and a wash is for short bands only: the resume band, a stopped row in a register, command rows, search hits, quiz option verdicts, the storage warning and a pressed problem chip. Tall panels mark the stopped place with a blue heading, not a fill. On the index the resume band fills, so the stopped row below it does not fill again. The quiz's teaching text stays on plain paper with only a colored rule and verdict. Reading text on a wash stays ink, at 10.0:1 or better in both schemes. A wash is 1.07:1 to 1.25:1 against paper, so it is never the only sign of anything. The resume band and quiz verdicts reach past the text edge by their own padding, so their words stay on the shared left edge.
 
-**The One Word Group Rule.** A site's own groups borrow a hue through `data-hue` for one word only: the topic on an index row, the category word on a pattern row and in its dialog, and a filter button, with any count it shows. Pattern numbers stay soft, and nothing else in the row takes the hue. The index has 工程 purple, 算法 cyan, 前端 yellow and AI blue. The course has 创建型 yellow, 结构型 purple and 行为型 cyan. These overlap the colors' jobs. Yellow on 创建型 and 前端 overlaps caution, and blue on AI overlaps links. A reviewer flagged both, and they were kept deliberately, because the owner asked for color and a gray category would be worse. This is an accepted trade-off, not an accident, so don't correct it. Purple on 工程 and 结构型 and cyan on 算法 and 行为型 overlap code and commands in the same way. A lesson's 运行并追踪 and 何时避免 headings use the same attribute to carry their job color, not a group.
+**The Stands Off The Paper Rule.** A color earns its place only if it differs from the paper in hue as well as in lightness. Orange and yellow failed this on warm paper even at 7:1, and the owner asked for colors close to the background to go, so they are not in the kit. Don't bring them back for emphasis, warnings or categories, and judge a new color on the page, not only by its contrast number.
+
+**The One Word Group Rule.** A site's own groups borrow a hue through `data-hue` for one word only: the topic on an index row, the category word on a pattern row and in its dialog, and a filter button, with any count it shows. Pattern numbers stay soft, and nothing else in the row takes the hue. The index has 工程 purple, 算法 cyan, 前端 green and AI blue. The course has 创建型 blue, 结构型 purple and 行为型 cyan. These overlap the colors' jobs. Green on 前端 overlaps done, and blue on AI and 创建型 overlaps links. A reviewer flagged this kind of overlap, and it was kept deliberately, because the owner asked for color and a gray category would be worse. This is an accepted trade-off, not an accident, so don't correct it. Purple on 工程 and 结构型 and cyan on 算法 and 行为型 overlap code and commands in the same way. A lesson's 运行并追踪 and 何时避免 headings use the same attribute to carry their job color, not a group.
 
 **The Composed Night Rule.** The two schemes are named 白天 and 晚上, and night is composed, not inverted: warm black paper and warm ink, not blue-black and near white. `--nb-rule-bold` softens heavy rules at night (by day it equals ink), `--nb-fill` is a deeper blue with warm paper text, and each wash keeps its own hue on the dark paper. Night tokens live in `@media screen`, so printing is always in day colors.
 
 **The Achromatic Field Rule.** Text fields carry no color of their own: transparent fill, Strong Ruling outline and Soft Ink placeholder. Only the focus ring and the caret are blue.
 
-Known drift, do not copy: the course's continue link is underlined in orange before any record exists, while the index keeps its 接着做 label in Soft Ink until there is one. The quiz's 稳定掌握 count is green even at 0. A pattern dialog's command is cyan text with no wash, unlike every other command row. The kit defines `--nb-purple-wash`, but nothing uses it yet.
+Known drift, do not copy: the course's continue link is underlined in blue before any record exists, while the index keeps its 接着做 label in Soft Ink until there is one. The quiz's 稳定掌握 count is green even at 0. A pattern dialog's command is cyan text with no wash, unlike every other command row.
 
 ## Typography
 
@@ -310,7 +294,7 @@ Known drift, do not copy: the course's continue link is underlined in orange bef
 - **Body** (400, 1rem, 1.75): Reading text, limited to the 42rem measure.
 - **Note** (400, .9375rem, 1.65): Row notes and short explanations, in Soft Ink.
 - **Label** (400, .875rem): Metadata, row state and footers, and the smallest size set in `rem`. Counts use tabular figures (`font-variant-numeric: tabular-nums`).
-- **Stopped** (700, .875rem, 1.5): The 停在这里 label, in Stopped Orange.
+- **Stopped** (700, .875rem, 1.5): The 停在这里 label, in Link Blue.
 - **Mono** (400, .875rem, 1.65): Pasted output and commands. Inline code is .875em. Identifier-like row keys, such as pattern numbers, also use it.
 
 ### Named Rules
@@ -404,8 +388,8 @@ The signature of the family: the gutter shows what has been done. Put it on ever
 
 - **Form:** A 1.25rem gutter, with a 1px dashed Strong Ruling line at its left edge and a 2px solid green line over it. Each row's line runs 1px past its bottom, so consecutive rows join into one continuous line.
 - **Fraction:** `--nb-fraction` (0 to 1) sets how far the solid part reaches. `data-record="done"` sets it to 1. A partly done entry is solid to its fraction.
-- **Stopped mark:** `aria-current` on an entry draws the orange tick across the line at that fraction and fills the row with the orange wash, and the row adds the 停在这里 label (`.nb-stopped`) under its title. On the index the resume band holds the fill instead. A list has one stopped mark.
-- **Steps:** In a lesson, each finished step is solid to its end with a green heading, and the tick sits at the top of the first step that is unfinished and unlocked, which takes an orange heading and the label instead of a fill. Locked steps stay dashed, with a dashed checkbox and Soft Ink text.
+- **Stopped mark:** `aria-current` on an entry draws the blue tick across the line at that fraction and fills the row with the blue wash, and the row adds the 停在这里 label (`.nb-stopped`) under its title. On the index the resume band holds the fill instead. A list has one stopped mark.
+- **Steps:** In a lesson, each finished step is solid to its end with a green heading, and the tick sits at the top of the first step that is unfinished and unlocked, which takes a blue heading and the label instead of a fill. Locked steps stay dashed, with a dashed checkbox and Soft Ink text.
 - **Motion:** Checking a step extends the line over .5s with `cubic-bezier(.16, 1, .3, 1)`. Reduced-motion settings remove it.
 - **Horizontal form:** A course or lesson progress track uses the same two lines left to right: 1px dashed underneath, 2px solid green growing over .7s. There are no filled bars.
 - **Contents list:** In a guide, each contents link has a 1px dashed left line, and the current section gets a 1px solid blue line and bold blue text. This shows position, not a record, and is the one place solid does not mean done.
@@ -424,7 +408,7 @@ Row dividers are ruling, not records. They stay solid hairlines whatever the sta
 
 A register, not a gallery. This family has no cards.
 
-**The Ruled Row Rule.** Lists and grouped content are rows between hairlines. No row or panel gets a radius or a shadow. The only rows that fill are short ones, under the Short Band Rule: the stopped row of a register on the orange wash, and a quiz option once it has its verdict.
+**The Ruled Row Rule.** Lists and grouped content are rows between hairlines. No row or panel gets a radius or a shadow. The only rows that fill are short ones, under the Short Band Rule: the stopped row of a register on the blue wash, and a quiz option once it has its verdict.
 
 - **Structure:** The list opens with a 1px bold rule, and each row closes with a 1px Ruling line.
 - **Columns:** Key, name, note, state, in whatever mix the content needs. Widths belong to each site, such as 2.5rem / 14rem / 1fr / 12rem on the index, with a narrow topic column first, and 5rem / 13rem / 1fr / 13rem on the course. Rows in one site share their columns.
@@ -443,7 +427,7 @@ A printout stuck into the page (`.nb-paste`), not a fake window.
 - **Label:** A plain line above, in bold cyan with text actions at its far edge, not a window bar.
 - **Keyboard:** Scrollable boxes take `tabindex="0"`.
 - **Long output:** Expected output and compiler diagnostics may wrap with `pre-wrap` where reading them matters more than their shape, and cap their height with a scroll.
-- **Code color:** Code blocks use this same form, colored by the kit's `.tok-*` classes: keyword purple, type cyan, call blue, string green, number orange, meta yellow, comment Soft Ink. Red is not used in code. On the course `code-colors.js` sets the classes at runtime for C#, PowerShell and bat, so the exported guide, its search index and its print output stay plain text, and the classes live in `@media screen`, so print stays black. An engine's highlighter should use the same assignments (provisional until an engine site ships).
+- **Code color:** Code blocks use this same form, colored by the kit's `.tok-*` classes: keyword and number purple, type cyan, call blue, string green, meta and comment Soft Ink. Red is not used in code. On the course `code-colors.js` sets the classes at runtime for C#, PowerShell and bat, so the exported guide, its search index and its print output stay plain text, and the classes live in `@media screen`, so print stays black. An engine's highlighter should use the same assignments (provisional until an engine site ships).
 
 ### Command Row
 
@@ -459,7 +443,7 @@ How Markdown output should look, as proven by the C# guide pages. VitePress and 
 
 - **Spacing:** The kit zeroes heading, paragraph and list margins, so prose must restore them: paragraphs 0 0 1em, lists with 1.5rem of left padding.
 - **Headings:** Second-level heads are 1.375rem serif with 2.5rem above and a 1px bold rule below. Third-level heads are 1.0625rem at 600.
-- **Quotes:** A highlighter: the yellow wash with inherited text and .625rem by .875rem of padding, with no line.
+- **Quotes:** A 1px Strong Ruling line on the left, 1rem of padding and inherited text, with no fill.
 - **Code:** Inline code in purple on the sheet with 2px corners, taking the link's color inside a link. Blocks follow Pasted Output.
 - **Tables:** 1px Ruling under each row, a bold rule under the header, no fills and no zebra stripes, inside a horizontally scrolling wrapper with a 640px minimum table width.
 - **Print:** Where a page has its own print styles, as PDF exports do, keep these rules inside `@media screen` so print output does not change.
@@ -468,7 +452,7 @@ How Markdown output should look, as proven by the C# guide pages. VitePress and 
 
 - **Dialog:** 1px ink outline, 2px corners, paper fill, the scrim from Elevation & Depth, at most 40rem wide. Its fields are ruled rows, its category word takes the group's hue, and its command is cyan text.
 - **Toast:** 1px ink outline on paper, fixed at the bottom right, with no shadow.
-- **Storage warning:** A sticky box with a 1px yellow outline on the yellow wash, ink text and a solid button.
+- **Storage warning:** A sticky box with a 1px red outline on the red wash, ink text and a solid button.
 
 ### Adopting the Kit
 
@@ -489,7 +473,7 @@ For every engine:
 - Map `--vp-c-bg` to paper, `--vp-c-bg-soft` to sheet, `--vp-c-text-1` and `--vp-c-text-2` to ink and Soft Ink, and `--vp-c-divider` to Ruling.
 - Map `--vp-c-brand-1` to `--vp-c-brand-3` to `--nb-link` and `--vp-c-brand-soft` to `--nb-blue-wash`, because VitePress uses brand for links and active states.
 - Point `--vp-font-family-base` and `--vp-font-family-mono` at the kit stacks.
-- Map the status colors to the seven tokens instead of retiring them: `--vp-c-danger-*` to `--nb-wrong`, `--vp-c-warning-*` to `--nb-caution`, and `--vp-c-success-*` and `--vp-c-green-*` to `--nb-done`, with each soft variant on its wash. `--vp-c-tip-*` follows brand. Every container keeps its written label.
+- Map the status colors to the five tokens instead of retiring them: `--vp-c-danger-*` and `--vp-c-warning-*` to `--nb-wrong`, and `--vp-c-success-*` and `--vp-c-green-*` to `--nb-done`, with each soft variant on its wash. `--vp-c-tip-*` follows brand. Every container keeps its written label.
 - Give the code highlighter the same assignments as `.tok-*`, with no red.
 - Bridge the `.dark` class to `data-theme`.
 - The `layout: home` hero and feature cards are the rejected template, so the landing page must be replaced, not reskinned.
@@ -503,18 +487,18 @@ For every engine:
 - Give `--md-code-hl-*` the same assignments as `.tok-*`, with no red.
 - Bridge `data-md-color-scheme` to `data-theme`.
 - Check sizes against the root font size, because Material enlarges it and the kit is set in `rem`.
-- Map admonitions to the seven tokens instead of removing their color: `danger` and `failure` to `--nb-wrong`, `warning` to `--nb-caution` and `success` to `--nb-done`, each on its wash as a short band with a written label.
+- Map admonitions to the five tokens instead of removing their color: `danger`, `failure` and `warning` to `--nb-wrong` and `success` to `--nb-done`, each on its wash as a short band with a written label.
 
 ## Do's and Don'ts
 
 ### Do:
 
 - **Do** take every color from the kit's tokens and let `data-theme` switch them.
-- **Do** give each of the seven colors its one job, and check any new use against the list.
-- **Do** give every list of work a record line: solid green for what is done, dashed for what is not, with one orange tick at the stopped place.
-- **Do** check a page with no record on it. It should show no tick, no 停在这里, no orange band and no solid green line.
+- **Do** give each of the five colors its one job, and check any new use against the list.
+- **Do** give every list of work a record line: solid green for what is done, dashed for what is not, with one blue tick at the stopped place.
+- **Do** check a page with no record on it. It should show no tick, no 停在这里, no blue band and no solid green line.
 - **Do** build lists as ruled rows, with each site choosing its own columns from its own content.
-- **Do** keep a wash to a short band, and mark the stopped place in a tall panel with an orange heading.
+- **Do** keep a wash to a short band, and mark the stopped place in a tall panel with a blue heading.
 - **Do** paste real output on the sheet between 1px hairlines.
 - **Do** give each command its own line on the cyan wash with `white-space: pre` and `overflow-x: auto`.
 - **Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on page titles, and write those titles with natural break points.
@@ -529,7 +513,7 @@ For every engine:
 ### Don't:
 
 - **Don't** use a color outside its job, for emphasis or as an accent. A group's borrowed word is the one exception, and an accepted one.
-- **Don't** add an eighth color, or a second job for one of the seven.
+- **Don't** add a sixth color, bring back orange or yellow, or give one of the five a second job.
 - **Don't** let a color carry a state without a word.
 - **Don't** turn anything green for work that is only started.
 - **Don't** fill a tall panel or teaching text with a wash, or fill the stopped row when a band above it already fills.

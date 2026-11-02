@@ -17,7 +17,7 @@ Unresolved: algorithms progress lives in IndexedDB and is not read yet. The othe
 
 THESIS: Returning is the job. Opening a site puts the owner back where they stopped, with the next thing to do in view. It refuses the template the family shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.
 
-OWN-WORLD: Warm paper #F4EFE4, warm ink #25211B, ruling #CFC6B3, and seven colors with one job each, every one holding 7:1 as text: red for wrong, orange for stopped here, yellow for caution, green for done, cyan for things to run, blue for links, purple for code. Two named schemes, 白天 and 晚上, with night composed rather than inverted. Noto Serif SC 600 for page heads, Segoe UI and YaHei for reading, Cascadia for code and data. Ruled rows instead of cards, pasted output between hairlines with no window chrome, square controls, everything flush left.
+OWN-WORLD: Warm paper #F4EFE4, warm ink #25211B, ruling #BDB39E, and five colors with one job each, every one holding 7:1 as text: red for wrong, green for done, cyan for things to run, blue for links and the place to return to, purple for code. Orange and yellow are left out because they turn brown on warm paper. Two named schemes, 白天 and 晚上, with night composed rather than inverted. Noto Serif SC 600 for page heads, Segoe UI and YaHei for reading, Cascadia for code and data. Ruled rows instead of cards, pasted output between hairlines with no window chrome, square controls, everything flush left.
 
 STORY: The owner sees where they stopped, continues or looks something up, runs the thing, and records it. They believe the record because it is theirs and is checked by doing.
 
