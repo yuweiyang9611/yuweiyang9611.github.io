@@ -17,12 +17,12 @@ Unresolved: algorithms progress lives in IndexedDB and is not read yet. The othe
 
 THESIS: Returning is the job. Opening a site puts the owner back where they stopped, with the next thing to do in view. It refuses the template the family shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.
 
-OWN-WORLD: Cool paper #F7F8F6, blue-black ink #1C2B45, ruling #CBD3DC, and one review red #B3261E reserved for "stopped here" and verified marks, with a blue-black night twin. Noto Serif SC 600 for page heads, Segoe UI and YaHei for reading, Cascadia for code and data. Ruled rows instead of cards, pasted output between hairlines with no window chrome, square controls, everything flush left.
+OWN-WORLD: Warm paper #F4EFE4, warm ink #25211B, ruling #CFC6B3, and seven colors with one job each, every one holding 7:1 as text: red for wrong, orange for stopped here, yellow for caution, green for done, cyan for things to run, blue for links, purple for code. Two named schemes, 白天 and 晚上, with night composed rather than inverted. Noto Serif SC 600 for page heads, Segoe UI and YaHei for reading, Cascadia for code and data. Ruled rows instead of cards, pasted output between hairlines with no window chrome, square controls, everything flush left.
 
 STORY: The owner sees where they stopped, continues or looks something up, runs the thing, and records it. They believe the record because it is theirs and is checked by doing.
 
 FIRST VIEWPORT: Home: a one-line running head, the serif page title, a "continue" row at the top left under 200px as the primary action, then filters and the ruled contents list immediately. Course: running head, then the continue link beside the pasted run output.
 
-FORM: Lab notebook, position 7 on the ordered list, seed key 8e32f99d. Signature: the record line. Solid only for what is done, dashed for what is not, so gaps in the work read as breaks in the line. A partly done entry is solid to its fraction, with the stopped tick at that point, and checking a step extends the line. Raises: state by line form not hue (emission rail); one continuous record line with visible gaps (provenance ribbon); achromatic text fields (iridescent edge); flush left, never centred (seedbed).
+FORM: Lab notebook, position 7 on the ordered list, seed key 8e32f99d. Signature: the record line. Solid only for what is done, dashed for what is not, so gaps in the work read as breaks in the line. A partly done entry is solid to its fraction, with the stopped tick at that point, and checking a step extends the line. Raises: state by line form and a written word, never by color alone (emission rail); one continuous record line with visible gaps (provenance ribbon); achromatic text fields (iridescent edge); flush left, never centred (seedbed).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

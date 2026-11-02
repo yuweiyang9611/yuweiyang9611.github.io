@@ -1,247 +1,727 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-01T21:35:49.321Z",
+  "generatedAt": "2026-11-02T01:09:38.476Z",
   "title": "Design System: Lab Notebook",
   "extensions": {
     "colorMeta": {
       "ink": {
         "role": "primary",
-        "displayName": "Blue-Black Ink",
-        "canonical": "#1c2b45",
+        "displayName": "Warm Ink",
+        "canonical": "#25211b",
         "tonalRamp": [
-          "#010a21",
-          "#16253e",
-          "#32425e",
-          "#50627f",
-          "#7183a2",
-          "#93a6c6",
-          "#b6caec",
-          "#e6effe"
-        ]
-      },
-      "mark": {
-        "role": "secondary",
-        "displayName": "Review Red",
-        "canonical": "#b3261e",
-        "tonalRamp": [
-          "#210000",
-          "#4e0000",
-          "#810103",
-          "#b0221b",
-          "#d84c3f",
-          "#ff7464",
-          "#ffb3a8",
-          "#ffe9e5"
+          "#0e0b06",
+          "#28241e",
+          "#46413b",
+          "#656059",
+          "#86827a",
+          "#a9a49c",
+          "#cec8c0",
+          "#f3eee5"
         ]
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Cool Paper",
-        "canonical": "#f7f8f6",
+        "displayName": "Warm Paper",
+        "canonical": "#f4efe4",
         "tonalRamp": [
-          "#0b0b0a",
-          "#252524",
-          "#414241",
-          "#616160",
-          "#828381",
-          "#a4a5a3",
-          "#c8c9c7",
-          "#eeefed"
+          "#0e0b05",
+          "#28251c",
+          "#464239",
+          "#656157",
+          "#868278",
+          "#a9a59a",
+          "#cdc9be",
+          "#f3eee3"
         ]
       },
       "sheet": {
         "role": "neutral",
         "displayName": "Pasted Sheet",
-        "canonical": "#eef1f2",
+        "canonical": "#ece6d9",
         "tonalRamp": [
-          "#0a0b0c",
-          "#232526",
-          "#404243",
-          "#5f6262",
-          "#808384",
-          "#a3a5a6",
-          "#c7cacb",
-          "#eceff0"
+          "#0f0b04",
+          "#29251b",
+          "#464137",
+          "#666155",
+          "#878276",
+          "#aaa498",
+          "#cec9bc",
+          "#f4eee1"
         ]
       },
       "ink-soft": {
         "role": "neutral",
         "displayName": "Soft Ink",
-        "canonical": "#4a5870",
+        "canonical": "#4d463b",
         "tonalRamp": [
-          "#030a1d",
-          "#19253a",
-          "#354259",
-          "#53627a",
-          "#74839d",
-          "#96a6c1",
-          "#bacae6",
-          "#e6efff"
+          "#100a03",
+          "#2a241a",
+          "#484136",
+          "#676055",
+          "#898175",
+          "#aca497",
+          "#d0c8bb",
+          "#f6ede0"
         ]
       },
       "rule": {
         "role": "neutral",
         "displayName": "Ruling",
-        "canonical": "#cbd3dc",
+        "canonical": "#cfc6b3",
         "tonalRamp": [
-          "#070c11",
-          "#20262c",
-          "#3c434a",
-          "#5b626a",
-          "#7c838b",
-          "#9ea6af",
-          "#c2cad3",
-          "#e7eff9"
+          "#100a01",
+          "#2b2415",
+          "#494131",
+          "#68604f",
+          "#8a8170",
+          "#ada492",
+          "#d1c8b5",
+          "#f7eeda"
         ]
       },
       "rule-strong": {
         "role": "neutral",
         "displayName": "Strong Ruling",
-        "canonical": "#7f8da1",
+        "canonical": "#6f6656",
         "tonalRamp": [
-          "#030b19",
-          "#1a2636",
-          "#374354",
-          "#556275",
-          "#768397",
-          "#98a6bb",
-          "#bbcae0",
-          "#e5effe"
+          "#110a01",
+          "#2c2416",
+          "#494132",
+          "#696050",
+          "#8a8170",
+          "#aea492",
+          "#d2c8b6",
+          "#f8eddb"
+        ]
+      },
+      "rule-bold": {
+        "role": "neutral",
+        "displayName": "Bold Ruling",
+        "canonical": "#25211b",
+        "tonalRamp": [
+          "#0e0b06",
+          "#28241e",
+          "#46413b",
+          "#656059",
+          "#86827a",
+          "#a9a49c",
+          "#cec8c0",
+          "#f3eee5"
         ]
       },
       "select": {
         "role": "neutral",
         "displayName": "Selection Wash",
-        "canonical": "#c9d6ea",
+        "canonical": "#d9d0ba",
         "tonalRamp": [
-          "#040b18",
-          "#1c2534",
-          "#384353",
-          "#576273",
-          "#778395",
-          "#9aa6b9",
-          "#bdcade",
+          "#110a00",
+          "#2b2413",
+          "#49412f",
+          "#69614d",
+          "#8a826d",
+          "#ada48f",
+          "#d1c8b3",
+          "#f7eed7"
+        ]
+      },
+      "red": {
+        "role": "secondary",
+        "displayName": "Wrong Red",
+        "canonical": "#950c26",
+        "tonalRamp": [
+          "#1f0002",
+          "#4c000d",
+          "#80001d",
+          "#ab2937",
+          "#d35057",
+          "#fb7479",
+          "#ffb2b1",
+          "#ffe8e8"
+        ]
+      },
+      "red-wash": {
+        "role": "secondary",
+        "displayName": "Wrong Wash",
+        "canonical": "#fce0e0",
+        "tonalRamp": [
+          "#160607",
+          "#331f1f",
+          "#513c3c",
+          "#725a5b",
+          "#947b7b",
+          "#b89e9e",
+          "#ddc2c2",
+          "#fee8e8"
+        ]
+      },
+      "orange": {
+        "role": "secondary",
+        "displayName": "Stopped Orange",
+        "canonical": "#743a00",
+        "tonalRamp": [
+          "#170600",
+          "#3c1b00",
+          "#663200",
+          "#8c501f",
+          "#b07142",
+          "#d69465",
+          "#fdb888",
+          "#ffeadc"
+        ]
+      },
+      "orange-wash": {
+        "role": "secondary",
+        "displayName": "Stopped Wash",
+        "canonical": "#f8e3d5",
+        "tonalRamp": [
+          "#140802",
+          "#302117",
+          "#4f3e33",
+          "#6f5d51",
+          "#917e71",
+          "#b4a194",
+          "#d9c5b7",
+          "#feeadc"
+        ]
+      },
+      "yellow": {
+        "role": "secondary",
+        "displayName": "Caution Yellow",
+        "canonical": "#574900",
+        "tonalRamp": [
+          "#0f0b00",
+          "#2d2500",
+          "#4e4100",
+          "#6f6122",
+          "#918245",
+          "#b4a567",
+          "#d9ca8a",
+          "#ffefae"
+        ]
+      },
+      "yellow-wash": {
+        "role": "secondary",
+        "displayName": "Caution Wash",
+        "canonical": "#f6ecc6",
+        "tonalRamp": [
+          "#0f0b00",
+          "#2d2403",
+          "#4a4221",
+          "#6a6140",
+          "#8c8260",
+          "#afa581",
+          "#d3c9a4",
+          "#f9efc9"
+        ]
+      },
+      "green": {
+        "role": "secondary",
+        "displayName": "Done Green",
+        "canonical": "#005528",
+        "tonalRamp": [
+          "#001004",
+          "#002e13",
+          "#005025",
+          "#2a7243",
+          "#4e9463",
+          "#71b885",
+          "#95dda8",
+          "#c7ffd4"
+        ]
+      },
+      "green-wash": {
+        "role": "secondary",
+        "displayName": "Done Wash",
+        "canonical": "#daeede",
+        "tonalRamp": [
+          "#030f05",
+          "#1a291e",
+          "#36473a",
+          "#556659",
+          "#768879",
+          "#98ab9c",
+          "#bccfc0",
+          "#e1f5e5"
+        ]
+      },
+      "cyan": {
+        "role": "secondary",
+        "displayName": "Run Cyan",
+        "canonical": "#02525a",
+        "tonalRamp": [
+          "#000e11",
+          "#002b30",
+          "#004b53",
+          "#296c74",
+          "#4d8e97",
+          "#70b2ba",
+          "#94d6df",
+          "#c9f9ff"
+        ]
+      },
+      "cyan-wash": {
+        "role": "secondary",
+        "displayName": "Run Wash",
+        "canonical": "#d2eef1",
+        "tonalRamp": [
+          "#000e10",
+          "#12292c",
+          "#2f4749",
+          "#4e6669",
+          "#6e888b",
+          "#90abae",
+          "#b4cfd2",
+          "#d9f5f8"
+        ]
+      },
+      "blue": {
+        "role": "secondary",
+        "displayName": "Link Blue",
+        "canonical": "#03469a",
+        "tonalRamp": [
+          "#000923",
+          "#002253",
+          "#003d8a",
+          "#225eb4",
+          "#4581db",
+          "#69a5ff",
+          "#a8cbff",
           "#e5effe"
+        ]
+      },
+      "blue-wash": {
+        "role": "secondary",
+        "displayName": "Link Wash",
+        "canonical": "#dce9fc",
+        "tonalRamp": [
+          "#040b17",
+          "#1c2633",
+          "#384352",
+          "#576272",
+          "#788394",
+          "#9aa6b8",
+          "#becadd",
+          "#e5efff"
+        ]
+      },
+      "purple": {
+        "role": "secondary",
+        "displayName": "Code Purple",
+        "canonical": "#652f8c",
+        "tonalRamp": [
+          "#140023",
+          "#370055",
+          "#58217e",
+          "#7944a2",
+          "#9b66c7",
+          "#bf89ed",
+          "#dcb7ff",
+          "#f4eafe"
+        ]
+      },
+      "purple-wash": {
+        "role": "secondary",
+        "displayName": "Code Wash",
+        "canonical": "#ede3f8",
+        "tonalRamp": [
+          "#0e0815",
+          "#292131",
+          "#463e4f",
+          "#665d6f",
+          "#877e91",
+          "#aaa0b4",
+          "#cec4d9",
+          "#f4eaff"
+        ]
+      },
+      "fill": {
+        "role": "secondary",
+        "displayName": "Solid Fill",
+        "canonical": "#03469a",
+        "tonalRamp": [
+          "#000923",
+          "#002253",
+          "#003d8a",
+          "#225eb4",
+          "#4581db",
+          "#69a5ff",
+          "#a8cbff",
+          "#e5effe"
+        ]
+      },
+      "on-fill": {
+        "role": "secondary",
+        "displayName": "On Solid Fill",
+        "canonical": "#f4efe4",
+        "tonalRamp": [
+          "#0e0b05",
+          "#28251c",
+          "#464239",
+          "#656157",
+          "#868278",
+          "#a9a59a",
+          "#cdc9be",
+          "#f3eee3"
         ]
       },
       "night-ink": {
         "role": "primary",
-        "displayName": "Blue-Black Ink, night",
-        "canonical": "#e6eaf0",
+        "displayName": "Warm Ink, night",
+        "canonical": "#e2dac9",
         "tonalRamp": [
-          "#090b0f",
-          "#22252a",
-          "#3f4247",
-          "#5e6167",
-          "#7f8388",
-          "#a2a5ab",
-          "#c5c9cf",
-          "#ebeff5"
-        ]
-      },
-      "night-mark": {
-        "role": "secondary",
-        "displayName": "Review Red, night",
-        "canonical": "#f2766c",
-        "tonalRamp": [
-          "#210000",
-          "#4d0004",
-          "#81000b",
-          "#a7322e",
-          "#cf564e",
-          "#f77a70",
-          "#ffb3aa",
-          "#ffe9e6"
+          "#100a02",
+          "#2a2417",
+          "#484133",
+          "#676052",
+          "#898272",
+          "#aca494",
+          "#d0c8b8",
+          "#f6eedc"
         ]
       },
       "night-paper": {
         "role": "neutral",
-        "displayName": "Cool Paper, night",
-        "canonical": "#141b2b",
+        "displayName": "Warm Paper, night",
+        "canonical": "#1c1a17",
         "tonalRamp": [
-          "#050a19",
-          "#1d2535",
-          "#3a4254",
-          "#586175",
-          "#798297",
-          "#9ba5bb",
-          "#bfc9e0",
-          "#e7efff"
+          "#0d0b08",
+          "#272522",
+          "#44423e",
+          "#63615d",
+          "#84827e",
+          "#a7a5a1",
+          "#cbc9c4",
+          "#f1eeea"
         ]
       },
       "night-sheet": {
         "role": "neutral",
         "displayName": "Pasted Sheet, night",
-        "canonical": "#1c2536",
+        "canonical": "#26231f",
         "tonalRamp": [
-          "#040b1a",
-          "#1c2536",
-          "#384255",
-          "#576275",
-          "#778398",
-          "#9aa6bb",
-          "#bdcae0",
-          "#e7effe"
+          "#0d0b07",
+          "#282520",
+          "#45413d",
+          "#64615c",
+          "#85827d",
+          "#a8a49f",
+          "#ccc8c3",
+          "#f2eee8"
         ]
       },
       "night-ink-soft": {
         "role": "neutral",
         "displayName": "Soft Ink, night",
-        "canonical": "#a9b4c4",
+        "canonical": "#bdb3a0",
         "tonalRamp": [
-          "#050b16",
-          "#1d2632",
-          "#394350",
-          "#586270",
-          "#798392",
-          "#9ba6b6",
-          "#bfcada",
-          "#e5efff"
+          "#110a01",
+          "#2c2415",
+          "#494131",
+          "#69604f",
+          "#8b816f",
+          "#aea491",
+          "#d2c8b5",
+          "#f8edd9"
         ]
       },
       "night-rule": {
         "role": "neutral",
         "displayName": "Ruling, night",
-        "canonical": "#2f3b52",
+        "canonical": "#3d3932",
         "tonalRamp": [
-          "#030a1d",
-          "#1a253a",
-          "#364259",
-          "#54617a",
-          "#75839d",
-          "#97a6c1",
-          "#bacae6",
-          "#e6efff"
+          "#0e0b06",
+          "#28251e",
+          "#46413a",
+          "#656159",
+          "#86827a",
+          "#a9a49c",
+          "#cdc8c0",
+          "#f3eee5"
         ]
       },
       "night-rule-strong": {
         "role": "neutral",
         "displayName": "Strong Ruling, night",
-        "canonical": "#6d7c95",
+        "canonical": "#8f8675",
         "tonalRamp": [
-          "#030a1d",
-          "#19253a",
-          "#354259",
-          "#53627a",
-          "#74839c",
-          "#96a6c0",
-          "#bacae6",
-          "#e6effe"
+          "#110a01",
+          "#2b2416",
+          "#494132",
+          "#696050",
+          "#8a8170",
+          "#ada492",
+          "#d2c8b6",
+          "#f7eddb"
+        ]
+      },
+      "night-rule-bold": {
+        "role": "neutral",
+        "displayName": "Bold Ruling, night",
+        "canonical": "#8f8675",
+        "tonalRamp": [
+          "#110a01",
+          "#2b2416",
+          "#494132",
+          "#696050",
+          "#8a8170",
+          "#ada492",
+          "#d2c8b6",
+          "#f7eddb"
         ]
       },
       "night-select": {
         "role": "neutral",
         "displayName": "Selection Wash, night",
-        "canonical": "#33486e",
+        "canonical": "#4a4437",
         "tonalRamp": [
-          "#000728",
-          "#112446",
-          "#2d4267",
-          "#4b6189",
-          "#6b83ad",
-          "#8da6d1",
-          "#b0caf7",
-          "#e6efff"
+          "#0f0a02",
+          "#2a2418",
+          "#474134",
+          "#676153",
+          "#888273",
+          "#aba495",
+          "#d0c8b9",
+          "#f5eede"
+        ]
+      },
+      "night-red": {
+        "role": "secondary",
+        "displayName": "Wrong Red, night",
+        "canonical": "#fb9b9b",
+        "tonalRamp": [
+          "#1f0002",
+          "#4c000d",
+          "#732027",
+          "#984245",
+          "#bd6465",
+          "#e48687",
+          "#ffb2b1",
+          "#ffe8e8"
+        ]
+      },
+      "night-red-wash": {
+        "role": "secondary",
+        "displayName": "Wrong Wash, night",
+        "canonical": "#352221",
+        "tonalRamp": [
+          "#160606",
+          "#321f1e",
+          "#513c3b",
+          "#715b59",
+          "#937c7a",
+          "#b79e9d",
+          "#dcc2c0",
+          "#ffe9e7"
+        ]
+      },
+      "night-orange": {
+        "role": "secondary",
+        "displayName": "Stopped Orange, night",
+        "canonical": "#eba674",
+        "tonalRamp": [
+          "#170600",
+          "#3c1b00",
+          "#653301",
+          "#8d4f1b",
+          "#b2713f",
+          "#d79462",
+          "#feb885",
+          "#ffeadc"
+        ]
+      },
+      "night-orange-wash": {
+        "role": "secondary",
+        "displayName": "Stopped Wash, night",
+        "canonical": "#332419",
+        "tonalRamp": [
+          "#140801",
+          "#302116",
+          "#4f3e32",
+          "#6f5d51",
+          "#917e71",
+          "#b4a193",
+          "#d9c5b7",
+          "#ffeadc"
+        ]
+      },
+      "night-yellow": {
+        "role": "secondary",
+        "displayName": "Caution Yellow, night",
+        "canonical": "#c9b563",
+        "tonalRamp": [
+          "#0f0b00",
+          "#2d2500",
+          "#4e4101",
+          "#736000",
+          "#95822d",
+          "#b9a553",
+          "#ddc977",
+          "#ffefaf"
+        ]
+      },
+      "night-yellow-wash": {
+        "role": "secondary",
+        "displayName": "Caution Wash, night",
+        "canonical": "#2c2816",
+        "tonalRamp": [
+          "#0f0b00",
+          "#292513",
+          "#46422f",
+          "#66624e",
+          "#87836e",
+          "#aaa690",
+          "#cecab3",
+          "#f4efd8"
+        ]
+      },
+      "night-green": {
+        "role": "secondary",
+        "displayName": "Done Green, night",
+        "canonical": "#80c593",
+        "tonalRamp": [
+          "#001004",
+          "#002e13",
+          "#005026",
+          "#2c7144",
+          "#509464",
+          "#73b786",
+          "#97dca9",
+          "#c6ffd4"
+        ]
+      },
+      "night-green-wash": {
+        "role": "secondary",
+        "displayName": "Done Wash, night",
+        "canonical": "#1c2c20",
+        "tonalRamp": [
+          "#020f05",
+          "#1a291e",
+          "#36473a",
+          "#556759",
+          "#758879",
+          "#97ab9c",
+          "#bbcfbf",
+          "#e0f5e4"
+        ]
+      },
+      "night-cyan": {
+        "role": "secondary",
+        "displayName": "Run Cyan, night",
+        "canonical": "#65c3ce",
+        "tonalRamp": [
+          "#000e10",
+          "#002b30",
+          "#014b52",
+          "#046e78",
+          "#2e929c",
+          "#57b5c0",
+          "#7ddae6",
+          "#c8f9ff"
+        ]
+      },
+      "night-cyan-wash": {
+        "role": "secondary",
+        "displayName": "Run Wash, night",
+        "canonical": "#142c2f",
+        "tonalRamp": [
+          "#000e11",
+          "#11292c",
+          "#2e474a",
+          "#4d666a",
+          "#6e888b",
+          "#90abae",
+          "#b3cfd3",
+          "#d8f5f9"
+        ]
+      },
+      "night-blue": {
+        "role": "secondary",
+        "displayName": "Link Blue, night",
+        "canonical": "#92b7ef",
+        "tonalRamp": [
+          "#000923",
+          "#042350",
+          "#224171",
+          "#406294",
+          "#6183b8",
+          "#82a7de",
+          "#a9cbfe",
+          "#e5efff"
+        ]
+      },
+      "night-blue-wash": {
+        "role": "secondary",
+        "displayName": "Link Wash, night",
+        "canonical": "#1e2836",
+        "tonalRamp": [
+          "#040b17",
+          "#1c2633",
+          "#384352",
+          "#576272",
+          "#778394",
+          "#99a6b8",
+          "#bdcadd",
+          "#e5efff"
+        ]
+      },
+      "night-purple": {
+        "role": "secondary",
+        "displayName": "Code Purple, night",
+        "canonical": "#c8a9e5",
+        "tonalRamp": [
+          "#140023",
+          "#311546",
+          "#4f3366",
+          "#6f5389",
+          "#9174ac",
+          "#b596d1",
+          "#d9baf7",
+          "#f4eafe"
+        ]
+      },
+      "night-purple-wash": {
+        "role": "secondary",
+        "displayName": "Code Wash, night",
+        "canonical": "#2c2433",
+        "tonalRamp": [
+          "#0f0815",
+          "#292130",
+          "#463e4e",
+          "#665d6e",
+          "#877e90",
+          "#aaa0b3",
+          "#cfc4d8",
+          "#f4eafe"
+        ]
+      },
+      "night-fill": {
+        "role": "secondary",
+        "displayName": "Solid Fill, night",
+        "canonical": "#1e4e95",
+        "tonalRamp": [
+          "#000923",
+          "#002255",
+          "#0d3e84",
+          "#3060a8",
+          "#5082ce",
+          "#72a6f4",
+          "#a9cbff",
+          "#e5efff"
+        ]
+      },
+      "night-on-fill": {
+        "role": "secondary",
+        "displayName": "On Solid Fill, night",
+        "canonical": "#f4efe4",
+        "tonalRamp": [
+          "#0e0b05",
+          "#28251c",
+          "#464239",
+          "#656157",
+          "#868278",
+          "#a9a59a",
+          "#cdc9be",
+          "#f3eee3"
         ]
       }
     },
@@ -272,7 +752,7 @@
       },
       "stopped": {
         "displayName": "Stopped",
-        "purpose": "The 停在这里 label, in Review Red."
+        "purpose": "The 停在这里 label, in Stopped Orange."
       },
       "mono": {
         "displayName": "Mono",
@@ -294,7 +774,7 @@
       {
         "name": "check-in",
         "value": "transform .18s cubic-bezier(.16, 1, .3, 1)",
-        "purpose": "The drawn red check scales into a ticked box."
+        "purpose": "The drawn green check scales into a ticked box."
       },
       {
         "name": "page-change",
@@ -326,102 +806,126 @@
       "name": "Button",
       "kind": "button",
       "refersTo": "button",
-      "description": "Default command: an outline with squared corners. Dashed when not available yet.",
+      "description": "Default command: an outline with squared corners. Blue on hover, dashed when not available yet.",
       "html": "<button class=\"ds-btn\" type=\"button\">搜索</button> <button class=\"ds-btn\" type=\"button\" disabled>提交答案</button>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; min-height: 2.5rem; padding: .375rem .875rem; border: 1px solid var(--nb-rule-strong, #7f8da1); border-radius: 2px; background: transparent; color: var(--nb-ink, #1c2b45); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-btn:hover { border-color: var(--nb-ink, #1c2b45); } .ds-btn:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-btn[disabled] { color: var(--nb-ink-soft, #4a5870); border-color: var(--nb-rule-strong, #7f8da1); border-style: dashed; cursor: not-allowed; }"
+      "css": ".ds-btn { display: inline-flex; align-items: center; min-height: 2.5rem; padding: .375rem .875rem; border: 1px solid var(--nb-rule-strong, #6f6656); border-radius: 2px; background: transparent; color: var(--nb-ink, #25211b); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-btn:hover { border-color: var(--nb-link, #03469a); color: var(--nb-link, #03469a); } .ds-btn:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-btn[disabled] { color: var(--nb-ink-soft, #4d463b); border-color: var(--nb-rule-strong, #6f6656); border-style: dashed; cursor: not-allowed; }"
     },
     {
       "name": "Solid Button",
       "kind": "button",
       "refersTo": "button-solid",
-      "description": "The main action in a view: ink fill with paper text.",
+      "description": "The main action in a view: warm paper on blue in both schemes, with a 1px Link Blue edge.",
       "html": "<button class=\"ds-btn-solid\" type=\"button\">打开完整课件</button>",
-      "css": ".ds-btn-solid { display: inline-flex; align-items: center; min-height: 2.5rem; padding: .375rem .875rem; border: 1px solid var(--nb-ink, #1c2b45); border-radius: 2px; background: var(--nb-ink, #1c2b45); color: var(--nb-paper, #f7f8f6); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-btn-solid:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; }"
+      "css": ".ds-btn-solid { display: inline-flex; align-items: center; min-height: 2.5rem; padding: .375rem .875rem; border: 1px solid var(--nb-link, #03469a); border-radius: 2px; background: var(--nb-fill, #03469a); color: var(--nb-on-fill, #f4efe4); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-btn-solid:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; }"
     },
     {
       "name": "Search Field",
       "kind": "input",
       "refersTo": "input",
-      "description": "Achromatic text field with the / key hint inside its right edge.",
+      "description": "Achromatic text field with the / key hint inside its right edge. Only the focus ring and caret are blue.",
       "html": "<label class=\"ds-search\"><input class=\"ds-input\" type=\"search\" placeholder=\"搜索项目或技术\" aria-label=\"搜索项目\"><kbd class=\"ds-kbd\" aria-hidden=\"true\">/</kbd></label>",
-      "css": ".ds-search { position: relative; display: block; max-width: 16rem; } .ds-input { width: 100%; min-height: 2.5rem; padding: .375rem .625rem; border: 1px solid var(--nb-rule-strong, #7f8da1); border-radius: 2px; background: transparent; color: var(--nb-ink, #1c2b45); font: inherit; } .ds-input::placeholder { color: var(--nb-ink-soft, #4a5870); opacity: 1; } .ds-input:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-kbd { position: absolute; top: 50%; right: .5rem; transform: translateY(-50%); padding: 0 .35em; border: 1px solid var(--nb-rule-strong, #7f8da1); border-radius: 2px; color: var(--nb-ink-soft, #4a5870); font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875em; }"
+      "css": ".ds-search { position: relative; display: block; max-width: 16rem; } .ds-input { width: 100%; min-height: 2.5rem; padding: .375rem .625rem; border: 1px solid var(--nb-rule-strong, #6f6656); border-radius: 2px; background: transparent; color: var(--nb-ink, #25211b); caret-color: var(--nb-link, #03469a); font: inherit; } .ds-input::placeholder { color: var(--nb-ink-soft, #4d463b); opacity: 1; } .ds-input:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-kbd { position: absolute; top: 50%; right: .5rem; transform: translateY(-50%); padding: 0 .35em; border: 1px solid var(--nb-rule-strong, #6f6656); border-radius: 2px; color: var(--nb-ink-soft, #4d463b); font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875em; }"
     },
     {
       "name": "Topic Filters",
       "kind": "chip",
       "refersTo": "filter",
-      "description": "Text buttons with aria-pressed. The active one is ink, weight 600 and underlined, never filled.",
-      "html": "<div class=\"ds-filters\" role=\"group\" aria-label=\"按主题筛选\"><button class=\"ds-filter\" type=\"button\" aria-pressed=\"true\">全部</button><button class=\"ds-filter\" type=\"button\" aria-pressed=\"false\">工程</button><button class=\"ds-filter\" type=\"button\" aria-pressed=\"false\">算法</button></div>",
-      "css": ".ds-filters { display: flex; flex-wrap: wrap; gap: 0 .25rem; } .ds-filter { min-height: 2.75rem; padding: 0 .625rem; border: 0; background: none; color: var(--nb-ink-soft, #4a5870); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-filter:hover { color: var(--nb-ink, #1c2b45); } .ds-filter:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-filter[aria-pressed=\"true\"] { color: var(--nb-ink, #1c2b45); font-weight: 600; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .32em; }"
+      "description": "Text buttons with aria-pressed, each showing its group's hue for one word. Pressed is weight 700 with a 2px underline, in its own hue or blue, never filled.",
+      "html": "<div class=\"ds-filters\" role=\"group\" aria-label=\"按主题筛选\"><button class=\"ds-filter\" type=\"button\" aria-pressed=\"true\">全部</button><button class=\"ds-filter\" type=\"button\" data-hue=\"purple\" aria-pressed=\"false\">工程</button><button class=\"ds-filter\" type=\"button\" data-hue=\"cyan\" aria-pressed=\"false\">算法</button><button class=\"ds-filter\" type=\"button\" data-hue=\"yellow\" aria-pressed=\"false\">前端</button><button class=\"ds-filter\" type=\"button\" data-hue=\"blue\" aria-pressed=\"false\">AI</button></div>",
+      "css": ".ds-filters { display: flex; flex-wrap: wrap; gap: 0 .25rem; } .ds-filter[data-hue=\"purple\"] { --ds-hue: var(--nb-purple, #652f8c); } .ds-filter[data-hue=\"cyan\"] { --ds-hue: var(--nb-cyan, #02525a); } .ds-filter[data-hue=\"yellow\"] { --ds-hue: var(--nb-yellow, #574900); } .ds-filter[data-hue=\"blue\"] { --ds-hue: var(--nb-blue, #03469a); } .ds-filter { min-height: 2.75rem; padding: 0 .625rem; border: 0; background: none; color: var(--ds-hue, var(--nb-ink-soft, #4d463b)); font: inherit; font-size: .9375rem; cursor: pointer; } .ds-filter:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .32em; } .ds-filter:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-filter[aria-pressed=\"true\"] { color: var(--ds-hue, var(--nb-link, #03469a)); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .32em; }"
     },
     {
       "name": "Running Head",
       "kind": "nav",
       "refersTo": "running-head",
-      "description": "One line naming the book: serif site name, words for navigation, 1px ink rule below.",
-      "html": "<header class=\"ds-head\"><a class=\"ds-brand\" href=\"#\">C# 设计模式</a><nav class=\"ds-nav\" aria-label=\"主导航\"><a href=\"#\" aria-current=\"page\">模式</a><a href=\"#\">路线</a><a href=\"#\">编码练习</a></nav></header>",
-      "css": ".ds-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 1.5rem; min-height: 3.25rem; padding: 0 1rem; border-bottom: 1px solid var(--nb-ink, #1c2b45); background: var(--nb-paper, #f7f8f6); color: var(--nb-ink, #1c2b45); } .ds-brand { font-family: var(--nb-serif, \"Noto Serif SC\", \"Source Han Serif SC\", serif); font-size: 1.0625rem; font-weight: 600; color: inherit; text-decoration: none; } .ds-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0 1.125rem; font-size: .9375rem; } .ds-nav a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--nb-ink-soft, #4a5870); text-decoration: none; } .ds-nav a:hover, .ds-nav a[aria-current] { color: var(--nb-ink, #1c2b45); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .32em; } .ds-brand:focus-visible, .ds-nav a:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; }"
+      "description": "One line naming the book: serif site name, words for navigation, the 白天 and 晚上 scheme words outside the nav, 1px bold rule below.",
+      "html": "<header class=\"ds-head\"><a class=\"ds-brand\" href=\"#\">C# 设计模式</a><nav class=\"ds-nav\" aria-label=\"主导航\"><a href=\"#\" aria-current=\"page\">模式</a><a href=\"#\">路线</a><a href=\"#\">编码练习</a></nav><div class=\"ds-theme\" role=\"group\" aria-label=\"配色方案\"><button type=\"button\" aria-pressed=\"true\">白天</button><button type=\"button\" aria-pressed=\"false\">晚上</button></div></header>",
+      "css": ".ds-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0 1.5rem; min-height: 3.25rem; padding: 0 1rem; border-bottom: 1px solid var(--nb-rule-bold, #25211b); background: var(--nb-paper, #f4efe4); color: var(--nb-ink, #25211b); } .ds-brand { font-family: var(--nb-serif, \"Noto Serif SC\", \"Source Han Serif SC\", serif); font-size: 1.0625rem; font-weight: 600; color: inherit; text-decoration: none; } .ds-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0 1.125rem; margin-left: auto; font-size: .9375rem; } .ds-nav a, .ds-theme button { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--nb-ink-soft, #4d463b); text-decoration: none; } .ds-nav a:hover, .ds-theme button:hover { color: var(--nb-link, #03469a); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .32em; } .ds-nav a[aria-current], .ds-theme button[aria-pressed=\"true\"] { color: var(--nb-link, #03469a); font-weight: 700; text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .32em; } .ds-theme { display: inline-flex; gap: .625rem; padding-left: 1.125rem; border-left: 1px solid var(--nb-rule, #cfc6b3); font-size: .9375rem; } .ds-theme button { padding: 0; border: 0; background: none; font: inherit; cursor: pointer; } .ds-brand:focus-visible, .ds-nav a:focus-visible, .ds-theme button:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; }"
+    },
+    {
+      "name": "Resume Band",
+      "kind": "custom",
+      "refersTo": "resume-band",
+      "description": "The way back to the stopped place once a record exists: a short band on the orange wash, with the 接着做 label in orange and the link in blue.",
+      "html": "<section class=\"ds-resume\"><h2 class=\"ds-resume-label\">接着做</h2><p class=\"ds-resume-line\"><a href=\"#\">C# 设计模式 · Adapter · 制造一个最小变化</a><span class=\"ds-resume-meta\">7 个任务已完成 · 2 天前</span></p></section>",
+      "css": ".ds-resume { display: grid; grid-template-columns: 5rem minmax(0, 1fr); gap: .25rem 1rem; align-items: baseline; padding: .875rem .75rem; background: var(--nb-stopped-wash, #f8e3d5); } .ds-resume-label { margin: 0; color: var(--nb-stopped, #743a00); font-size: .9375rem; font-weight: 700; } .ds-resume-line { margin: 0; color: var(--nb-ink-soft, #4d463b); } .ds-resume-line a { color: var(--nb-link, #03469a); font-family: var(--nb-serif, \"Noto Serif SC\", \"Source Han Serif SC\", serif); font-size: 1.1875rem; font-weight: 600; word-break: keep-all; overflow-wrap: anywhere; text-decoration: underline; text-decoration-color: var(--nb-rule-strong, #6f6656); text-decoration-thickness: 1px; text-underline-offset: .22em; } .ds-resume-line a:hover { text-decoration-color: currentColor; } .ds-resume-line a:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-resume-meta { display: block; font-size: .875rem; }"
     },
     {
       "name": "Record Line",
       "kind": "custom",
       "refersTo": "ruled-row",
-      "description": "The family signature on ruled rows: solid for what is done, dashed for what is not, one red tick at the stopped place.",
+      "description": "The family signature on ruled rows: solid green for what is done, dashed for what is not, one orange tick and the orange wash on the stopped row.",
       "html": "<ol class=\"ds-rows\"><li class=\"ds-entry\" style=\"--ds-fraction: 1\"><h3 class=\"ds-row-title\"><a href=\"#\">Iterator</a></h3><p class=\"ds-row-note\">在不暴露集合内部结构的前提下顺序访问元素。</p><p class=\"ds-row-state ds-verified\">4 / 4 · 已验证</p></li><li class=\"ds-entry ds-here\" style=\"--ds-fraction: .5\"><h3 class=\"ds-row-title\"><a href=\"#\">Adapter</a></h3><p class=\"ds-stopped\">停在这里</p><p class=\"ds-row-note\">把已有类型的接口转换为客户端期望的接口。</p><p class=\"ds-row-state\">2 / 4 · 制造一个最小变化</p></li><li class=\"ds-entry\" style=\"--ds-fraction: 0\"><h3 class=\"ds-row-title\"><a href=\"#\">Template Method</a></h3><p class=\"ds-row-note\">定义算法骨架，并允许子类改写其中的特定步骤。</p><p class=\"ds-row-state\">0 / 4 · 说清变化轴</p></li></ol>",
-      "css": ".ds-rows { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--nb-ink, #1c2b45); color: var(--nb-ink, #1c2b45); } .ds-entry { position: relative; padding: .75rem 0 .75rem 1.25rem; border-bottom: 1px solid var(--nb-rule, #cbd3dc); } .ds-entry::before { content: \"\"; position: absolute; top: 0; bottom: -1px; left: 0; width: 2px; border-left: 1px dashed var(--nb-rule-strong, #7f8da1); background: linear-gradient(var(--nb-ink, #1c2b45), var(--nb-ink, #1c2b45)) -1px 0 / 2px calc(var(--ds-fraction, 0) * 100%) no-repeat; transition: background-size .5s cubic-bezier(.16, 1, .3, 1); } .ds-here::after { content: \"\"; position: absolute; top: calc(var(--ds-fraction, 0) * 100%); left: -.25rem; width: .625rem; height: 2px; background: var(--nb-mark, #b3261e); } .ds-row-title { margin: 0; font-size: 1.0625rem; font-weight: 700; line-height: 1.5; } .ds-row-title a { color: inherit; text-decoration: none; } .ds-row-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; } .ds-row-title a:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-stopped { margin: 0; color: var(--nb-mark, #b3261e); font-size: .8125rem; font-weight: 700; line-height: 1.5; } .ds-row-note { margin: 0; color: var(--nb-ink-soft, #4a5870); font-size: .9375rem; line-height: 1.65; } .ds-row-state { margin: 0; color: var(--nb-ink-soft, #4a5870); font-size: .875rem; font-variant-numeric: tabular-nums; } .ds-verified { color: var(--nb-mark, #b3261e); font-weight: 600; }"
+      "css": ".ds-rows { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--nb-rule-bold, #25211b); color: var(--nb-ink, #25211b); } .ds-entry { position: relative; padding: .75rem 0 .75rem 1.25rem; border-bottom: 1px solid var(--nb-rule, #cfc6b3); } .ds-entry::before { content: \"\"; position: absolute; top: 0; bottom: -1px; left: 0; width: 2px; border-left: 1px dashed var(--nb-rule-strong, #6f6656); background: linear-gradient(var(--nb-done, #005528), var(--nb-done, #005528)) -1px 0 / 2px calc(var(--ds-fraction, 0) * 100%) no-repeat; transition: background-size .5s cubic-bezier(.16, 1, .3, 1); } .ds-here { background: var(--nb-stopped-wash, #f8e3d5); } .ds-here::after { content: \"\"; position: absolute; top: max(.5rem, calc(var(--ds-fraction, 0) * 100%)); left: -.25rem; width: .625rem; height: 2px; background: var(--nb-stopped, #743a00); } .ds-row-title { margin: 0; font-size: 1.0625rem; font-weight: 700; line-height: 1.5; } .ds-row-title a { color: var(--nb-link, #03469a); text-decoration: none; } .ds-row-title a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .22em; } .ds-row-title a:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-stopped { margin: 0; color: var(--nb-stopped, #743a00); font-size: .875rem; font-weight: 700; line-height: 1.5; } .ds-row-note { margin: 0; color: var(--nb-ink-soft, #4d463b); font-size: .9375rem; line-height: 1.65; } .ds-row-state { margin: 0; color: var(--nb-ink-soft, #4d463b); font-size: .875rem; font-variant-numeric: tabular-nums; } .ds-verified { color: var(--nb-done, #005528); font-weight: 600; }"
     },
     {
       "name": "Checkbox",
       "kind": "custom",
       "refersTo": "checkbox",
-      "description": "A square box countersigned with a drawn red check. Dashed when locked.",
+      "description": "A square box with a drawn green check. Dashed when locked.",
       "html": "<label class=\"ds-check-row\"><input class=\"ds-check\" type=\"checkbox\" checked>我已完成：说清变化轴</label><label class=\"ds-check-row\"><input class=\"ds-check\" type=\"checkbox\">我已完成：运行并核对输出</label><label class=\"ds-check-row\"><input class=\"ds-check\" type=\"checkbox\" disabled>我已完成：验证并解释取舍</label>",
-      "css": ".ds-check-row { display: flex; align-items: center; gap: .625rem; min-height: 2.75rem; color: var(--nb-ink, #1c2b45); font-size: .9375rem; cursor: pointer; } .ds-check { appearance: none; flex: none; display: inline-grid; place-content: center; width: 1.25rem; height: 1.25rem; margin: 0; border: 1px solid var(--nb-ink, #1c2b45); border-radius: 2px; background: transparent; cursor: pointer; } .ds-check::before { content: \"\"; width: .9rem; height: .9rem; background: var(--nb-mark, #b3261e); clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 18%, 84% 6%, 36% 72%); transform: scale(0); transition: transform .18s cubic-bezier(.16, 1, .3, 1); } .ds-check:checked::before { transform: scale(1); } .ds-check:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-check:disabled { border: 1px dashed var(--nb-rule-strong, #7f8da1); cursor: not-allowed; }"
+      "css": ".ds-check-row { display: flex; align-items: center; gap: .625rem; min-height: 2.75rem; color: var(--nb-ink, #25211b); font-size: .9375rem; cursor: pointer; } .ds-check { appearance: none; flex: none; display: inline-grid; place-content: center; width: 1.25rem; height: 1.25rem; margin: 0; border: 1px solid var(--nb-ink, #25211b); border-radius: 2px; background: transparent; cursor: pointer; } .ds-check::before { content: \"\"; width: .9rem; height: .9rem; background: var(--nb-done, #005528); clip-path: polygon(14% 52%, 0 66%, 38% 100%, 100% 18%, 84% 6%, 36% 72%); transform: scale(0); transition: transform .18s cubic-bezier(.16, 1, .3, 1); } .ds-check:checked::before { transform: scale(1); } .ds-check:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-check:disabled { border: 1px dashed var(--nb-rule-strong, #6f6656); cursor: not-allowed; }"
     },
     {
       "name": "Pasted Output",
       "kind": "custom",
       "refersTo": "pasted-output",
-      "description": "A printout stuck into the page: sheet fill, hairlines above and below, no window chrome.",
-      "html": "<pre class=\"ds-paste\" tabindex=\"0\"><span class=\"ds-paste-command\">dotnet run --project src/DesignPatterns.Runner -- adapter</span>\n\n=== Adapter / 适配器模式 [Structural] ===\n旧设备原始读数: 41.0 °F\n适配后的读数: 5.0 °C</pre>",
-      "css": ".ds-paste { margin: 0; padding: .75rem 1rem; border-block: 1px solid var(--nb-rule-strong, #7f8da1); background: var(--nb-sheet, #eef1f2); color: var(--nb-ink, #1c2b45); font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875rem; line-height: 1.65; font-variant-ligatures: none; overflow-x: auto; white-space: pre; } .ds-paste:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; } .ds-paste-command { font-weight: 600; }"
+      "description": "A printout stuck into the page: sheet fill, hairlines above and below, no window chrome. The command line is cyan, and code blocks take the kit's code colors on screen.",
+      "html": "<pre class=\"ds-paste\" tabindex=\"0\"><span class=\"ds-paste-command\">dotnet run --project src/DesignPatterns.Runner -- adapter</span>\n\n=== Adapter / 适配器模式 [Structural] ===\n旧设备原始读数: 41.0 °F\n适配后的读数: 5.0 °C</pre><pre class=\"ds-paste\" tabindex=\"0\"><code><span class=\"ds-tok-comment\">// 把华氏度适配成摄氏度</span>\n<span class=\"ds-tok-meta\">[Obsolete]</span>\n<span class=\"ds-tok-keyword\">public</span> <span class=\"ds-tok-keyword\">double</span> <span class=\"ds-tok-call\">Read</span>() =&gt; (legacy.<span class=\"ds-tok-call\">ReadFahrenheit</span>() - <span class=\"ds-tok-number\">32</span>) / <span class=\"ds-tok-number\">1.8</span>;\n<span class=\"ds-tok-type\">Console</span>.<span class=\"ds-tok-call\">WriteLine</span>(<span class=\"ds-tok-string\">\"已适配\"</span>);</code></pre>",
+      "css": ".ds-paste { margin: 0 0 .75rem; padding: .75rem 1rem; border-block: 1px solid var(--nb-rule-strong, #6f6656); background: var(--nb-sheet, #ece6d9); color: var(--nb-ink, #25211b); font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875rem; line-height: 1.65; font-variant-ligatures: none; overflow-x: auto; white-space: pre; } .ds-paste code { font: inherit; } .ds-paste:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; } .ds-paste-command { color: var(--nb-run, #02525a); font-weight: 600; } .ds-tok-comment { color: var(--nb-ink-soft, #4d463b); } .ds-tok-keyword { color: var(--nb-purple, #652f8c); } .ds-tok-type { color: var(--nb-cyan, #02525a); } .ds-tok-call { color: var(--nb-blue, #03469a); } .ds-tok-string { color: var(--nb-green, #005528); } .ds-tok-number { color: var(--nb-orange, #743a00); } .ds-tok-meta { color: var(--nb-yellow, #574900); }"
     },
     {
       "name": "Command Row",
       "kind": "custom",
-      "refersTo": "pasted-output",
-      "description": "One command on its own line, never broken inside a token, with a text action to copy it.",
-      "html": "<div class=\"ds-command\"><code class=\"ds-command-code\">dotnet run --project tests/DesignPatterns.SmokeTests --configuration Release</code><button class=\"ds-text-action\" type=\"button\">复制命令</button></div>",
-      "css": ".ds-command { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center; padding: .5rem .75rem; border-block: 1px solid var(--nb-rule-strong, #7f8da1); background: var(--nb-sheet, #eef1f2); color: var(--nb-ink, #1c2b45); } .ds-command-code { flex: 1 1 100%; min-width: 0; overflow-x: auto; font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875em; font-variant-ligatures: none; white-space: pre; } .ds-text-action { min-height: 2.75rem; padding: 0; border: 0; background: none; color: var(--nb-ink-soft, #4a5870); font: inherit; font-size: .875rem; text-decoration: underline; text-decoration-color: var(--nb-rule-strong, #7f8da1); text-underline-offset: .22em; cursor: pointer; } .ds-text-action:hover { color: var(--nb-ink, #1c2b45); } .ds-text-action:focus-visible { outline: 2px solid var(--nb-ink, #1c2b45); outline-offset: 2px; }"
+      "refersTo": "command-row",
+      "description": "One command on its own line on the cyan wash, never broken inside a token, with a text action to copy it. A locked step's command uses the sheet and Soft Ink.",
+      "html": "<div class=\"ds-command\"><code class=\"ds-command-code\">dotnet run --project src/DesignPatterns.Runner -- adapter</code><button class=\"ds-text-action\" type=\"button\">复制命令</button></div><div class=\"ds-command ds-command-locked\"><code class=\"ds-command-code\">dotnet run --project tests/DesignPatterns.SmokeTests --configuration Release</code><button class=\"ds-text-action\" type=\"button\">复制命令</button></div>",
+      "css": ".ds-command { display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: center; margin-bottom: .5rem; padding: .5rem .75rem; background: var(--nb-run-wash, #d2eef1); } .ds-command-code { flex: 1 1 100%; min-width: 0; overflow-x: auto; color: var(--nb-run, #02525a); font-family: var(--nb-mono, \"Cascadia Mono\", Consolas, monospace); font-size: .875em; font-variant-ligatures: none; white-space: pre; } .ds-command-locked { background: var(--nb-sheet, #ece6d9); } .ds-command-locked .ds-command-code { color: var(--nb-ink-soft, #4d463b); } .ds-text-action { min-height: 2.75rem; padding: 0; border: 0; background: none; color: var(--nb-ink-soft, #4d463b); font: inherit; font-size: .875rem; text-decoration: underline; text-decoration-color: var(--nb-rule-strong, #6f6656); text-underline-offset: .22em; cursor: pointer; } .ds-text-action:hover { color: var(--nb-ink, #25211b); } .ds-text-action:focus-visible { outline: 2px solid var(--nb-link, #03469a); outline-offset: 2px; }"
     }
   ],
   "narrative": {
     "northStar": "The Lab Notebook",
-    "overview": "A lab notebook is kept by the person using it. It holds what was run and what was checked, in order, and the next entry starts where the last one stopped. Each site in this family is such a notebook: opening it puts the owner back at the place they stopped, with the next thing to do in view. The record line in the page gutter and its \"stopped here\" mark are what a reader should remember.\n\nThe material is cool paper, blue-black ink, thin ruling and one review red, with a blue-black night twin. Pages are dense and quiet. Structure comes from hairlines and a shared left edge, not boxes, and nothing is there for decoration. The family rejects the template it shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.\n\nThe family shares a language, not a layout. Each site's structure follows its own content, so copy these rules and never a sibling's page. `kit/v1/notebook.css` is the source of truth for values, and this file explains how to use them. It was recorded from two built surfaces: the project index in this repository and the C# design patterns course (course index, lesson, guide, quiz, playground).",
+    "overview": "A lab notebook is kept by the person using it. It holds what was run and what was checked, in order, and the next entry starts where the last one stopped. Each site in this family is such a notebook: opening it puts the owner back at the place they stopped, with the next thing to do in view. The record line in the page gutter and its \"stopped here\" mark are what a reader should remember.\n\nThe material is warm paper, warm ink and thin ruling, with seven colors that each do one job, in a day and a night scheme. The colors are there to make reading easier, so they are dark enough to hold 7:1 as text and muted enough to be easy on the eyes. Pages are dense. Structure comes from hairlines and a shared left edge, not boxes, and nothing is there for decoration. The family rejects the template it shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.\n\nThe family shares a language, not a layout. Each site's structure follows its own content, so copy these rules and never a sibling's page. `kit/v1/notebook.css` is the source of truth for values, and this file explains how to use them. It was recorded from two built surfaces: the project index in this repository and the C# design patterns course (course index, lesson, guide, quiz, playground).",
     "keyCharacteristics": [
-      "A record line in the gutter: solid for what is done, dashed for what is not, with one red tick where the owner stopped.",
-      "Red only for \"stopped here\" and verified marks.",
-      "Ruled rows instead of cards.",
+      "A record line in the gutter: solid green for what is done, dashed for what is not, with one orange tick where the owner stopped.",
+      "Seven colors, each with one job, each holding 7:1 as text, and always a word beside them.",
+      "Two named schemes, 白天 and 晚上, with night composed rather than inverted.",
+      "Ruled rows instead of cards, with a wash only on short bands.",
       "Pasted output between hairlines, with no window chrome.",
-      "Commands on their own line, never broken inside a token.",
+      "Commands on their own line on a cyan wash, never broken inside a token.",
       "Noto Serif SC 600 for page heads, a Chinese-tuned sans for reading, Cascadia Mono for code.",
       "Chinese page titles that break between phrases, never inside a word.",
       "Flat, flush-left, square-cornered, and the way back to the stopped place first."
     ],
     "rules": [
       {
-        "name": "The Review Red Rule",
-        "body": "Red means \"stopped here\" or \"verified\", and nothing else. Errors, warnings, links, hover states, emphasis and section accents never use it. Audit test: a page with no record and nothing verified has no red on it.",
+        "name": "The One Job Rule",
+        "body": "Each of the seven colors has the one job listed above, and none is used for emphasis, section accents or decoration. The one exception is a group's borrowed word, under the One Word Group Rule. Audit test: a page with no record has no tick, no 停在这里, no orange band and no solid green line.",
         "section": "colors"
       },
       {
-        "name": "The Line Not Hue Rule",
-        "body": "State is shown by line form and a written word, never by a new hue. The palette has no green, amber or blue status color. A correct quiz answer gets a 2px solid ink rule and 正确, a wrong one gets a dashed rule and 你的选择, and a locked step gets a dashed box. Audit test: in grayscale the page still says what is done.",
+        "name": "The Word Beside The Color Rule",
+        "body": "A color never carries a state alone: a written word always goes with it, and records and verdicts keep their line form too. A correct quiz answer gets a 2px solid green rule and 正确, a wrong one gets a 1px dashed red rule and 你的选择, and a locked step gets a dashed box. Every text color holds 7:1 on paper, on the sheet and on every wash in both schemes, with the lowest at 7.16:1 by day and 7.15:1 at night, and `tests/home.mjs` enforces it. Hue is less reliable than contrast. Measured as OKLab distance times 100, the closest pairs for normal vision are orange and yellow by day at 6.7 and red and orange at night at 7.0. Under simulated deuteranopia, orange and yellow come within 1.2 by day and 1.5 at night, and at night blue and purple come within 2.8. Under simulated protanopia, orange and yellow come within 2.3 by day, and blue and purple within 2.1 at night. Audit test: in grayscale the page still says what is done.",
+        "section": "colors"
+      },
+      {
+        "name": "The Short Band Rule",
+        "body": "Each color has a wash, and a wash is for short bands only: the resume band, a stopped row in a register, command rows, note highlights, quiz option verdicts and a pressed problem chip. Tall panels mark the stopped place with an orange heading, not a fill. On the index the resume band fills, so the stopped row below it does not fill again. The quiz's teaching text stays on plain paper with only a colored rule and verdict. Reading text on a wash stays ink, at 10.5:1 or better in both schemes. A wash is 1.03:1 to 1.18:1 against paper, so it is never the only sign of anything. The resume band and quiz verdicts reach past the text edge by their own padding, so their words stay on the shared left edge.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Word Group Rule",
+        "body": "A site's own groups borrow a hue through `data-hue` for one word only: the topic on an index row, the category word on a pattern row and in its dialog, and a filter button, with any count it shows. Pattern numbers stay soft, and nothing else in the row takes the hue. The index has 工程 purple, 算法 cyan, 前端 yellow and AI blue. The course has 创建型 yellow, 结构型 purple and 行为型 cyan. These overlap the colors' jobs. Yellow on 创建型 and 前端 overlaps caution, and blue on AI overlaps links. A reviewer flagged both, and they were kept deliberately, because the owner asked for color and a gray category would be worse. This is an accepted trade-off, not an accident, so don't correct it. Purple on 工程 and 结构型 and cyan on 算法 and 行为型 overlap code and commands in the same way. A lesson's 运行并追踪 and 何时避免 headings use the same attribute to carry their job color, not a group.",
+        "section": "colors"
+      },
+      {
+        "name": "The Composed Night Rule",
+        "body": "The two schemes are named 白天 and 晚上, and night is composed, not inverted: warm black paper and warm ink, not blue-black and near white. `--nb-rule-bold` softens heavy rules at night (by day it equals ink), `--nb-fill` is a deeper blue with warm paper text, and each wash keeps its own hue on the dark paper. Night tokens live in `@media screen`, so printing is always in day colors.",
         "section": "colors"
       },
       {
         "name": "The Achromatic Field Rule",
-        "body": "Text fields carry no color of their own: transparent fill, Strong Ruling outline, Soft Ink placeholder and the ink focus ring.",
+        "body": "Text fields carry no color of their own: transparent fill, Strong Ruling outline and Soft Ink placeholder. Only the focus ring and the caret are blue.",
         "section": "colors"
       },
       {
@@ -456,7 +960,7 @@
       },
       {
         "name": "The Flush Left Rule",
-        "body": "All text is left-aligned on one left edge, and nothing is centered: no centered headings, copy blocks or empty states. Only secondary things sit at the far edge: the head nav, the search box, the state column, the next link. The one centered thing is the capped page block in a window wider than 72rem.",
+        "body": "All text is left-aligned on one left edge, and nothing is centered: no centered headings, copy blocks or empty states. Only secondary things sit at the far edge: the head nav and scheme control, the search box, the state column, the next link. The one centered thing is the capped page block in a window wider than 72rem.",
         "section": "layout"
       },
       {
@@ -471,17 +975,17 @@
       },
       {
         "name": "The Square Box Rule",
-        "body": "Anything drawn as a box has 2px corners or none: controls, dialogs and the favicon tile at 2px, pasted output, toasts and rows at none. Nothing is a pill. Radio buttons stay native and round.",
+        "body": "Anything drawn as a box has 2px corners or none: controls, dialogs and the favicon tile at 2px, pasted output, wash bands, toasts and rows at none. Nothing is a pill. Radio buttons stay native and round.",
         "section": "shapes"
       },
       {
         "name": "The Solid And Dashed Rule",
-        "body": "In the record line, solid means done and dashed means not done, so gaps in the work read as breaks in the line. Solid is never drawn for progress that is not on record, and dashed is never used as decoration.",
+        "body": "In the record line, solid green means done and dashed means not done, so gaps in the work read as breaks in the line. Solid is never drawn for progress that is not on record, and dashed is never used as decoration.",
         "section": "components"
       },
       {
         "name": "The Ruled Row Rule",
-        "body": "Lists and grouped content are rows between hairlines. No row or panel gets a fill, a radius or a shadow.",
+        "body": "Lists and grouped content are rows between hairlines. No row or panel gets a radius or a shadow. The only rows that fill are short ones, under the Short Band Rule: the stopped row of a register on the orange wash, and a quiz option once it has its verdict.",
         "section": "components"
       },
       {
@@ -491,28 +995,36 @@
       },
       {
         "name": "The Whole Token Rule",
-        "body": "A command never wraps and never breaks inside a token. It sits on its own line in the sheet with `white-space: pre`, `overflow-x: auto` and `min-width: 0`, and a long one scrolls sideways in its own box, even if that cuts it off at the edge of a phone. Anything meant to be copied gets a command row, and inline code is for short names.",
+        "body": "A command never wraps and never breaks inside a token. It sits on its own line on the cyan wash with `white-space: pre`, `overflow-x: auto` and `min-width: 0`, and a long one scrolls sideways in its own box, even if that cuts it off at the edge of a phone. Anything meant to be copied gets a command row, and inline code is for short names.",
         "section": "components"
       }
     ],
     "dos": [
       "**Do** take every color from the kit's tokens and let `data-theme` switch them.",
-      "**Do** give every list of work a record line: solid for what is done, dashed for what is not, with one red tick at the stopped place.",
-      "**Do** check a page with no record on it. It should show no red.",
+      "**Do** give each of the seven colors its one job, and check any new use against the list.",
+      "**Do** give every list of work a record line: solid green for what is done, dashed for what is not, with one orange tick at the stopped place.",
+      "**Do** check a page with no record on it. It should show no tick, no 停在这里, no orange band and no solid green line.",
       "**Do** build lists as ruled rows, with each site choosing its own columns from its own content.",
+      "**Do** keep a wash to a short band, and mark the stopped place in a tall panel with an orange heading.",
       "**Do** paste real output on the sheet between 1px hairlines.",
-      "**Do** give each command its own line with `white-space: pre` and `overflow-x: auto`.",
+      "**Do** give each command its own line on the cyan wash with `white-space: pre` and `overflow-x: auto`.",
       "**Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on page titles, and write those titles with natural break points.",
       "**Do** set `lang=\"zh-CN\"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text.",
-      "**Do** show state with line form and a written word.",
+      "**Do** pair every colored state with a written word, and keep the line form in records and verdicts.",
+      "**Do** check a new color value against `tests/home.mjs`, which holds every text color to 7:1 on paper, sheet and every wash in both schemes.",
       "**Do** put the continue link first on a site's opening screen.",
       "**Do** give text-only controls a 2.75rem target.",
       "**Do** carry over the kit's reduced-motion and forced-colors handling when an engine replaces a component.",
       "**Do** show only counts that come from the repository or the owner's own record."
     ],
     "donts": [
-      "**Don't** use red for errors, warnings, links, hover states, emphasis or accents.",
-      "**Don't** add status colors. There is no green, amber or blue state in this palette.",
+      "**Don't** use a color outside its job, for emphasis or as an accent. A group's borrowed word is the one exception, and an accepted one.",
+      "**Don't** add an eighth color, or a second job for one of the seven.",
+      "**Don't** let a color carry a state without a word.",
+      "**Don't** turn anything green for work that is only started.",
+      "**Don't** fill a tall panel or teaching text with a wash, or fill the stopped row when a band above it already fills.",
+      "**Don't** use red in code.",
+      "**Don't** make night by inverting day.",
       "**Don't** draw a dashed line as decoration, or a solid record line for work that is not on record.",
       "**Don't** use cards: no filled tiles, rounded panels or grids of boxes.",
       "**Don't** draw a terminal: no title bar, traffic lights, tab strip, tilt or shadow around output.",
