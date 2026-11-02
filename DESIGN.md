@@ -42,41 +42,41 @@ colors:
   night-on-fill: "#f4efe4"
 typography:
   display:
-    fontFamily: "Noto Serif SC, Source Han Serif SC, Songti SC, SimSun, serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "clamp(1.625rem, 1.4rem + 1vw, 2rem)"
     fontWeight: 600
     lineHeight: 1.35
   headline:
-    fontFamily: "Noto Serif SC, Source Han Serif SC, Songti SC, SimSun, serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "1.375rem"
     fontWeight: 600
     lineHeight: 1.35
   title:
-    fontFamily: "NB CJK Marks, Segoe UI, Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "1.0625rem"
-    fontWeight: 700
+    fontWeight: 600
     lineHeight: 1.5
   body:
-    fontFamily: "NB CJK Marks, Segoe UI, Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "1rem"
     fontWeight: 400
     lineHeight: 1.75
   note:
-    fontFamily: "NB CJK Marks, Segoe UI, Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 400
     lineHeight: 1.65
   label:
-    fontFamily: "NB CJK Marks, Segoe UI, Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 400
   stopped:
-    fontFamily: "NB CJK Marks, Segoe UI, Microsoft YaHei UI, Microsoft YaHei, PingFang SC, Noto Sans CJK SC, sans-serif"
+    fontFamily: "NB Dot, Noto Sans SC, Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei, sans-serif"
     fontSize: "0.875rem"
-    fontWeight: 700
+    fontWeight: 600
     lineHeight: 1.5
   mono:
-    fontFamily: "Cascadia Mono, Consolas, SFMono-Regular, Menlo, Microsoft YaHei, monospace"
+    fontFamily: "Cascadia Mono, Consolas, SFMono-Regular, Menlo, Noto Sans SC, PingFang SC, Microsoft YaHei, monospace"
     fontSize: "0.875rem"
     fontWeight: 400
     lineHeight: 1.65
@@ -218,7 +218,7 @@ The family shares a language, not a layout. Each site's structure follows its ow
 - Ruled rows instead of cards, with a wash only on short bands.
 - Pasted output between hairlines, with no window chrome.
 - Commands on their own line on a cyan wash, never broken inside a token.
-- Noto Serif SC 600 for page heads, a Chinese-tuned sans for reading, Cascadia Mono for code.
+- Noto Sans SC at 400 and 600 for everything read, Cascadia Mono for code.
 - Chinese page titles that break between phrases, never inside a word.
 - Flat, flush-left, square-cornered, and the way back to the stopped place first.
 
@@ -279,29 +279,29 @@ Known drift, do not copy: the course's continue link is underlined in blue befor
 
 ## Typography
 
-**Display Font:** Noto Serif SC 600 (with Source Han Serif SC, Songti SC, SimSun)
-**Body Font:** Segoe UI and Microsoft YaHei UI (with PingFang SC, Noto Sans CJK SC), behind a small CJK face for punctuation
-**Label/Mono Font:** Cascadia Mono (with Consolas, SFMono-Regular, Menlo, and Microsoft YaHei for Chinese inside code)
+**Display Font:** Noto Sans SC 600 (with Source Han Sans SC, PingFang SC, Microsoft YaHei UI, Microsoft YaHei)
+**Body Font:** Noto Sans SC 400, the same family and fallbacks, behind a small Latin face for the middle dot
+**Label/Mono Font:** Cascadia Mono (with Consolas, SFMono-Regular, Menlo, and Noto Sans SC for Chinese inside code)
 
-**Character:** The serif heads a page the way a hand-lettered title heads a notebook entry. Everything read at length stays in a system screen face, and code looks as it does in the terminal beside it.
+**Character:** One family at two weights, so hierarchy comes from size, weight and rules rather than a change of voice. Code looks as it does in the terminal beside it.
 
 ### Hierarchy
 
 - **Display** (600, clamp(1.625rem, 1.4rem + 1vw, 2rem), 1.35): The page title, once per page.
 - **Headline** (600, 1.375rem, 1.35): Section heads. Smaller section heads drop to 1.125rem at the same weight.
-- **Serif accents** (600): The site name in the running head at 1.0625rem, the continue link at 1.1875rem on the index and up to clamp(1.25rem, 1.1rem + .6vw, 1.5rem) on a course, and the previous and next links of a lesson.
-- **Title** (700, 1.0625rem, 1.5): Row titles, in the sans. The kit's bare third-level heading is 1rem at the same weight.
+- **Accents** (600): The site name in the running head at 1.0625rem, the continue link at 1.1875rem on the index and 1.25rem on a course, and the previous and next links of a lesson.
+- **Title** (600, 1.0625rem, 1.5): Row titles. The kit's bare third-level heading is 1rem at the same weight.
 - **Body** (400, 1rem, 1.75): Reading text, limited to the 42rem measure.
 - **Note** (400, .9375rem, 1.65): Row notes and short explanations, in Soft Ink.
 - **Label** (400, .875rem): Metadata, row state and footers, and the smallest size set in `rem`. Counts use tabular figures (`font-variant-numeric: tabular-nums`).
-- **Stopped** (700, .875rem, 1.5): The 停在这里 label, in Link Blue.
+- **Stopped** (600, .875rem, 1.5): The 停在这里 label, in Link Blue.
 - **Mono** (400, .875rem, 1.65): Pasted output and commands. Inline code is .875em. Identifier-like row keys, such as pattern numbers, also use it.
 
 ### Named Rules
 
-**The One Serif Weight Rule.** The shared font files hold Noto Serif SC at weight 600 only, so the serif appears at 600 and never for reading text. `theme.js` adds `/kit/v1/fonts.css` on the production host only, so a local preview showing a fallback serif is expected.
+**The One Family Rule.** Everything but code is set in Noto Sans SC at 400 or 600, the two weights in the shared font files, so a page never changes voice between its head and its text. The owner rejected a Noto Serif SC head over a Microsoft YaHei body on 2026-11-02 as awkward: two voices met in one row, YaHei draws quotation marks narrow, and Segoe UI digits sat lighter than YaHei bold in the same heading. `theme.js` adds `/kit/v1/fonts.css` on the production host only, so a local preview uses an installed Noto Sans SC or falls back to the system face.
 
-**The Whole Phrase Rule.** Page titles use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every first-level heading. Add the same pair to anything else that shows a course or lesson title in the serif, such as the continue link. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.
+**The Whole Phrase Rule.** Page titles use `word-break: keep-all` with `overflow-wrap: anywhere`. In Chinese this limits breaks to spaces and punctuation, so 设计模式 stays whole, and `anywhere` remains as the emergency exit that stops a long title overflowing a phone. The kit sets this on every first-level heading. Add the same pair to anything else that shows a course or lesson title, such as the continue link. Write titles with natural break points (a space, `：`, `·`), because a long run with none gets cut wherever the emergency break lands.
 
 **The No Balance Rule.** Don't use `text-wrap: balance` on Chinese text. It was tried on headings and removed because it split 下单 in the middle of a word on the OnlineStore guide title: it looks for equal line lengths, and Chinese offers it a break between any two characters, with no word boundaries to respect. `text-wrap: pretty` stays on headings and paragraphs for last-line orphans, but it does not stop mid-word splits either, which is why the Whole Phrase Rule exists.
 
@@ -315,7 +315,7 @@ Measured in Chromium with the kit stylesheet at a 320px viewport, where the page
 
 **The Chinese Reading Rule.** Every page sets `lang="zh-CN"` and lets the kit's body settings reach the text: `line-break: strict` for line-start and line-end punctuation, `text-spacing-trim: trim-start` so an opening `（` at the start of a line does not look indented, `text-autospace: normal` for spacing between Chinese and Latin, and line height 1.75. An engine's stylesheet must not override them.
 
-**The Wide Marks Rule.** Quotation marks, em dashes and ellipses come from a CJK face, because Latin UI faces draw them too narrow for Chinese. The kit does this with the `NB CJK Marks` face at the front of the sans stack, using `unicode-range`. Keep that face first if an engine's font variable is replaced.
+**The Narrow Dot Rule.** Noto Sans SC draws `·` full width, which opens wide gaps in labels written as `a · b`. The kit's `NB Dot` face at the front of the sans stack takes that one character from a Latin face, using `unicode-range`. Keep that face first if an engine's font variable is replaced.
 
 **The Literal Code Rule.** Code uses Cascadia Mono, not Cascadia Code, with ligatures off, so `--` and `->` read exactly as they are typed. Put it first in the stack, because a `font:` shorthand resets the kit's ligature setting.
 
@@ -373,12 +373,12 @@ Components are plain: words, lines and the occasional box. Words do the job of i
 
 ### Navigation
 
-- **Running head (`.nb-head`):** One sticky line, 3.25rem high, naming the book. Paper fill, 1px bold rule below, site name in the serif at the left, words in Soft Ink at the right. It wraps rather than clips.
-- **States:** Hover turns a nav word blue with a 1px underline at .32em. `aria-current` turns it blue at weight 700 with a 2px underline at .32em. There are no pills or filled tabs.
+- **Running head (`.nb-head`):** One sticky line, 3.25rem high, naming the book. Paper fill, 1px bold rule below, site name at 600 at the left, words in Soft Ink at the right. It wraps rather than clips.
+- **States:** Hover turns a nav word blue with a 1px underline at .32em. `aria-current` turns it blue at weight 600 with a 2px underline at .32em. There are no pills or filled tabs.
 - **Scheme control:** Two words, 白天 and 晚上, beside the nav and set off from it by a Ruling hairline. `theme.js` places them after `.nb-nav`, outside it, so they stay visible at every width and never hide behind the menu. The pressed word has the same treatment as `aria-current`. The default follows the system until the owner picks, and the choice is stored under `site-theme` as `light` or `dark`. Print hides the control.
 - **Mobile:** Below 56rem, a collapsible nav (`.nb-nav--collapsible`) hides behind the word 菜单 (`.nb-nav-toggle`), with the scheme words staying beside it in the head.
 - **Page changes:** `@view-transition` crossfades pages while the head, named `nb-head`, holds still.
-- **Filters:** Topic filters are text buttons with `aria-pressed`. At rest a filter shows its group's hue, or Soft Ink if it has none. Pressed, it has weight 700 and a 2px underline, in its own hue or, for 全部, in blue. A pressed filter never gets a fill.
+- **Filters:** Topic filters are text buttons with `aria-pressed`. At rest a filter shows its group's hue, or Soft Ink if it has none. Pressed, it has weight 600 and a 2px underline, in its own hue or, for 全部, in blue. A pressed filter never gets a fill.
 
 ### Record Line
 
@@ -442,7 +442,7 @@ A printout stuck into the page (`.nb-paste`), not a fake window.
 How Markdown output should look, as proven by the C# guide pages. VitePress and MkDocs content follows the same mapping.
 
 - **Spacing:** The kit zeroes heading, paragraph and list margins, so prose must restore them: paragraphs 0 0 1em, lists with 1.5rem of left padding.
-- **Headings:** Second-level heads are 1.375rem serif with 2.5rem above and a 1px bold rule below. Third-level heads are 1.0625rem at 600.
+- **Headings:** Second-level heads are 1.375rem at 600 with 2.5rem above and a 1px bold rule below. Third-level heads are 1.0625rem at 600.
 - **Quotes:** A 1px Strong Ruling line on the left, 1rem of padding and inherited text, with no fill.
 - **Code:** Inline code in purple on the sheet with 2px corners, taking the link's color inside a link. Blocks follow Pasted Output.
 - **Tables:** 1px Ruling under each row, a bold rule under the header, no fills and no zebra stripes, inside a horizontally scrolling wrapper with a 640px minimum table width.
@@ -528,7 +528,7 @@ For every engine:
 - **Don't** center headings, copy or empty states.
 - **Don't** open a site with the old template: giant headline, tilted terminal, two buttons, stats row, card grid.
 - **Don't** use shadows, blur or pill shapes.
-- **Don't** set reading text in the serif, or use the serif at any weight but 600.
+- **Don't** add a serif or a second Chinese family, or use any weight but 400 and 600.
 - **Don't** use uppercase, letter-spacing or justified text.
 - **Don't** add icons. Controls are words, and the only drawn marks are the record line, the tick and the check.
 - **Don't** put a small label above a title. Keys and categories get their own column or row.

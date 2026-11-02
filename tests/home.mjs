@@ -207,12 +207,27 @@ try {
     await context.close();
   }
 
-  // Every font the kit declares must ship.
+  // One family at two weights: every font the kit declares must ship, and the page must use only those.
   {
     const css = await readFile(join(root, "kit", "v1", "fonts.css"), "utf8");
     const files = [...css.matchAll(/url\((fonts\/[^)]+)\)/gu)].map((match) => match[1]);
-    assert.ok(files.length > 50, "expected the sliced heading font");
+    assert.ok(files.length > 50, "expected the sliced font");
     for (const file of files) await stat(join(root, "kit", "v1", file));
+    assert.deepEqual([...new Set(css.match(/font-family: '[^']+'/gu))], ["font-family: 'Noto Sans SC'"]);
+    assert.deepEqual([...new Set(css.match(/font-weight: \d+/gu))].sort(), ["font-weight: 400", "font-weight: 600"]);
+
+    const { context, page, errors } = await open(browser, { seed: records });
+    const used = await page.evaluate(() => {
+      const styles = [...document.querySelectorAll("body *")]
+        .filter((element) => element.offsetParent && element.textContent.trim() && !element.closest("code, kbd, pre, samp"))
+        .map((element) => getComputedStyle(element));
+      return { families: [...new Set(styles.map((style) => style.fontFamily))], weights: [...new Set(styles.map((style) => style.fontWeight))].sort() };
+    });
+    assert.equal(used.families.length, 1, `more than one family on the page: ${used.families.join(" | ")}`);
+    assert.ok(used.families[0].includes("Noto Sans SC"), used.families[0]);
+    assert.deepEqual(used.weights, ["400", "600"]);
+    assert.deepEqual(errors, []);
+    await context.close();
   }
   console.log("Home checks passed.");
 } finally {
