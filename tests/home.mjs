@@ -87,6 +87,7 @@ try {
   {
     const { context, page, errors } = await open(browser);
     assert.equal(await page.locator(".entry").count(), 6);
+    assert.equal(await page.locator(".entry-topic").count(), 6);
     assert.match(await page.locator("#resume-line").textContent(), /还没有学习记录/u);
     assert.equal(await page.locator(".entry[data-record]").count(), 0);
     assert.equal(await page.locator(".entry[aria-current]").count(), 0);
@@ -158,10 +159,39 @@ try {
     const { context, page } = await open(browser, { colorScheme: "dark" });
     assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), "dark");
     await assertAccessible(page, "dark theme");
-    await page.locator(".nb-theme").click();
+    assert.equal(await page.getByRole("button", { name: "晚上" }).getAttribute("aria-pressed"), "true");
+    await page.getByRole("button", { name: "白天" }).click();
+    assert.equal(await page.getByRole("button", { name: "白天" }).getAttribute("aria-pressed"), "true");
     assert.equal(await page.evaluate(() => localStorage.getItem("site-theme")), "light");
     await page.reload();
     assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), "light");
+    await context.close();
+  }
+
+  // Reading comfort: every text colour holds 7:1 on paper, sheet and every wash, in both schemes.
+  {
+    const { context, page } = await open(browser);
+    for (const scheme of ["light", "dark"]) {
+      const weak = await page.evaluate((name) => {
+        document.documentElement.dataset.theme = name;
+        const style = getComputedStyle(document.documentElement);
+        const token = (key) => style.getPropertyValue(`--nb-${key}`).trim();
+        const channel = (value) => (value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+        const luminance = (hex) => [1, 3, 5]
+          .map((start) => channel(parseInt(hex.slice(start, start + 2), 16) / 255))
+          .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0);
+        const ratio = (first, second) => {
+          const [high, low] = [luminance(first), luminance(second)].sort((a, b) => b - a);
+          return (high + 0.05) / (low + 0.05);
+        };
+        const hues = ["red", "orange", "yellow", "green", "cyan", "blue", "purple"];
+        const backgrounds = ["paper", "sheet", ...hues.map((hue) => `${hue}-wash`)];
+        const pairs = ["ink", "ink-soft", ...hues].flatMap((text) => backgrounds.map((back) => [text, back]));
+        pairs.push(["on-fill", "fill"]);
+        return pairs.filter(([text, back]) => ratio(token(text), token(back)) < 7).map((pair) => pair.join(" on "));
+      }, scheme);
+      assert.deepEqual(weak, [], `${scheme} scheme has text below 7:1`);
+    }
     await context.close();
   }
 

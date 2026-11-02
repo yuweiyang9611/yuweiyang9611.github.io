@@ -158,7 +158,7 @@ function showProgress() {
     const read = courses[entry.dataset.course];
     const progress = read ? read() : null;
     if (!progress) return;
-    entry.dataset.record = "started";
+    entry.dataset.record = progress.fraction >= 1 ? "done" : "started";
     entry.style.setProperty("--nb-fraction", String(progress.fraction));
     entry.querySelector("[data-state]").textContent = [progress.state, whenText(progress.at)].filter(Boolean).join(" · ");
     if (!latest || progress.at > latest.progress.at) latest = { entry, progress };

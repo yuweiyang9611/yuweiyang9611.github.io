@@ -34,7 +34,7 @@ These are the owner's own study benches, not product marketing. Every lesson lea
 
 Functions that must survive the redesign:
 
-- **Home:** project index with search and topic filters, light and dark theme.
+- **Home:** project index with search and topic filters, a day and a night color scheme.
 - **Design patterns:** course routes, 23 pattern pages, full-text search, exercises, an in-browser C# compiler playground, quizzes, spaced review, progress with storage-status reporting.
 - **.NET:** online book, search, layered labs, lab catalog, roadmap, progress with backups.
 - **LLM:** 15-page MkDocs course with math rendering and a PDF download.
@@ -57,6 +57,8 @@ Stated by the owner, binding on all future work:
 - No decoration that does not help reading or doing.
 - Chinese typography has to read well; the current sites do not.
 - Pages must not be long and scattered: it must be obvious where to start.
+- Pages must not be monochrome. Use seven colors to make reading easier, and offer a day and a night color scheme. Requested on 2026-11-02 after seeing a one-ink, one-red pilot.
+- Text must be easy to make out, and the colors must be easy on the eyes. Requested on 2026-11-02 after a first seven-color version at about 5:1 was hard to read. Every text color holds 7:1, paper is warm and dimmer than white, and night is warm black with warm ink rather than blue-black with near-white text.
 
 ## Evidence on Hand
 
