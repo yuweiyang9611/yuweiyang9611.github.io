@@ -1,6 +1,6 @@
 ---
 name: Lab Notebook
-description: "Shared visual language of the yuweiyang9611.github.io study sites: a record line in the gutter, ruled rows, pasted output and five colors with one job each, in a day and a night scheme."
+description: "Shared visual language of the yuweiyang9611.github.io study sites: a learning dashboard of coloured cards with progress rings, one dark banner for the place to continue, pasted output, and five hues as both text and surface, in a day and a night scheme."
 colors:
   ink: "#25211b"
   paper: "#f4efe4"
@@ -19,7 +19,14 @@ colors:
   blue: "#103f9c"
   blue-wash: "#dae7fe"
   purple: "#66278a"
-  fill: "#103f9c"
+  red-fill: "#a2041e"
+  green-fill: "#0d5b27"
+  cyan-fill: "#055868"
+  blue-fill: "#1445b8"
+  purple-fill: "#7528a1"
+  purple-wash: "#ebdcf3"
+  ink-fill: "#25211b"
+  fill: "#1445b8"
   on-fill: "#f4efe4"
   night-ink: "#e2dac9"
   night-paper: "#1c1a17"
@@ -38,7 +45,9 @@ colors:
   night-blue: "#9abcf9"
   night-blue-wash: "#202b3f"
   night-purple: "#d1adec"
-  night-fill: "#1e4e95"
+  night-purple-wash: "#33263f"
+  night-ink-fill: "#3a352d"
+  night-fill: "#1445b8"
   night-on-fill: "#f4efe4"
 typography:
   display:
@@ -81,7 +90,9 @@ typography:
     fontWeight: 400
     lineHeight: 1.65
 rounded:
-  control: "2px"
+  control: "8px"
+  surface: "14px"
+  pill: "999px"
 spacing:
   record-gutter: "1.25rem"
   row: "0.75rem"
@@ -204,23 +215,24 @@ components:
 
 **Creative North Star: "The Lab Notebook"**
 
-A lab notebook is kept by the person using it. It holds what was run and what was checked, in order, and the next entry starts where the last one stopped. Each site in this family is such a notebook: opening it puts the owner back at the place they stopped, with the next thing to do in view. The record line in the page gutter and its "stopped here" mark are what a reader should remember.
+A lab notebook is kept by the person using it. It holds what was run and what was checked, in order, and the next entry starts where the last one stopped. Each site in this family is such a notebook: opening it puts the owner back at the place they stopped, with the next thing to do in view. Since 2026-11-04 the notebook is read through a dashboard: a dark banner names the place to continue, and every course or chapter is a card whose coloured head carries a progress ring, so the state of the work is visible before a word is read.
 
-The material is warm paper, warm ink and thin ruling, with five colors that each do one job, in a day and a night scheme. The colors are there to make reading easier, so they are dark enough to hold 7:1 as text and muted enough to be easy on the eyes. Pages are dense. Structure comes from hairlines and a shared left edge, not boxes, and nothing is there for decoration. The family rejects the template it shipped before: giant headline, tilted terminal, two buttons, stats row, card grid.
+The material is warm paper, warm ink and the pasted sheet, with five hues that are used two ways: as text, dark enough to hold 7:1, and as fills, with paper-coloured text on top. The owner rejected the first notebook build on 2026-11-04 as monotone (five dark colours confined to small labels and links, with no colour surface anywhere, and night mode reading as grey on black) and as dense (every row at one weight, progress only as numbers, nothing saying where to look first). The answer is colour as surface: a card head, a banner, a ring and a pressed chip are filled, and the text on them stays paper, so the page has colour without any text going grey. Pages are still dense in content, but they open with a summary, group work into cards with room between them, and shorten every note to a sentence.
 
-The family shares a language, not a layout. Each site's structure follows its own content, so copy these rules and never a sibling's page. `kit/v1/notebook.css` is the source of truth for values, and this file explains how to use them. It was recorded from two built surfaces: the project index in this repository and the C# design patterns course (course index, lesson, guide, quiz, playground).
+The family shares a language, not a layout. Each site's structure follows its own content, so copy these rules and never a sibling's page. `kit/v1/notebook.css` is the source of truth for values, and this file explains how to use them. It was recorded from the project index in this repository and the C# design patterns course; the other five sites follow.
 
 **Key Characteristics:**
 
-- A record line in the gutter: solid green for what is done, dashed for what is not, with one blue tick where the owner stopped.
-- Five colors, each with one job, each holding 7:1 as text, and always a word beside them.
-- Two named schemes, 白天 and 晚上, with night composed rather than inverted.
-- Ruled rows instead of cards, with a wash only on short bands.
+- One dark banner per opening screen, naming the place to continue, with a solid button beside it.
+- Cards with a coloured head: an eyebrow, the title and a progress ring, over a sheet body with one sentence and a figure row.
+- Five hues, each with a text value at 7:1 on paper and a fill at 7:1 under paper-coloured text, and always a word beside them.
+- Two named schemes, 白天 and 晚上, with night composed rather than inverted and the fills unchanged.
+- Rings and bars for progress, from the owner's own record, never invented.
 - Pasted output between hairlines, with no window chrome.
 - Commands on their own line on a cyan wash, never broken inside a token.
 - Noto Sans SC at 400 and 600 for everything read, Cascadia Mono for code.
 - Chinese page titles that break between phrases, never inside a word.
-- Flat, flush-left, square-cornered, and the way back to the stopped place first.
+- Flat, flush-left, rounded surfaces with no shadow, and the way back to the stopped place first.
 
 ## Colors
 
@@ -261,17 +273,21 @@ Five colors, each with one job. The kit names each by hue (`--nb-red`) and by jo
 
 ### Named Rules
 
-**The One Job Rule.** Each of the five colors has the one job listed above, and none is used for emphasis, section accents or decoration. The one exception is a group's borrowed word, under the One Word Group Rule. Audit test: a page with no record has no tick, no 停在这里, no blue band and no solid green line.
+### Fills
+
+Each hue also has a fill: `--nb-red-fill` #a2041e, `--nb-green-fill` #0d5b27, `--nb-cyan-fill` #055868, `--nb-blue-fill` #1445b8 and `--nb-purple-fill` #7528a1, plus `--nb-ink-fill` (ink by day, #3a352d at night) for the banner and the pressed 全部 chip. `--nb-on-fill` #f4efe4 is the text on every fill, and holds 7.06:1 or better on each, in both schemes, which `tests/home.mjs` enforces. The fills are the same in both schemes: they are chosen for the text on them, not for the paper behind them, and at night they stand 2.1:1 off the paper, enough for a block. `--nb-fill` is the blue fill. Purple now has a wash too, #ebdcf3 by day and #33263f at night, at 7:1 under every text colour like the others.
+
+**The Colour As Surface Rule.** Colour goes on fills first and on text second. A card head, the banner, a progress ring and a pressed chip are filled with a hue, and the words on them are paper. Text in a hue is kept for the jobs below (links, verdicts, commands, code, a group's word) and is never used to give a page colour: that is what the fills are for. A page with no record still has its card heads and its banner, so it is not monochrome. Audit test: cover the fills and the page says the same thing in words. The jobs stay: red is still wrong, green is still done, cyan is still run, blue is still the link and the place to continue, purple is still code. A fill carries the group's hue (a course's topic, a pattern's category) or, for the banner, no hue at all.
 
 **The Word Beside The Color Rule.** A color never carries a state alone: a written word always goes with it, and records and verdicts keep their line form too. A correct quiz answer gets a 2px solid green rule and 正确, a wrong one gets a 1px dashed red rule and 你的选择, and a locked step gets a dashed box. Every text color holds 7:1 on paper, on the sheet and on every wash in both schemes, with the lowest at 7.17:1 by day and 7.15:1 at night, and `tests/home.mjs` enforces it. Hue is less reliable than contrast. Measured as OKLab distance times 100, the closest pairs for normal vision are green and cyan by day at 10.0 and blue and purple at night at 7.8. Under simulated deuteranopia, blue and purple come within 3.9 by day and cyan and purple within 2.4 at night. Under simulated protanopia, blue and purple come within 3.8 by day and 2.4 at night. Audit test: in grayscale the page still says what is done.
 
-**The Short Band Rule.** Red, green, cyan and blue each have a wash, and a wash is for short bands only: the resume band, a stopped row in a register, command rows, search hits, quiz option verdicts, the storage warning and a pressed problem chip. Tall panels mark the stopped place with a blue heading, not a fill. On the index the resume band fills, so the stopped row below it does not fill again. The quiz's teaching text stays on plain paper with only a colored rule and verdict. Reading text on a wash stays ink, at 10.0:1 or better in both schemes. A wash is 1.07:1 to 1.25:1 against paper, so it is never the only sign of anything. The resume band and quiz verdicts reach past the text edge by their own padding, so their words stay on the shared left edge.
+**The Short Band Rule.** Each hue has a wash, and a wash is for short bands of reading text only: command rows, search hits, quiz option verdicts, the storage warning and a group heading's band. Reading text on a wash stays ink, at 10.0:1 or better in both schemes. A wash is 1.07:1 to 1.25:1 against paper, so it is never the only sign of anything. The place to continue is no longer a wash: it is the banner, on the ink fill. A card body is the sheet, never a wash; its hue lives in its head.
 
 **The Stands Off The Paper Rule.** A color earns its place only if it differs from the paper in hue as well as in lightness. Orange and yellow failed this on warm paper even at 7:1, and the owner asked for colors close to the background to go, so they are not in the kit. Don't bring them back for emphasis, warnings or categories, and judge a new color on the page, not only by its contrast number.
 
-**The One Word Group Rule.** A site's own groups borrow a hue through `data-hue` for one word only: the topic on an index row, the category word on a pattern row and in its dialog, and a filter button, with any count it shows. Pattern numbers stay soft, and nothing else in the row takes the hue. The index has 工程 purple, 算法 cyan, 前端 green and AI blue. The course has 创建型 blue, 结构型 purple and 行为型 cyan. These overlap the colors' jobs. Green on 前端 overlaps done, and blue on AI and 创建型 overlaps links. A reviewer flagged this kind of overlap, and it was kept deliberately, because the owner asked for color and a gray category would be worse. This is an accepted trade-off, not an accident, so don't correct it. Purple on 工程 and 结构型 and cyan on 算法 and 行为型 overlap code and commands in the same way. A lesson's 运行并追踪 and 何时避免 headings use the same attribute to carry their job color, not a group.
+**The One Hue Group Rule.** A site's own groups take a hue through `data-hue`, which sets the word colour (`--nb-hue`), the fill (`--nb-hue-fill`) and the wash (`--nb-hue-wash`). The hue fills the group's card heads and its pressed filter chip, and colours the 停在这里 label inside a card; nothing else in the card takes it. The index has 工程 purple, 算法 cyan, 前端 green and AI blue. The course has 创建型 blue, 结构型 purple and 行为型 cyan. These overlap the colors' text jobs: green on 前端 overlaps done, blue on AI and 创建型 overlaps links. That was flagged by a reviewer and kept deliberately, because the owner asked for colour and a grey category would be worse. Now that the hue is mostly a fill, the overlap matters less: a green card head does not say done, because done is a ring at 100% and a word. A lesson's 运行并追踪 and 何时避免 headings use the same attribute to carry their job colour, not a group.
 
-**The Composed Night Rule.** The two schemes are named 白天 and 晚上, and night is composed, not inverted: warm black paper and warm ink, not blue-black and near white. `--nb-rule-bold` softens heavy rules at night (by day it equals ink), `--nb-fill` is a deeper blue with warm paper text, and each wash keeps its own hue on the dark paper. Night tokens live in `@media screen`, so printing is always in day colors.
+**The Composed Night Rule.** The two schemes are named 白天 and 晚上, and night is composed, not inverted: warm black paper and warm ink, not blue-black and near white. `--nb-rule-bold` softens heavy rules at night (by day it equals ink), the five fills stay as they are so a card keeps its colour, `--nb-ink-fill` lifts to #3a352d so the banner stands off the night paper, and each wash keeps its own hue on the dark paper. Night tokens live in `@media screen`, so printing is always in day colors.
 
 **The Achromatic Field Rule.** Text fields carry no color of their own: transparent fill, Strong Ruling outline and Soft Ink placeholder. Only the focus ring and the caret are blue.
 
@@ -323,29 +339,29 @@ Measured in Chromium with the kit stylesheet at a 320px viewport, where the page
 
 ## Layout
 
-The page is a single column of ruled sections on a shared left edge. The block is capped at the 72rem page width, with a gutter of clamp(1rem, 4vw, 3rem), and the running head and footer use the kit's `--nb-inset` so their edges line up with the content. Reading text stays within the 42rem measure.
+An opening screen reads top to bottom as summary, then continue, then the work: a masthead with the title beside two or three figures (`.nb-stat`), the banner, the filter chips and search, then the card grid. The block is capped at the 72rem page width, with a gutter of clamp(1rem, 4vw, 3rem), and the running head and footer use the kit's `--nb-inset` so their edges line up with the content. Reading text stays within the 42rem measure.
 
-Density is high on purpose: the owner should be reading or working within seconds. Rows use .75rem to .875rem of vertical padding, and sections use 1.75rem with a Ruling line between them. Interactive text gets a 2.75rem target even though it draws no box. Anchors land below the sticky head through `scroll-padding-top`.
+Cards sit in `.nb-grid`, auto-filled at 17rem minimum with a 1rem gap; the index fixes three columns from 64rem and lets the stopped card span two. Sections keep 1.75rem between them. Interactive text gets a 2.75rem target. Anchors land below the sticky head through `scroll-padding-top`. A lesson or guide page stays a reading column: cards are for the register (courses, chapters, patterns), not for prose.
 
-Breakpoints follow each surface's columns rather than a shared scale. The kit collapses the head nav at 56rem. The index stacks its rows at 48rem. The course reflows its rows at 62rem and stacks them at 44rem. On a phone a row keeps at most a narrow key column, the topic on the index and the number on the course, and the rest becomes one column in reading order: title, stopped label, note, state. The page itself never scrolls sideways; only command and output boxes do.
+Breakpoints follow each surface's columns rather than a shared scale. The kit collapses the head nav at 56rem. The index stacks its masthead at 48rem, and the grid falls to one column on its own. The page itself never scrolls sideways; only command and output boxes do.
 
 A generated guide uses two columns: contents at minmax(13rem, 17rem), then the measure. Below 56rem the contents collapse behind a 展开目录 text action.
 
 **The Flush Left Rule.** All text is left-aligned on one left edge, and nothing is centered: no centered headings, copy blocks or empty states. Only secondary things sit at the far edge: the head nav and scheme control, the search box, the state column, the next link. The one centered thing is the capped page block in a window wider than 72rem.
 
-**The Continue First Rule.** The way back to the stopped place is the first action on a site's opening screen, and nothing above it pitches the site. On the index it is a row at the top left, under 200px from the top of the window. On a course it sits directly under the title, beside the thing to run. With no record yet, it offers the first step or says plainly that there is no record.
+**The Continue First Rule.** The way back to the stopped place is the first action on a site's opening screen, and nothing above it pitches the site. It is the banner (`.nb-banner`), directly under the masthead: the eyebrow 接着做, the place as its title, the figure and the time as a note, and a solid 继续学习 button. With no record yet, the banner says plainly that there is no record and the button is hidden; a course may instead offer its first step. The masthead's figures are the summary, not a pitch: real counts from the record, zero when there is none.
 
 ## Elevation & Depth
 
-This system is flat. There are no box shadows, text shadows or blur. Depth is limited to four cases: the sticky running head (paper fill and a 1px bold rule), the Pasted Sheet tint (which means "stuck in", not "raised"), a wash (a tint that marks a short band, not a raised surface), and overlays (a 1px ink outline, plus a scrim behind dialogs of `rgb(37 33 27 / 55%)` by day and `rgb(0 0 0 / 60%)` at night).
+This system is flat. There are no box shadows, text shadows or blur. A card is separated from the paper by its sheet body and its filled head, a banner by its fill, and nothing else: the sticky running head keeps its paper fill and 1px bold rule, a wash marks a short band, and overlays have a 1px ink outline plus a scrim behind dialogs of `rgb(37 33 27 / 55%)` by day and `rgb(0 0 0 / 60%)` at night. The stopped card gets a 3px outline in its hue at a 2px offset.
 
-**The Flat Paper Rule.** Nothing casts a shadow. If something needs separating, rule a line.
+**The Flat Paper Rule.** Nothing casts a shadow. If something needs separating, fill it or rule a line.
 
 ## Shapes
 
 Lines do the work here. Dividers are 1px. The record line's solid part is 2px, and the stopped tick is .625rem by 2px. Links have a 1px underline at a .22em offset, and the active nav, scheme or filter item has a 2px one at .32em. The check inside a ticked box is drawn as a shape, not set as a character.
 
-**The Square Box Rule.** Anything drawn as a box has 2px corners or none: controls, dialogs and the favicon tile at 2px, pasted output, wash bands, toasts and rows at none. Nothing is a pill. Radio buttons stay native and round.
+**The Rounded Surface Rule.** Three radii, by role: surfaces (cards, the banner) at 14px (`--nb-radius`), controls (buttons, fields) at 8px (`--nb-radius-control`), and chips, rings, bars and the banner's button as pills. Pasted output, wash bands, rows, dialogs and toasts stay square, because they are pasted or ruled, not objects. The favicon tile keeps 2px. Radio buttons stay native and round. This replaced the square-box rule on 2026-11-04, when the owner chose the dashboard direction.
 
 ## Components
 
@@ -353,17 +369,44 @@ Components are plain: words, lines and the occasional box. Words do the job of i
 
 ### Buttons
 
-- **Shape:** Squared corners (2px), minimum height 2.5rem, raised to 2.75rem in the quiz and playground.
+- **Shape:** 8px corners, minimum height 2.5rem, raised to 2.75rem in the quiz and playground. Inside the banner the solid button is a pill.
 - **Default (`.nb-button`):** 1px Strong Ruling outline, transparent fill, inherited ink, .9375rem.
-- **Solid (`.nb-button--solid`):** `--nb-fill` with `--nb-on-fill` text, which is warm paper on blue in both schemes, and a 1px Link Blue edge, kept for the main action in a view, such as 提交答案 or 打开完整课件.
+- **Solid (`.nb-button--solid`):** `--nb-fill` (the blue fill) with `--nb-on-fill` text, warm paper on blue in both schemes, and a 1px Link Blue edge, kept for the main action in a view, such as 继续学习, 提交答案 or 打开完整课件.
 - **Hover / Focus:** Hover turns the outline and text blue, with no fill change and no lift, and a solid button does not change. Focus everywhere is a 2px blue outline at a 2px offset.
 - **Disabled:** Dashed Strong Ruling outline, Soft Ink text, `not-allowed` cursor. Dashed means "not yet" here too. A solid action drops its fill while disabled.
 - **Text actions:** Copy and collapse are underlined Soft Ink text with no box and a 2.75rem target, and hover turns them ink. Backup, export and import in the course's records are underlined blue. A destructive action, such as 清空复习记录, is red.
 
 ### Chips
 
-- **Style:** Used only for the multi-select problem filter. 1px Ruling outline, 2px corners, 2rem high, .875rem Soft Ink.
-- **State:** Selected turns the outline and text blue on the blue wash, at weight 600.
+- **Style (`.nb-chip`):** Filters and the multi-select problem filter. A pill with a 1px Strong Ruling outline, 2.25rem high (the index raises its filters to 2.75rem for touch), .875rem ink. Hover turns the outline and text to the chip's hue.
+- **State:** Pressed is filled with the chip's hue (`data-hue`) and paper text at weight 600; 全部 uses `data-hue="ink"`, so it fills ink. A chip with no hue fills ink too.
+
+### Cards
+
+- **Shape (`.nb-card`):** A 14px rounded sheet, clipped, with no border or shadow. The card takes `data-hue` for its group.
+- **Head (`.nb-card-head`):** Filled with the hue; eyebrow (`.nb-card-eyebrow`, .8125rem, the group word and a count, such as 工程 · 23 种模式), then the title at 1.1875rem 600 as the link, in paper with no underline until hover. The progress ring sits at the right.
+- **Body (`.nb-card-body`):** One sentence in Soft Ink at .9375rem, then a figure row (`.nb-card-meta`) pushed to the bottom: the state on the left (0 / 120 任务) and the place on the right (Abstract Factory · 运行并核对输出 · 昨天), in tabular figures.
+- **Stopped:** The newest record's card gets `aria-current`, a 3px outline in its hue, a 停在这里 label in the hue at the top of its body, and on the index it spans two columns.
+- **Done:** The state turns green at weight 600 and the ring reaches 100%.
+- **Link:** The title is the link, stretched over the whole card on the index. Hover underlines the title; nothing else changes.
+
+### Progress Ring
+
+- **Form (`.nb-ring`):** 3.25rem, a conic arc in paper over a 28% paper track, with a 2.5rem disc in the card's fill inside, and the percentage at .8125rem 600 in the disc. `--nb-fraction` from 0 to 1 sets the arc; the site sets it and the `aria-label` (完成 6%) from the record.
+- **Where:** Only on a card whose course records progress the site can read. A card with no reader (algorithms, LLM, the LightGBM documentation) has no ring, and its head shows the count in the eyebrow instead. A ring at 0% is shown, because 0 / 120 is a true figure; a ring is never drawn for progress that is not on record.
+
+### Progress Bar
+
+- **Form (`.nb-bar`):** A .375rem pill track in Ruling with the done part in the hue, or in green where the bar means done; `.nb-bar--on-fill` is the paper-on-fill version for a bar inside a banner or card head.
+
+### Banner
+
+- **Form (`.nb-banner`):** The one dark block on a page: 14px corners, the ink fill, paper text; a grid of the text and a pill button, stacking at 40rem. Eyebrow (`.nb-banner-eyebrow`), title at 1.375rem 600, note at .9375rem.
+- **Job:** The place to continue, and nothing else. A page has at most one.
+
+### Stat
+
+- **Form (`.nb-stat`):** A figure at 1.5rem 600 over a .8125rem Soft Ink label, with a 3px rule above in the stat's hue. Three in a row on the index: done units (green), courses in progress (cyan), last record (blue).
 
 ### Inputs / Fields
 
@@ -408,9 +451,9 @@ Row dividers are ruling, not records. They stay solid hairlines whatever the sta
 
 ### Ruled Rows
 
-A register, not a gallery. This family has no cards.
+Rows are for lists inside a reading page, such as a route list, a guide's contents or a lesson's steps. A register of things to continue (courses, chapters, patterns) is cards.
 
-**The Ruled Row Rule.** Lists and grouped content are rows between hairlines. No row or panel gets a radius or a shadow. The only rows that fill are short ones, under the Short Band Rule: the stopped row of a register on the blue wash, and a quiz option once it has its verdict.
+**The Ruled Row Rule.** Lists inside a reading page are rows between hairlines, with no radius or shadow. The only rows that fill are short ones, under the Short Band Rule: a quiz option once it has its verdict.
 
 - **Structure:** The list opens with a 1px bold rule, and each row closes with a 1px Ruling line.
 - **Columns:** Key, name, note, state, in whatever mix the content needs. Widths belong to each site, such as 2.5rem / 14rem / 1fr / 12rem on the index, with a narrow topic column first, and 5rem / 13rem / 1fr / 13rem on the course. Rows in one site share their columns.
@@ -496,17 +539,18 @@ For every engine:
 ### Do:
 
 - **Do** take every color from the kit's tokens and let `data-theme` switch them.
-- **Do** give each of the five colors its one job, and check any new use against the list.
-- **Do** give every list of work a record line: solid green for what is done, dashed for what is not, with one blue tick at the stopped place.
-- **Do** check a page with no record on it. It should show no tick, no 停在这里, no blue band and no solid green line.
-- **Do** build lists as ruled rows, with each site choosing its own columns from its own content.
-- **Do** keep a wash to a short band, and mark the stopped place in a tall panel with a blue heading.
+- **Do** put colour on fills first: card heads, the banner, rings and pressed chips, with paper text on top.
+- **Do** keep each hue's text job (wrong, done, run, link, code) and check any new text colour against the list.
+- **Do** build a register of courses, chapters or patterns as cards in `.nb-grid`, each with its group's hue in its head and a ring where the site reads progress.
+- **Do** check a page with no record on it. It should show no 停在这里, no outlined card, every ring at 0% and the banner saying there is no record.
+- **Do** open every site with masthead, banner, chips, then cards, and keep lesson and guide pages as reading columns.
+- **Do** keep a wash to a short band.
 - **Do** paste real output on the sheet between 1px hairlines.
 - **Do** give each command its own line on the cyan wash with `white-space: pre` and `overflow-x: auto`.
 - **Do** keep `word-break: keep-all` and `overflow-wrap: anywhere` on headings, contents entries and anything else that shows a title, and write titles with natural break points.
 - **Do** set `lang="zh-CN"` and keep `line-break: strict`, `text-spacing-trim: trim-start` and `text-autospace: normal` reaching the text, and load `theme.js` so touching marks are squeezed.
 - **Do** pair every colored state with a written word, and keep the line form in records and verdicts.
-- **Do** check a new color value against `tests/home.mjs`, which holds every text color to 7:1 on paper, sheet and every wash in both schemes.
+- **Do** check a new color value against `tests/home.mjs`, which holds every text color to 7:1 on paper, sheet and every wash, and paper text to 7:1 on every fill, in both schemes.
 - **Do** put the continue link first on a site's opening screen.
 - **Do** give text-only controls a 2.75rem target.
 - **Do** carry over the kit's reduced-motion and forced-colors handling when an engine replaces a component.
@@ -514,25 +558,26 @@ For every engine:
 
 ### Don't:
 
-- **Don't** use a color outside its job, for emphasis or as an accent. A group's borrowed word is the one exception, and an accepted one.
-- **Don't** add a sixth color, bring back orange or yellow, or give one of the five a second job.
+- **Don't** use a hue as text outside its job. Colour for its own sake goes on a fill.
+- **Don't** add a sixth color, bring back orange or yellow, or give one of the five a second text job.
 - **Don't** let a color carry a state without a word.
 - **Don't** turn anything green for work that is only started.
-- **Don't** fill a tall panel or teaching text with a wash, or fill the stopped row when a band above it already fills.
+- **Don't** fill a tall panel or teaching text with a wash, or put a second dark block on a page beside the banner.
+- **Don't** draw a ring or bar for progress the site cannot read.
 - **Don't** use red in code.
 - **Don't** make night by inverting day.
 - **Don't** draw a dashed line as decoration, or a solid record line for work that is not on record.
-- **Don't** use cards: no filled tiles, rounded panels or grids of boxes.
+- **Don't** make prose into cards: a lesson, a guide or an answer stays a reading column.
 - **Don't** draw a terminal: no title bar, traffic lights, tab strip, tilt or shadow around output.
 - **Don't** use `pre-wrap` or `overflow-wrap: anywhere` on commands.
 - **Don't** use `text-wrap: balance` on Chinese text.
 - **Don't** remove `keep-all` from a page title because it breaks badly; shorten the title or give it a break point.
 - **Don't** center headings, copy or empty states.
-- **Don't** open a site with the old template: giant headline, tilted terminal, two buttons, stats row, card grid.
-- **Don't** use shadows, blur or pill shapes.
+- **Don't** open a site with a pitch: no giant headline, tilted terminal or two buttons above the banner. The masthead figures are the owner's own counts, not a stats row for visitors.
+- **Don't** use shadows or blur. Pills are for chips, rings, bars and the banner's button only.
 - **Don't** add a serif or a second Chinese family, or use any weight but 400 and 600.
 - **Don't** use uppercase, letter-spacing or justified text.
 - **Don't** add icons. Controls are words, and the only drawn marks are the record line, the tick and the check.
-- **Don't** put a small label above a title. Keys and categories get their own column or row.
+- **Don't** put a small label above a title outside a card head. In a card head the eyebrow is the group word and a count, nothing else.
 - **Don't** edit a site's copy of the kit, or change a published kit version.
 - **Don't** copy a sibling site's page structure. The family shares rules, not a template.

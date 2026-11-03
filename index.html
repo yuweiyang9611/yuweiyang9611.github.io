@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yuwei Yang 的项目目录：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
+  <meta name="description" content="Yuwei Yang 的学习台：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目，记着每一门停在哪。">
   <meta name="theme-color" content="#f4efe4">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="项目目录 · Yuwei Yang">
+  <meta property="og:title" content="学习台 · Yuwei Yang">
   <meta property="og:description" content="设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
   <meta property="og:url" content="https://yuweiyang9611.github.io/">
   <meta property="og:image" content="https://yuweiyang9611.github.io/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="项目目录 · Yuwei Yang">
+  <meta name="twitter:title" content="学习台 · Yuwei Yang">
   <meta name="twitter:description" content="设计模式、算法、前端、.NET、大语言模型与 CUDA 项目。">
   <meta name="twitter:image" content="https://yuweiyang9611.github.io/og.png">
-  <title>项目目录 · Yuwei Yang</title>
+  <title>学习台 · Yuwei Yang</title>
   <link rel="canonical" href="https://yuweiyang9611.github.io/">
   <link rel="icon" href="kit/v1/favicon.svg" type="image/svg+xml">
   <script src="kit/v1/theme.js"></script>
@@ -23,33 +23,46 @@
   <script src="script.js" defer></script>
 </head>
 <body>
-  <a class="skip-link" href="#contents">跳到目录</a>
+  <a class="skip-link" href="#contents">跳到项目</a>
 
   <header class="nb-head">
     <a class="nb-brand" href="./">Yuwei Yang</a>
     <nav class="nb-nav" aria-label="主导航">
-      <a href="#contents">目录</a>
+      <a href="#contents">项目</a>
       <a href="#about">关于</a>
       <a href="https://github.com/yuweiyang9611">GitHub</a>
     </nav>
   </header>
 
   <main class="page">
-    <h1>项目目录</h1>
+    <div class="masthead">
+      <div>
+        <h1>学习台</h1>
+        <p class="masthead-note">六门课、一份构建文档。每一门都记着你停在哪，下次打开接着做。</p>
+      </div>
+      <dl class="stats" id="stats" aria-label="学习概况">
+        <div class="nb-stat" data-hue="green"><dd id="stat-done">0</dd><dt>已完成单元</dt></div>
+        <div class="nb-stat" data-hue="cyan"><dd id="stat-active">0</dd><dt>门进行中</dt></div>
+        <div class="nb-stat" data-hue="blue"><dd id="stat-when">还没有</dd><dt>上次记录</dt></div>
+      </dl>
+    </div>
 
-    <section class="resume" aria-labelledby="resume-label">
-      <h2 class="resume-label" id="resume-label">接着做</h2>
-      <p class="resume-line" id="resume-line">这个浏览器里还没有学习记录，从下面选一门开始。</p>
+    <section class="resume nb-banner" aria-labelledby="resume-label">
+      <div>
+        <h2 class="nb-banner-eyebrow" id="resume-label">接着做</h2>
+        <p class="resume-line nb-banner-title" id="resume-line">这个浏览器里还没有学习记录，从下面选一门开始。</p>
+      </div>
+      <a class="nb-button nb-button--solid resume-go" id="resume-go" href="#contents" hidden>继续学习</a>
     </section>
 
     <section id="contents" aria-label="项目列表">
       <div class="tools">
         <div class="filters" role="group" aria-label="按主题筛选">
-          <button class="filter" type="button" data-filter="all" aria-pressed="true">全部</button>
-          <button class="filter" type="button" data-filter="engineering" data-hue="purple" aria-pressed="false">工程</button>
-          <button class="filter" type="button" data-filter="algorithm" data-hue="cyan" aria-pressed="false">算法</button>
-          <button class="filter" type="button" data-filter="frontend" data-hue="green" aria-pressed="false">前端</button>
-          <button class="filter" type="button" data-filter="ai" data-hue="blue" aria-pressed="false">AI</button>
+          <button class="filter nb-chip" type="button" data-filter="all" data-hue="ink" aria-pressed="true">全部</button>
+          <button class="filter nb-chip" type="button" data-filter="engineering" data-hue="purple" aria-pressed="false">工程</button>
+          <button class="filter nb-chip" type="button" data-filter="algorithm" data-hue="cyan" aria-pressed="false">算法</button>
+          <button class="filter nb-chip" type="button" data-filter="frontend" data-hue="green" aria-pressed="false">前端</button>
+          <button class="filter nb-chip" type="button" data-filter="ai" data-hue="blue" aria-pressed="false">AI</button>
         </div>
         <div class="search" role="search">
           <label class="sr-only" for="project-search">搜索项目</label>
@@ -59,42 +72,81 @@
       </div>
       <p class="sr-only" id="results-count" aria-live="polite"></p>
 
-      <ol class="entries">
-        <li class="entry nb-entry" data-category="engineering" data-course="patterns" data-search="c# 设计模式 design patterns 工程 architecture">
-          <h3><a href="/CSharp_Implementation_of_DesignPatterns/">C# 设计模式学习地图</a></h3>
-          <p class="entry-topic" data-hue="purple">工程</p>
-          <p class="entry-note">把抽象模式放回真实语境，用可视化路径理解创建、结构与行为之间的关系。</p>
-          <p class="entry-state" data-state>23 种模式</p>
+      <ol class="entries nb-grid">
+        <li class="entry nb-card" data-hue="purple" data-category="engineering" data-course="patterns" data-total="120" data-unit="任务" data-search="c# 设计模式 design patterns 工程 architecture">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">工程</span> · 23 种模式</p>
+              <h3><a href="/CSharp_Implementation_of_DesignPatterns/">C# 设计模式学习地图</a></h3>
+            </div>
+            <div class="nb-ring" data-ring role="img" aria-label="完成 0%"><span>0%</span></div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">把抽象模式放回真实语境，每种模式一个可运行的示例和一条自检路径。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>0 / 120 任务</span><span class="entry-place" data-place>未开始</span></div>
+          </div>
         </li>
-        <li class="entry nb-entry" data-category="algorithm" data-search="数据结构 算法 algorithm data structure complexity">
-          <h3><a href="/DataStructureAndAlgorithm/">算法研习室</a></h3>
-          <p class="entry-topic" data-hue="cyan">算法</p>
-          <p class="entry-note">拆解数据结构与算法思想，在推演、实现和练习之间建立直觉。</p>
-          <p class="entry-state" data-state>100 题主线</p>
+        <li class="entry nb-card" data-hue="cyan" data-category="algorithm" data-search="数据结构 算法 algorithm data structure complexity">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">算法</span> · 100 题主线</p>
+              <h3><a href="/DataStructureAndAlgorithm/">算法研习室</a></h3>
+            </div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">拆解数据结构与算法思想，在推演、实现和练习之间建立直觉。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>22 个学习单元</span><span class="entry-place" data-place>进度记在课程里</span></div>
+          </div>
         </li>
-        <li class="entry nb-entry" data-category="frontend" data-course="frontend" data-search="issueflow 前端 frontend interaction workflow javascript">
-          <h3><a href="/frontend-learning-project/">IssueFlow 学习站</a></h3>
-          <p class="entry-topic" data-hue="green">前端</p>
-          <p class="entry-note">围绕真实交互场景练习现代前端开发流程，把页面做成可用的产品界面。</p>
-          <p class="entry-state" data-state>91 天课程</p>
+        <li class="entry nb-card" data-hue="green" data-category="frontend" data-course="frontend" data-total="91" data-unit="天" data-search="issueflow 前端 frontend interaction workflow javascript">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">前端</span> · 91 天课程</p>
+              <h3><a href="/frontend-learning-project/">IssueFlow 学习站</a></h3>
+            </div>
+            <div class="nb-ring" data-ring role="img" aria-label="完成 0%"><span>0%</span></div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">围绕真实交互场景练习现代前端开发流程，把页面做成可用的产品界面。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>0 / 91 天</span><span class="entry-place" data-place>未开始</span></div>
+          </div>
         </li>
-        <li class="entry nb-entry" data-category="engineering" data-course="dotnet" data-search=".net dotnet c# 学习 工程 learning">
-          <h3><a href="/LearnDotnetCSharp/">LearnDotnetCSharp</a></h3>
-          <p class="entry-topic" data-hue="purple">工程</p>
-          <p class="entry-note">系统整理 .NET 与 C# 核心知识，让零散概念变成可以查阅和复习的路径。</p>
-          <p class="entry-state" data-state>53 个实验</p>
+        <li class="entry nb-card" data-hue="purple" data-category="engineering" data-course="dotnet" data-total="53" data-unit="实验" data-search=".net dotnet c# 学习 工程 learning">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">工程</span> · 53 个实验</p>
+              <h3><a href="/LearnDotnetCSharp/">LearnDotnetCSharp</a></h3>
+            </div>
+            <div class="nb-ring" data-ring role="img" aria-label="完成 0%"><span>0%</span></div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">系统整理 .NET 10 与 C# 14 核心知识，让零散概念变成可以查阅和复习的路径。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>0 / 53 实验</span><span class="entry-place" data-place>未开始</span></div>
+          </div>
         </li>
-        <li class="entry nb-entry" data-category="ai" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
-          <h3><a href="/LearnLLM/">LearnLLM</a></h3>
-          <p class="entry-topic" data-hue="blue">AI</p>
-          <p class="entry-note">从第一性原理出发，通过中文实战课程理解大语言模型的核心概念与实现路径。</p>
-          <p class="entry-state" data-state>中文课程</p>
+        <li class="entry nb-card" data-hue="blue" data-category="ai" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">AI</span> · 中文课程</p>
+              <h3><a href="/LearnLLM/">LearnLLM</a></h3>
+            </div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">从第一性原理出发，通过中文实战课程理解大语言模型的核心概念与实现路径。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>章节配实验</span><span class="entry-place" data-place>可下载 PDF</span></div>
+          </div>
         </li>
-        <li class="entry nb-entry" data-category="engineering" data-search="lightgbm native cuda windows linux gpu c++ machine learning">
-          <h3><a href="/LightGBM-NativeCUDA/">LightGBM NativeCUDA</a></h3>
-          <p class="entry-topic" data-hue="purple">工程</p>
-          <p class="entry-note">非官方 LightGBM 分支：修复 CUDA 正确性问题，用同一份源码在 Windows（MSVC、单 GPU）和 Linux（GCC）上原生构建。</p>
-          <p class="entry-state" data-state>构建文档</p>
+        <li class="entry nb-card" data-hue="purple" data-category="engineering" data-search="lightgbm native cuda windows linux gpu c++ machine learning">
+          <div class="nb-card-head">
+            <div>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">工程</span> · 构建文档</p>
+              <h3><a href="/LightGBM-NativeCUDA/">LightGBM NativeCUDA</a></h3>
+            </div>
+          </div>
+          <div class="nb-card-body">
+            <p class="entry-note">非官方 LightGBM 分支：修复 CUDA 正确性问题，用同一份源码在 Windows 和 Linux 上原生构建。</p>
+            <div class="nb-card-meta"><span class="entry-state" data-state>构建、验证与下载</span><span class="entry-place" data-place>Windows · Linux</span></div>
+          </div>
         </li>
       </ol>
       <p class="empty" id="empty-state" hidden>没有找到匹配的项目。换个关键词，或选择“全部”。</p>
