@@ -58,6 +58,7 @@ Stated by the owner, binding on all future work:
 - Chinese typography has to read well; the current sites do not. On 2026-11-02 the owner called a serif head over a Microsoft YaHei body awkward, so every site now uses one family, Noto Sans SC.
 - Pages must not be long and scattered: it must be obvious where to start.
 - Pages must not be monochrome: use a small set of colors that make reading easier, and offer a day and a night color scheme. Requested on 2026-11-02 after seeing a one-ink, one-red pilot. The owner first allowed up to seven, then said fewer is fine and that a color close to the background should go.
+- Pages must have colour as surface and a visible way in. Requested on 2026-11-04 after the owner reviewed the finished notebook build of all seven sites and rejected it as monotone (表现单调，缺乏色彩) and dense (文字密密麻麻，缺少引导，不现代化). The owner chose the dashboard direction over a lighter recolouring: coloured card heads with progress rings, one dark banner for the place to continue, rounded surfaces and shorter notes, at the cost of relaying out every site.
 - Text must be easy to make out, and the colors must be easy on the eyes. Requested on 2026-11-02 after a first seven-color version at about 5:1 was hard to read. Every text color holds 7:1, paper is warm and dimmer than white, and night is warm black with warm ink rather than blue-black with near-white text.
 
 ## Evidence on Hand

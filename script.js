@@ -104,7 +104,8 @@ const courses = {
       course: "C# 设计模式",
       place,
       href,
-      state: done + " 个任务已完成",
+      state: done + " / 120 任务",
+      done,
       fraction: done / 120,
       at: timestamp(record.resume?.updatedAt) || timestamp(record.updatedAt),
     };
@@ -122,6 +123,7 @@ const courses = {
       place: next ? "第 " + next.day + " 天" : "全部完成",
       href: "/frontend-learning-project/",
       state: done.length + " / " + days.length + " 天",
+      done: done.length,
       fraction: done.length / days.length,
       at: Math.max(...done.map((day) => timestamp(day.completedAt))),
     };
@@ -137,7 +139,8 @@ const courses = {
       course: "LearnDotnetCSharp",
       place: reading ? reading.title : "实验目录",
       href: "/LearnDotnetCSharp/" + (typeof reading?.url === "string" ? reading.url : ""),
-      state: experiments > 0 ? experiments + " 个实验有记录" : "读到 " + reading.title,
+      state: experiments + " / 53 实验",
+      done: experiments,
       fraction: experiments / 53,
       at: 0,
     };
@@ -153,24 +156,42 @@ function whenText(time) {
 
 function showProgress() {
   let latest = null;
+  let doneUnits = 0;
+  let active = 0;
 
   entries.forEach((entry) => {
     const read = courses[entry.dataset.course];
     const progress = read ? read() : null;
     if (!progress) return;
-    entry.dataset.record = progress.fraction >= 1 ? "done" : "started";
-    entry.style.setProperty("--nb-fraction", String(progress.fraction));
-    entry.querySelector("[data-state]").textContent = [progress.state, whenText(progress.at)].filter(Boolean).join(" · ");
+    const fraction = Math.min(1, Math.max(0, progress.fraction));
+    entry.dataset.record = fraction >= 1 ? "done" : "started";
+    entry.style.setProperty("--nb-fraction", String(fraction));
+    const ring = entry.querySelector("[data-ring]");
+    if (ring) {
+      const percent = Math.round(fraction * 100) + "%";
+      ring.style.setProperty("--nb-fraction", String(fraction));
+      ring.querySelector("span").textContent = percent;
+      ring.setAttribute("aria-label", "完成 " + percent);
+    }
+    entry.querySelector("[data-state]").textContent = progress.state;
+    entry.querySelector("[data-place]").textContent = [progress.place, whenText(progress.at)].filter(Boolean).join(" · ");
+    doneUnits += progress.done;
+    active += 1;
     if (!latest || progress.at > latest.progress.at) latest = { entry, progress };
   });
 
   if (!latest) return;
+  document.querySelector("#stat-done").textContent = String(doneUnits);
+  document.querySelector("#stat-active").textContent = String(active);
+  document.querySelector("#stat-when").textContent = whenText(latest.progress.at) || "有记录";
+
   const { entry, progress } = latest;
   entry.setAttribute("aria-current", "true");
   const stopped = document.createElement("p");
   stopped.className = "nb-stopped";
   stopped.textContent = "停在这里";
-  entry.querySelector("h3").after(stopped);
+  entry.querySelector(".nb-card-body").prepend(stopped);
+
   resumeLine.closest(".resume").classList.add("has-record");
   const link = document.createElement("a");
   link.href = progress.href;
@@ -179,6 +200,9 @@ function showProgress() {
   meta.className = "resume-meta";
   meta.textContent = [progress.state, whenText(progress.at)].filter(Boolean).join(" · ");
   resumeLine.replaceChildren(link, meta);
+  const go = document.querySelector("#resume-go");
+  go.href = progress.href;
+  go.hidden = false;
 }
 
 updateEntries();

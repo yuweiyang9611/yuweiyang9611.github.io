@@ -91,6 +91,8 @@ try {
     assert.match(await page.locator("#resume-line").textContent(), /还没有学习记录/u);
     assert.equal(await page.locator(".entry[data-record]").count(), 0);
     assert.equal(await page.locator(".entry[aria-current]").count(), 0);
+    assert.equal(await page.locator("#resume-go").isVisible(), false);
+    assert.deepEqual(await page.locator("[data-ring] span").allTextContents(), ["0%", "0%", "0%"]);
     assert.equal(await page.locator('a[href="/LightGBM-NativeCUDA/"]').count(), 1);
 
     await page.locator('[data-filter="ai"]').click();
@@ -115,6 +117,12 @@ try {
     const link = page.locator("#resume-line a");
     assert.match(await link.textContent(), /Factory Method/u);
     assert.match(await link.textContent(), /运行并核对输出/u);
+    assert.equal(await page.locator('.entry[data-course="patterns"] [data-ring]').getAttribute("aria-label"), "完成 1%");
+    assert.equal(await page.locator('.entry[data-course="patterns"] [data-ring] span').textContent(), "1%");
+    assert.equal(await page.locator("#stat-done").textContent(), "4");
+    assert.equal(await page.locator("#stat-active").textContent(), "3");
+    assert.equal(await page.locator("#resume-go").isVisible(), true);
+    assert.equal(await page.locator("#resume-go").getAttribute("href"), "/CSharp_Implementation_of_DesignPatterns/patterns/factory-method.html#evidence-run");
     assert.equal(await link.getAttribute("href"), "/CSharp_Implementation_of_DesignPatterns/patterns/factory-method.html#evidence-run");
     assert.equal(await page.locator(".entry .nb-stopped").count(), 1);
     assert.equal(await page.locator(".entry[data-record]").count(), 3);
@@ -185,9 +193,10 @@ try {
           return (high + 0.05) / (low + 0.05);
         };
         const hues = ["red", "green", "cyan", "blue", "purple"];
-        const backgrounds = ["paper", "sheet", "red-wash", "green-wash", "cyan-wash", "blue-wash"];
+        const backgrounds = ["paper", "sheet", "red-wash", "green-wash", "cyan-wash", "blue-wash", "purple-wash"];
         const pairs = ["ink", "ink-soft", ...hues].flatMap((text) => backgrounds.map((back) => [text, back]));
-        pairs.push(["on-fill", "fill"]);
+        // Paper-coloured text on every fill: card heads, the banner and pressed chips.
+        for (const fill of [...hues.map((hue) => hue + "-fill"), "ink-fill", "fill"]) pairs.push(["on-fill", fill]);
         return pairs.filter(([text, back]) => ratio(token(text), token(back)) < 7).map((pair) => pair.join(" on "));
       }, scheme);
       assert.deepEqual(weak, [], `${scheme} scheme has text below 7:1`);
