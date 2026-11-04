@@ -264,6 +264,7 @@ Five colors, each with one job. The kit names each by hue (`--nb-red`) and by jo
 
 - **Warm Paper** (#f4efe4, night #1c1a17): The page, the running head and dialogs. `theme.js` also sets it as the browser's `theme-color`.
 - **Pasted Sheet** (#e7e0d0, night #2c2924): Only for things pasted into the notebook: run output, code blocks, inline code, the code editor and the commands of locked steps. It is 1.15:1 against paper by day and 1.20:1 at night, dark enough to read as its own surface.
+- **Code Paper** (#1c1a17 in both schemes): Only the code panel. Code is read on night paper by day as well, with the night text hues on it (`--nb-code-ink`, `--nb-code-soft`, `--nb-code-green/cyan/blue/purple`), each at least 7:1 on the paper and on the marked line (`--nb-code-mark`, #262930). A marked line also takes a 3px blue edge, so the mark reads without colour.
 - **Soft Ink** (#4a4338, night #c4baa7): Notes, metadata, inactive nav and filters, placeholders. Contrast is 8.5:1 on paper and 7.4:1 on the sheet by day, 9.0:1 and 7.5:1 at night, and at least 7.2:1 on any wash.
 - **Ruling** (#bdb39e, night #4c473e): Dividers between rows and sections. At 1.8:1 by day it is never the only edge of a control.
 - **Strong Ruling** (#6a6152, night #958c7b): The dashed part of the record line, control outlines, the hairlines around pasted output and link underlines. Contrast is 5.3:1 by day and 5.2:1 at night, so it is for lines, not text.
@@ -474,6 +475,20 @@ A printout stuck into the page (`.nb-paste`), not a fake window.
 - **Long output:** Expected output and compiler diagnostics may wrap with `pre-wrap` where reading them matters more than their shape, and cap their height with a scroll.
 - **Code color:** Code blocks use this same form, colored by the kit's `.tok-*` classes: keyword and number purple, type cyan, call blue, string green, meta and comment Soft Ink. Red is not used in code. On the course `code-colors.js` sets the classes at runtime for C#, PowerShell and bat, so the exported guide, its search index and its print output stay plain text, and the classes live in `@media screen`, so print stays black. An engine's highlighter should use the same assignments (provisional until an engine site ships).
 
+### Code Panel
+
+Source read in place (`.nb-code`), so a lesson never sends the reader to GitHub for the file it teaches. Added 2026-11-05 after the owner said the sites lacked interaction and that reading source should not mean leaving the site.
+
+**The Source In Place Rule.** A file the lesson talks about is on the page, whole, with its real line numbers. The build copies it from the repository at the page's own revision, so the panel cannot drift from the code. A link to GitHub stays as a small text link in the actions row, for history and blame, and is never the only way to the file.
+
+- **Form:** A rounded sheet: a tab strip on the Pasted Sheet, the code on Code Paper, an actions row on the sheet, and the run output under it. Tabs are mono at 600 and the selected tab takes the Code Paper.
+- **Code:** Mono at .8125rem/1.65, `white-space: pre`, line numbers in `--nb-code-soft` that cannot be selected, at most 34rem tall and scrolling inside (`--nb-code-height` overrides). Lines the lesson points at carry `data-marked`.
+- **Colour:** The same jobs as `.tok-*`, in the night hues: keyword and number purple, type cyan, call blue, string green, comment and meta soft. No red in code.
+- **Actions:** 运行 is a solid button; 改一改再跑, 复制 and 恢复原文 are outlined. The output label is cyan while a run is going, green when it finished (`data-state="done"`) and red when it failed (`"wrong"`), always in words: 运行结果, 编译失败, 运行超时.
+- **Editing:** 改一改再跑 swaps the view for `.nb-code-editor`, a plain textarea on the Code Paper, so the edit stays uncoloured like every code editor. The draft lives only on the page.
+- **Without script:** The tabs and the GitHub link still render, and a site may inline the first file so the code reads without script.
+- **Behaviour is the site's:** The kit gives the form and the tokens. Tabs, loading the text, colouring it with `code-colors.js` or an engine's highlighter, and running it belong to the site.
+
 ### Command Row
 
 **The Whole Token Rule.** A command never wraps and never breaks inside a token. It sits on its own line on the cyan wash with `white-space: pre`, `overflow-x: auto` and `min-width: 0`, and a long one scrolls sideways in its own box, even if that cuts it off at the edge of a phone. Anything meant to be copied gets a command row, and inline code is for short names.
@@ -509,6 +524,7 @@ For every engine:
 - The kit is global: it zeroes prose margins, colors and underlines every link and restyles every checkbox, so check an engine's own controls against it.
 - The site supplies the `js` class on `<html>` (the collapsing nav needs it and `theme.js` does not set it), the menu toggle's behavior, and `--nb-fraction`, `aria-current` and the stopped label on record rows.
 - `theme.js` builds the scheme control after the first `.nb-nav`, so a page without that class gets no control.
+- The code panel is form only: the site loads the file text, colours it and runs it. A static site bundles the files it shows at build time, next to the page, at the same revision.
 - Tokens switch on `data-theme` on `<html>`, as `light` or `dark`. An engine with its own dark state must drive that attribute, or the kit stays in day colors on a night page.
 
 **Hand-written pages** use the kit classes directly. The C# course is the working example.

@@ -197,6 +197,8 @@ try {
         const pairs = ["ink", "ink-soft", ...hues].flatMap((text) => backgrounds.map((back) => [text, back]));
         // Paper-coloured text on every fill: card heads, the banner and pressed chips.
         for (const fill of [...hues.map((hue) => hue + "-fill"), "ink-fill", "fill"]) pairs.push(["on-fill", fill]);
+        // Code panel: every code colour on the code paper and on a marked line.
+        for (const text of ["code-ink", "code-soft", "code-green", "code-cyan", "code-blue", "code-purple"]) for (const back of ["code-paper", "code-mark"]) pairs.push([text, back]);
         return pairs.filter(([text, back]) => ratio(token(text), token(back)) < 7).map((pair) => pair.join(" on "));
       }, scheme);
       assert.deepEqual(weak, [], `${scheme} scheme has text below 7:1`);
