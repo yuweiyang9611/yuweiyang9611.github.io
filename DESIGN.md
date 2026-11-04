@@ -483,6 +483,7 @@ Source read in place (`.nb-code`), so a lesson never sends the reader to GitHub 
 
 - **Form:** A rounded sheet: a tab strip on the Pasted Sheet, the code on Code Paper, an actions row on the sheet, and the run output under it. Tabs are mono at 600 and the selected tab takes the Code Paper.
 - **Code:** Mono at .8125rem/1.65, `white-space: pre`, line numbers in `--nb-code-soft` that cannot be selected, at most 34rem tall and scrolling inside (`--nb-code-height` overrides). Lines the lesson points at carry `data-marked`.
+- **Markup:** `.nb-code` holds `.nb-code-tabs` (buttons with `role="tab"` and a trailing `.nb-code-note`), a `pre.nb-code-view` with one `code`, `.nb-code-actions` and, when the site runs code, `.nb-code-output`. Each line is a `.nb-code-line` with `data-line` for its number and the coloured text in one `.nb-code-text` span: the line is a two-column grid, so the tokens must share that span or each becomes a cell.
 - **Colour:** The same jobs as `.tok-*`, in the night hues: keyword and number purple, type cyan, call blue, string green, comment and meta soft. No red in code.
 - **Actions:** 运行 is a solid button; 改一改再跑, 复制 and 恢复原文 are outlined. The output label is cyan while a run is going, green when it finished (`data-state="done"`) and red when it failed (`"wrong"`), always in words: 运行结果, 编译失败, 运行超时.
 - **Editing:** 改一改再跑 swaps the view for `.nb-code-editor`, a plain textarea on the Code Paper, so the edit stays uncoloured like every code editor. The draft lives only on the page.

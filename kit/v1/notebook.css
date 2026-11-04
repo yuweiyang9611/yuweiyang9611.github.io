@@ -191,6 +191,8 @@ kbd { padding: 0 .35em; border: 1px solid var(--nb-rule-strong); border-radius: 
 .nb-button:hover { border-color: var(--nb-link); color: var(--nb-link); }
 .nb-button[disabled] { color: var(--nb-ink-soft); border-style: dashed; cursor: not-allowed; }
 .nb-button--solid, .nb-button--solid:hover { border-color: var(--nb-link); background: var(--nb-fill); color: var(--nb-on-fill); }
+/* A solid button that cannot be pressed yet drops its fill, so its words never sit on a surface they cannot be read on. */
+.nb-button--solid[disabled], .nb-button--solid[disabled]:hover { border: 1px dashed var(--nb-rule-strong); background: transparent; color: var(--nb-ink-soft); }
 
 .nb-input {
   width: 100%;
@@ -493,6 +495,7 @@ input[type="checkbox"]:disabled { border: 1px dashed var(--nb-rule-strong); curs
 .nb-code-view code { display: block; min-width: max-content; padding: .5rem 0; font: inherit; }
 .nb-code-line { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); padding-right: 1rem; white-space: pre; }
 .nb-code-line::before { content: attr(data-line); padding-right: 1rem; color: var(--nb-code-soft); text-align: right; user-select: none; }
+.nb-code-text { min-width: 0; }
 .nb-code-line[data-marked] { background: var(--nb-code-mark); box-shadow: inset 3px 0 var(--nb-code-blue); }
 .nb-code .tok-comment, .nb-code .tok-meta { color: var(--nb-code-soft); }
 .nb-code .tok-keyword, .nb-code .tok-number { color: var(--nb-code-purple); }
