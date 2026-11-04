@@ -46,6 +46,7 @@ Constraints:
 
 - Existing URLs and browser storage keys must not change, or the owner loses their place and their progress.
 - Static hosting on GitHub Pages only: no backend.
+- Running code means WebAssembly in the browser (the C# course ships a Roslyn and .NET 10 runtime, about 70 MB, loaded on the first run) or nothing. Nothing executes on a server.
 - Each site's existing site tests and CI checks must keep passing.
 - Some repositories reject email addresses in commit messages and PR text.
 
@@ -60,6 +61,7 @@ Stated by the owner, binding on all future work:
 - Pages must not be monochrome: use a small set of colors that make reading easier, and offer a day and a night color scheme. Requested on 2026-11-02 after seeing a one-ink, one-red pilot. The owner first allowed up to seven, then said fewer is fine and that a color close to the background should go.
 - Pages must have colour as surface and a visible way in. Requested on 2026-11-04 after the owner reviewed the finished notebook build of all seven sites and rejected it as monotone (表现单调，缺乏色彩) and dense (文字密密麻麻，缺少引导，不现代化). The owner chose the dashboard direction over a lighter recolouring: coloured card heads with progress rings, one dark banner for the place to continue, rounded surfaces and shorter notes, at the cost of relaying out every site.
 - Text must be easy to make out, and the colors must be easy on the eyes. Requested on 2026-11-02 after a first seven-color version at about 5:1 was hard to read. Every text color holds 7:1, paper is warm and dimmer than white, and night is warm black with warm ink rather than blue-black with near-white text.
+- Source is read where it is taught, and a lesson can be run where it is read. Requested on 2026-11-05: the owner said the sites lacked interaction (互动性不行) and that looking at source should not mean jumping to GitHub, and asked for an online learning system. They accepted the three-layer plan, source in the site, running in the browser, one learning loop across the courses, with the C# design patterns course as the pilot, LearnLLM to start keeping records, and backups as a JSON file rather than a Gist.
 
 ## Evidence on Hand
 
