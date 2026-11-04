@@ -485,6 +485,8 @@ input[type="checkbox"]:disabled { border: 1px dashed var(--nb-rule-strong); curs
    schemes, so the night text hues colour the tokens by day too. The site supplies the behaviour: tabs, loading
    the text, colouring it with code-colors.js or an engine's highlighter, and running it. */
 .nb-code { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; min-width: 0; overflow: hidden; border: 1px solid var(--nb-rule); border-radius: var(--nb-radius); background: var(--nb-paper); }
+/* Grid items take their content as a minimum width, so every part of the panel gives that up: the code scrolls inside its view instead of widening the page. */
+.nb-code > * { min-width: 0; }
 .nb-code-tabs { display: flex; flex-wrap: wrap; align-items: stretch; margin: 0; padding: 0; border-bottom: 1px solid var(--nb-rule); background: var(--nb-sheet); list-style: none; }
 .nb-code-tab { min-height: 2.5rem; padding: 0 .875rem; border: 0; border-right: 1px solid var(--nb-rule); background: transparent; color: var(--nb-ink-soft); font: 600 .8125rem/1 var(--nb-mono); cursor: pointer; }
 .nb-code-tab:hover { color: var(--nb-ink); }
