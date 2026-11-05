@@ -394,7 +394,8 @@ Components are plain: words, lines and the occasional box. Words do the job of i
 ### Progress Ring
 
 - **Form (`.nb-ring`):** 3.25rem, a conic arc in paper over a 28% paper track, with a 2.5rem disc in the card's fill inside, and the percentage at .8125rem 600 in the disc. `--nb-fraction` from 0 to 1 sets the arc; the site sets it and the `aria-label` (完成 6%) from the record.
-- **Where:** Only on a card whose course records progress the site can read. A card with no reader (algorithms, LLM, the LightGBM documentation) has no ring, and its head shows the count in the eyebrow instead. A ring at 0% is shown, because 0 / 120 is a true figure; a ring is never drawn for progress that is not on record.
+- **Where:** Only on a card whose course records progress the site can read. A card with no reader (LLM, the LightGBM documentation) has no ring, and its head shows the count in the eyebrow instead. A ring at 0% is shown, because 0 / 120 is a true figure; a ring is never drawn for progress that is not on record.
+- **Readers:** The index has four, in `script.js` under `courses`, and every one only reads. Three read localStorage (design patterns, 120 tasks; IssueFlow, 91 days; .NET, 53 labs). The algorithms course keeps its record in IndexedDB (`dsa-learning-progress`, store `progress`, key `current`; 22 units, a unit counts once verified), and opening a database by name would create an empty one and break that course, so the reader lists the databases first and opens the course's only when it is already there, at the course's version, with no upgrade handler. `tests/home.mjs` seeds that record the way the course writes it and checks the index never changes it and never creates the database when it is missing.
 
 ### Progress Bar
 

@@ -145,7 +145,146 @@ const courses = {
       at: 0,
     };
   },
+
+  // The algorithms course keeps its record in IndexedDB (database dsa-learning-progress, store
+  // progress, key current). This mirrors the course's own read-only reader, readRecord.ts: a unit
+  // counts once verified at the current mastery revision, and the place to continue is the unit
+  // touched last and not finished, else the earliest review due, else the first unit whose
+  // prerequisites are all verified.
+  async algorithms() {
+    let store = null;
+    try {
+      store = await readAlgorithmsStore();
+    } catch {
+      store = null;
+    }
+    if (!(store?.revision > 0 || store?.generation > 0)) store = legacyAlgorithmsStore();
+    const units = store?.units && typeof store.units === "object" ? store.units : {};
+    const ids = Object.keys(units);
+    if (ids.length === 0) return null;
+    const now = Date.now();
+    const status = (id) => algorithmStatus(units[id], now);
+    const mastered = (id) => status(id) === "verified" || status(id) === "review";
+    const verified = algorithmUnits.filter(([id]) => mastered(id)).length;
+    const learning = algorithmUnits
+      .filter(([id]) => status(id) === "learning")
+      .sort(([left], [right]) => (Number(units[right]?.updatedAt) || 0) - (Number(units[left]?.updatedAt) || 0))[0];
+    const due = algorithmUnits
+      .filter(([id]) => status(id) === "review")
+      .sort(([left], [right]) => (Number(units[left]?.nextReviewAt) || 0) - (Number(units[right]?.nextReviewAt) || 0))[0];
+    const next = algorithmUnits.find(([id, , prerequisites]) => status(id) === "not-started" && prerequisites.every(mastered));
+    const stop = learning ?? due ?? next;
+    const base = "/DataStructureAndAlgorithm/学习单元.html";
+    let place = "全部完成";
+    if (learning) place = learning[1];
+    else if (due) place = due[1] + " · 复习到期";
+    else if (next) place = next[1] + " · 下一个单元";
+    return {
+      course: "算法研习室",
+      place,
+      href: stop ? base + "#unit-" + stop[0] : base,
+      state: verified + " / 22 单元",
+      done: verified,
+      fraction: verified / 22,
+      at: Math.max(0, ...ids.map((id) => Number(units[id]?.updatedAt) || 0)),
+    };
+  },
 };
+
+// The course's 22 units in the order its units page teaches them (stage order, corrected so no unit
+// comes before a prerequisite), each with its prerequisites. Copied from learningUnits.ts and record.ts.
+const algorithmUnits = [
+  ["core-linear-structures", "链表、栈、队列与双端队列", []],
+  ["core-array-search", "数组模式、Span 与二分查找", []],
+  ["core-sorting", "比较排序与非比较排序", ["core-array-search"]],
+  ["advanced-ordered-trees", "BST、AVL、红黑树与跳表", ["core-linear-structures"]],
+  ["advanced-heap-ipq", "二叉堆与索引优先队列", ["core-array-search"]],
+  ["advanced-hash-tables", "链地址与开放寻址哈希表", ["core-array-search"]],
+  ["advanced-disjoint-set", "并查集与动态连通性", ["core-linear-structures"]],
+  ["advanced-caching", "LRU 与 LFU 缓存", ["core-linear-structures", "advanced-hash-tables"]],
+  ["advanced-range-query", "Fenwick、线段树、Sparse Table 与懒标记", ["core-array-search"]],
+  ["core-trie-kmp", "Trie 与 KMP 单模式匹配", ["core-linear-structures"]],
+  ["core-weighted-graphs", "加权图、最短路与最小生成森林", ["advanced-heap-ipq", "advanced-disjoint-set"]],
+  ["core-dynamic-programming", "动态规划：线性、区间、树形与状态压缩", ["core-array-search", "core-linear-structures"]],
+  ["core-backtracking", "回溯与组合搜索", ["core-linear-structures"]],
+  ["advanced-connectivity-flow", "全源最短路、低链接、A* 与费用流", ["core-weighted-graphs"]],
+  ["p3-number-theory-bit", "数论与位运算", ["core-array-search"]],
+  ["p3-string-indexes", "高级字符串与文本索引", ["core-trie-kmp", "core-dynamic-programming"]],
+  ["p3-graph-algorithms", "Johnson、匹配、欧拉路径、LCA 与最大流", ["core-weighted-graphs", "advanced-connectivity-flow"]],
+  ["practice-leetcode-100", "LeetCode 100 题分型训练", ["core-array-search", "core-linear-structures", "core-trie-kmp", "core-dynamic-programming", "core-backtracking"]],
+  ["project-city-delivery", "城市即时配送 V2", ["advanced-hash-tables", "advanced-caching", "advanced-disjoint-set", "advanced-heap-ipq", "advanced-connectivity-flow"]],
+  ["project-mini-search", "迷你搜索引擎 V2", ["core-linear-structures", "advanced-hash-tables", "core-trie-kmp", "advanced-heap-ipq", "advanced-caching", "p3-string-indexes"]],
+  ["project-scheduling", "项目调度 V2", ["advanced-hash-tables", "advanced-heap-ipq", "advanced-range-query", "core-weighted-graphs", "core-dynamic-programming"]],
+  ["project-mini-storage", "迷你存储引擎", ["advanced-ordered-trees", "advanced-caching", "advanced-hash-tables"]],
+];
+const algorithmEvidence = ["invariant", "test", "transfer"];
+const algorithmRevision = 1;
+const algorithmDatabase = "dsa-learning-progress";
+
+// statusOf from the course's progress.ts.
+function algorithmStatus(record, now) {
+  if (!record || typeof record !== "object") return "not-started";
+  const evidence = record.evidenceRevision === algorithmRevision ? plural(record.evidenceIds) : [];
+  const complete = algorithmEvidence.every((id) => evidence.includes(id));
+  if (!record.verifiedAt || record.verifiedRevision !== algorithmRevision || !complete) return "learning";
+  return record.nextReviewAt && record.nextReviewAt <= now ? "review" : "verified";
+}
+
+// Opening a database that does not exist would create an empty one without the course's object
+// store and break its units page. So the index asks for the list of databases first, opens the
+// course's only when it is already there, at the course's own version, with no upgrade handler,
+// and only ever reads from it.
+async function readAlgorithmsStore() {
+  const factory = globalThis.indexedDB;
+  if (typeof factory?.databases !== "function") return null;
+  const listed = (await factory.databases()).some((database) => database.name === algorithmDatabase);
+  if (!listed) return null;
+  const database = await new Promise((resolve, reject) => {
+    const request = factory.open(algorithmDatabase, 1);
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error("blocked"));
+    request.onsuccess = () => resolve(request.result);
+  });
+  try {
+    database.onversionchange = () => database.close();
+    if (!database.objectStoreNames.contains("progress")) return null;
+    return await new Promise((resolve, reject) => {
+      const request = database.transaction("progress", "readonly").objectStore("progress").get("current");
+      request.onsuccess = () => resolve(request.result && typeof request.result === "object" ? request.result : null);
+      request.onerror = () => reject(request.error);
+    });
+  } finally {
+    database.close();
+  }
+}
+
+// Before IndexedDB the course kept a backup-shaped record (v2) or a list of finished unit ids (v1)
+// in localStorage; its reader still falls back to them, so this does too.
+function legacyAlgorithmsStore() {
+  const units = {};
+  try {
+    const v2 = localStorage.getItem("dsa-learning-progress-v2");
+    if (v2 !== null) {
+      const backup = readRecord("dsa-learning-progress-v2");
+      const entries = backup?.schemaVersion === 2 && backup.units && typeof backup.units === "object"
+        ? Object.entries(backup.units).map(([id, record]) => ({ id, record }))
+        : backup?.schemaVersion === 3 ? plural(backup.records) : [];
+      for (const entry of entries) {
+        if (typeof entry?.id === "string" && entry.record && typeof entry.record === "object") units[entry.id] = entry.record;
+      }
+      return { units };
+    }
+    const now = Date.now();
+    for (const id of plural(readRecord("dsa-learning-progress-v1"))) {
+      if (typeof id === "string" && algorithmUnits.some(([known]) => known === id)) {
+        units[id] = { evidenceIds: [], reviewRound: 0, legacyCompleted: true, startedAt: now, updatedAt: now };
+      }
+    }
+  } catch {
+    // Storage can be disabled.
+  }
+  return { units };
+}
 
 function whenText(time) {
   if (!time) return "";
@@ -154,14 +293,24 @@ function whenText(time) {
   return days === 1 ? "昨天" : days + " 天前";
 }
 
-function showProgress() {
+async function showProgress() {
   let latest = null;
   let doneUnits = 0;
   let active = 0;
 
-  entries.forEach((entry) => {
-    const read = courses[entry.dataset.course];
-    const progress = read ? read() : null;
+  // Every record is read before any card is painted, so the stats, the banner and the stopped
+  // card agree. The algorithms reader is asynchronous; the others resolve at once.
+  const read = await Promise.all(entries.map(async (entry) => {
+    const reader = courses[entry.dataset.course];
+    try {
+      return reader ? await reader() : null;
+    } catch {
+      return null;
+    }
+  }));
+
+  entries.forEach((entry, index) => {
+    const progress = read[index];
     if (!progress) return;
     const fraction = Math.min(1, Math.max(0, progress.fraction));
     entry.dataset.record = fraction >= 1 ? "done" : "started";
@@ -206,4 +355,7 @@ function showProgress() {
 }
 
 updateEntries();
-showProgress();
+// The mark says every record has been looked at, so a test can wait for it instead of guessing.
+showProgress().finally(() => {
+  document.body.dataset.progress = "read";
+});

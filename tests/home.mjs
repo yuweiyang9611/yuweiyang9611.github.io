@@ -57,8 +57,56 @@ const records = {
   "issueflow:frontend-learning-project:progress:v1": JSON.stringify(frontend),
   "learn-dotnet-csharp-learning-data-v1": JSON.stringify(dotnet),
 };
+// The algorithms course's record as its progressRepository.ts writes it: schema 3, one entry per
+// touched unit. One unit verified a week ago, one started today with a single piece of evidence.
+const today = Date.now();
+const algorithms = {
+  schemaVersion: 3,
+  generation: 0,
+  revision: 7,
+  units: {
+    "core-linear-structures": {
+      evidenceIds: ["invariant", "test", "transfer"], evidenceRevision: 1, selfTestPassedAt: today - 7 * 86400000, selfTestRevision: 1,
+      verifiedAt: today - 7 * 86400000, verifiedRevision: 1, nextReviewAt: today + 86400000, reviewRound: 0,
+      startedAt: today - 8 * 86400000, updatedAt: today - 7 * 86400000,
+    },
+    "core-array-search": { evidenceIds: ["invariant"], evidenceRevision: 1, reviewRound: 0, startedAt: today - 3600000, updatedAt: today - 3600000 },
+  },
+  deleted: {},
+};
 
-async function open(browser, { seed, viewport = { width: 1440, height: 900 }, colorScheme = "light", init } = {}) {
+// Writes the record the way the course does (database version 1, store "progress", key "current").
+function seedAlgorithms(record) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("dsa-learning-progress", 1);
+    request.onupgradeneeded = () => request.result.createObjectStore("progress");
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const database = request.result;
+      const transaction = database.transaction("progress", "readwrite");
+      transaction.objectStore("progress").put(record, "current");
+      transaction.oncomplete = () => { database.close(); resolve(); };
+      transaction.onerror = () => reject(transaction.error);
+    };
+  });
+}
+
+// Reads the course's record back, or null when the database or the record is missing.
+async function readAlgorithms() {
+  if (!(await indexedDB.databases()).some((database) => database.name === "dsa-learning-progress")) return null;
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("dsa-learning-progress", 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const database = request.result;
+      const get = database.transaction("progress", "readonly").objectStore("progress").get("current");
+      get.onsuccess = () => { database.close(); resolve(JSON.stringify(get.result) ?? null); };
+      get.onerror = () => reject(get.error);
+    };
+  });
+}
+
+async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", init } = {}) {
   const context = await browser.newContext({ viewport, colorScheme });
   if (seed) {
     await context.addInitScript((data) => {
@@ -71,7 +119,18 @@ async function open(browser, { seed, viewport = { width: 1440, height: 900 }, co
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
   await page.goto(baseUrl);
+  if (database) {
+    // IndexedDB has to be written on the origin, so the record goes in after a first load and the page is opened again.
+    await page.evaluate(seedAlgorithms, database);
+    await page.reload();
+  }
+  await settled(page);
   return { context, page, errors };
+}
+
+// The records are read asynchronously; the page marks the body once every reader has answered.
+function settled(page) {
+  return page.locator('body[data-progress="read"]').waitFor({ state: "attached" });
 }
 
 async function assertAccessible(page, label) {
@@ -92,8 +151,10 @@ try {
     assert.equal(await page.locator(".entry[data-record]").count(), 0);
     assert.equal(await page.locator(".entry[aria-current]").count(), 0);
     assert.equal(await page.locator("#resume-go").isVisible(), false);
-    assert.deepEqual(await page.locator("[data-ring] span").allTextContents(), ["0%", "0%", "0%"]);
+    assert.deepEqual(await page.locator("[data-ring] span").allTextContents(), ["0%", "0%", "0%", "0%"]);
     assert.equal(await page.locator('a[href="/LightGBM-NativeCUDA/"]').count(), 1);
+    // Looking for the algorithms course's record must not create its database.
+    assert.deepEqual(await page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), []);
 
     await page.locator('[data-filter="ai"]').click();
     assert.equal(await page.locator(".entry:visible").count(), 1);
@@ -131,11 +192,64 @@ try {
 
     const before = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
     await page.reload();
+    await settled(page);
     const after = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
     assert.equal(after, before, "the index must never change another site's records");
+    assert.deepEqual(await page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), []);
     await assertAccessible(page, "returning state");
     assert.deepEqual(errors, []);
     await context.close();
+  }
+
+  // The algorithms course's record lives in IndexedDB. Read through the same guard the course uses, never written.
+  {
+    const { context, page, errors } = await open(browser, { seed: records, database: algorithms });
+    const card = page.locator('.entry[data-course="algorithms"]');
+    assert.equal(await card.locator("[data-ring]").getAttribute("aria-label"), "完成 5%");
+    assert.equal(await card.locator("[data-ring] span").textContent(), "5%");
+    assert.equal(await card.locator("[data-state]").textContent(), "1 / 22 单元");
+    assert.match(await card.locator("[data-place]").textContent(), /^数组模式、Span 与二分查找 · 今天$/u);
+    assert.equal(await card.getAttribute("aria-current"), "true", "the unit touched today is the place to continue");
+    assert.equal(await page.locator(".entry[data-record]").count(), 4);
+    assert.equal(await page.locator("#stat-done").textContent(), "5");
+    assert.equal(await page.locator("#stat-active").textContent(), "4");
+    assert.equal(await page.locator("#stat-when").textContent(), "今天");
+    const link = page.locator("#resume-line a");
+    assert.equal(await link.textContent(), "算法研习室 · 数组模式、Span 与二分查找");
+    const href = "/DataStructureAndAlgorithm/学习单元.html#unit-core-array-search";
+    assert.equal(await link.getAttribute("href"), href);
+    assert.equal(await page.locator("#resume-go").getAttribute("href"), href);
+
+    const before = await page.evaluate(readAlgorithms);
+    assert.equal(before, JSON.stringify(algorithms));
+    await page.reload();
+    await settled(page);
+    assert.equal(await page.locator('.entry[data-course="algorithms"][data-record]').count(), 1);
+    assert.equal(await page.evaluate(readAlgorithms), before, "the index must never change the course's IndexedDB record");
+    assert.equal(await page.evaluate(() => indexedDB.databases().then((list) => list.length)), 1, "no second database");
+    await assertAccessible(page, "algorithms record");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // The course's own fallbacks: with every unit verified the card is done, and the next unit is the first whose
+  // prerequisites are verified; a record from before IndexedDB is still read from localStorage.
+  {
+    const verified = Object.fromEntries(["core-linear-structures", "core-array-search"].map((id) => [id, algorithms.units["core-linear-structures"]]));
+    const { context, page, errors } = await open(browser, { database: { ...algorithms, units: verified } });
+    const card = page.locator('.entry[data-course="algorithms"]');
+    assert.equal(await card.locator("[data-state]").textContent(), "2 / 22 单元");
+    assert.match(await card.locator("[data-place]").textContent(), /^比较排序与非比较排序 · 下一个单元 · 7 天前$/u);
+    assert.deepEqual(errors, []);
+    await context.close();
+
+    const legacy = await open(browser, { seed: { "dsa-learning-progress-v1": JSON.stringify(["core-sorting", "unknown-unit"]) } });
+    const legacyCard = legacy.page.locator('.entry[data-course="algorithms"]');
+    assert.equal(await legacyCard.locator("[data-state]").textContent(), "0 / 22 单元");
+    assert.match(await legacyCard.locator("[data-place]").textContent(), /^比较排序与非比较排序 · 今天$/u);
+    assert.deepEqual(await legacy.page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), []);
+    assert.deepEqual(legacy.errors, []);
+    await legacy.context.close();
   }
 
   // Damaged or future-format records must not break the page.
