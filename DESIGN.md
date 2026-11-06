@@ -491,6 +491,17 @@ Source read in place (`.nb-code`), so a lesson never sends the reader to GitHub 
 - **Without script:** The tabs and the GitHub link still render, and a site may inline the first file so the code reads without script.
 - **Behaviour is the site's:** The kit gives the form and the tokens. Tabs, loading the text, colouring it with `code-colors.js` or an engine's highlighter, and running it belong to the site.
 
+### Loop Band
+
+The five steps of a lesson in one row (`.nb-steps`), so every course page says the same thing about where the reader is. Added 2026-11-06 for the third phase of the learning system, when the loop reached every site.
+
+**The One Band Rule.** A lesson page carries one band with its steps in the order the reader takes them, 读, 看代码, 跑, 自测, 记一笔, or the steps that lesson has. The band is read from the records the site already keeps, so it never asks for a tick of its own: a step is done because the reader did it, and the one step marked 停在这里 is where to continue. A step the lesson lacks (a chapter with nothing to run) is dashed, not dropped, so the row keeps its shape across the course.
+
+- **Form:** An ordered list of pills with a counter, wrapping on narrow screens. Done is the Green fill with the word 完成, now is outlined in ink at 600 with the words 停在这里, pending is outlined in Strong Ruling, none is dashed and faded. A count (`.nb-steps-count`, such as 4 题) may follow a step label.
+- **On a fill:** `.nb-steps--on-fill` turns the pills to the on-fill palette: done becomes an on-fill pill with the hue as its text, now a translucent pill, the same way `.nb-bar--on-fill` works.
+- **Markup:** `ol.nb-steps` with one `li[data-step][data-state]` per step; the label is a link to the section on the page that does the step.
+- **Behaviour is the site's:** the kit gives the pills and the four states; which records set each state belongs to the site, as does the continue banner on the index that uses the same reading.
+
 ### Command Row
 
 **The Whole Token Rule.** A command never wraps and never breaks inside a token. It sits on its own line on the cyan wash with `white-space: pre`, `overflow-x: auto` and `min-width: 0`, and a long one scrolls sideways in its own box, even if that cuts it off at the edge of a phone. Anything meant to be copied gets a command row, and inline code is for short names.
@@ -527,6 +538,7 @@ For every engine:
 - The site supplies the `js` class on `<html>` (the collapsing nav needs it and `theme.js` does not set it), the menu toggle's behavior, and `--nb-fraction`, `aria-current` and the stopped label on record rows.
 - `theme.js` builds the scheme control after the first `.nb-nav`, so a page without that class gets no control.
 - The code panel is form only: the site loads the file text, colours it and runs it. A static site bundles the files it shows at build time, next to the page, at the same revision.
+- The loop band is form only too: the site sets `data-state` on each step from its own records.
 - Tokens switch on `data-theme` on `<html>`, as `light` or `dark`. An engine with its own dark state must drive that attribute, or the kit stays in day colors on a night page.
 
 **Hand-written pages** use the kit classes directly. The C# course is the working example.
