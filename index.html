@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yuwei Yang 的学习台：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目，记着每一门停在哪。">
+  <meta name="description" content="Yuwei Yang 的学习台：设计模式、算法、前端、.NET、大语言模型与 CUDA 项目，记着每一门停在哪、今天该复习什么。">
   <meta name="theme-color" content="#f4efe4">
   <meta property="og:type" content="website">
   <meta property="og:title" content="学习台 · Yuwei Yang">
@@ -29,6 +29,8 @@
     <a class="nb-brand" href="./">Yuwei Yang</a>
     <nav class="nb-nav" aria-label="主导航">
       <a href="#contents">项目</a>
+      <a href="#review">复习</a>
+      <a href="#backup">备份</a>
       <a href="#about">关于</a>
       <a href="https://github.com/yuweiyang9611">GitHub</a>
     </nav>
@@ -38,12 +40,13 @@
     <div class="masthead">
       <div>
         <h1>学习台</h1>
-        <p class="masthead-note">六门课、一份构建文档。每一门都记着你停在哪，下次打开接着做。</p>
+        <p class="masthead-note">五门课、一份构建文档。每一门都记着你停在哪，下次打开接着做。</p>
       </div>
       <dl class="stats" id="stats" aria-label="学习概况">
         <div class="nb-stat" data-hue="green"><dd id="stat-done">0</dd><dt>已完成单元</dt></div>
         <div class="nb-stat" data-hue="cyan"><dd id="stat-active">0</dd><dt>门进行中</dt></div>
-        <div class="nb-stat" data-hue="blue"><dd id="stat-when">还没有</dd><dt>上次记录</dt></div>
+        <div class="nb-stat" data-hue="purple"><dd id="stat-due">0</dd><dt>今天该复习</dt></div>
+        <div class="nb-stat" data-hue="blue"><dd id="stat-streak">0 天</dd><dt>连续学习</dt></div>
       </dl>
     </div>
 
@@ -53,6 +56,15 @@
         <p class="resume-line nb-banner-title" id="resume-line">这个浏览器里还没有学习记录，从下面选一门开始。</p>
       </div>
       <a class="nb-button nb-button--solid resume-go" id="resume-go" href="#contents" hidden>继续学习</a>
+    </section>
+
+    <section class="review" id="review" aria-labelledby="review-title">
+      <div class="section-head">
+        <h2 id="review-title">今日复习</h2>
+        <p class="section-note">三门有复习的课里，答过一次、今天到期的题。</p>
+      </div>
+      <ul class="review-list" id="review-list" hidden></ul>
+      <p class="review-empty" id="review-empty">今天没有到期的复习。</p>
     </section>
 
     <section id="contents" aria-label="项目列表">
@@ -125,16 +137,17 @@
             <div class="nb-card-meta"><span class="entry-state" data-state>0 / 53 实验</span><span class="entry-place" data-place>未开始</span></div>
           </div>
         </li>
-        <li class="entry nb-card" data-hue="blue" data-category="ai" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
+        <li class="entry nb-card" data-hue="blue" data-category="ai" data-course="llm" data-total="9" data-unit="章" data-search="learnllm llm 大语言模型 人工智能 ai python first principles">
           <div class="nb-card-head">
             <div>
-              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">AI</span> · 中文课程</p>
+              <p class="entry-topic nb-card-eyebrow"><span class="entry-topic-word">AI</span> · 9 章</p>
               <h3><a href="/LearnLLM/">LearnLLM</a></h3>
             </div>
+            <div class="nb-ring" data-ring role="img" aria-label="完成 0%"><span>0%</span></div>
           </div>
           <div class="nb-card-body">
             <p class="entry-note">从第一性原理出发，通过中文实战课程理解大语言模型的核心概念与实现路径。</p>
-            <div class="nb-card-meta"><span class="entry-state" data-state>章节配实验</span><span class="entry-place" data-place>可下载 PDF</span></div>
+            <div class="nb-card-meta"><span class="entry-state" data-state>0 / 9 章</span><span class="entry-place" data-place>未开始</span></div>
           </div>
         </li>
         <li class="entry nb-card" data-hue="purple" data-category="engineering" data-search="lightgbm native cuda windows linux gpu c++ machine learning">
@@ -151,6 +164,26 @@
         </li>
       </ol>
       <p class="empty" id="empty-state" hidden>没有找到匹配的项目。换个关键词，或选择“全部”。</p>
+    </section>
+
+    <section class="backup" id="backup" aria-labelledby="backup-title">
+      <h2 id="backup-title">备份</h2>
+      <p>学习记录只保存在这个浏览器里。「备份全部」把五门课的记录存成一个 JSON 文件；换了浏览器或清了网站数据，用「从文件恢复」放回来。</p>
+      <div class="backup-actions">
+        <button class="nb-button nb-button--solid" type="button" id="backup-all">备份全部</button>
+        <button class="nb-button" type="button" id="restore-pick">从文件恢复</button>
+        <input class="sr-only" type="file" id="restore-file" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+      </div>
+      <div class="restore-preview" id="restore-preview" hidden>
+        <p id="restore-summary"></p>
+        <ul class="restore-list" id="restore-list"></ul>
+        <p class="restore-warning">恢复会用文件里的记录覆盖这个浏览器里同名的记录，文件里没有的记录不动。要留住现在的记录，先点「备份全部」。</p>
+        <div class="backup-actions">
+          <button class="nb-button nb-button--solid" type="button" id="restore-confirm">覆盖并恢复</button>
+          <button class="nb-button" type="button" id="restore-cancel">取消</button>
+        </div>
+      </div>
+      <p class="backup-status" id="backup-status" role="status"></p>
     </section>
 
     <section class="about" id="about" aria-labelledby="about-title">

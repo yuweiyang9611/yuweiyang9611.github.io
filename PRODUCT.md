@@ -27,14 +27,14 @@ These are the owner's own study benches, not product marketing. Every lesson lea
 ## Operating Context
 
 - Lessons are read next to a local checkout, with commands copied into a terminal.
-- Progress lives in browser storage on the owner's machine, with JSON backup in some sites.
+- Progress lives in browser storage on the owner's machine, with JSON backup in each course and one backup of everything on the index.
 - Sessions are repeated and short: find the place, read, run, mark done, leave.
 
 ## Capabilities and Constraints
 
 Functions that must survive the redesign:
 
-- **Home:** project index with search and topic filters, a day and a night color scheme.
+- **Home:** project index with search and topic filters, a day and a night color scheme, the place to continue, today's reviews across the courses, a study streak, and one backup file for every course's record with a confirmed restore.
 - **Design patterns:** course routes, 23 pattern pages, full-text search, exercises, an in-browser C# compiler playground, quizzes, spaced review, progress with storage-status reporting.
 - **.NET:** online book, search, layered labs, lab catalog, roadmap, progress with backups.
 - **LLM:** 15-page MkDocs course with math rendering and a PDF download.

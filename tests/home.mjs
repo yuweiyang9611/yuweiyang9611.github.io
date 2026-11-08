@@ -75,6 +75,58 @@ const algorithms = {
   deleted: {},
 };
 
+// Times a whole number of days back, at noon in this time zone, so the streak does not depend on the hour the
+// checks run. "Now" stays a second in the past so it is never a future time.
+function daysAgo(days) {
+  if (days === 0) return new Date(Date.now() - 1000);
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  date.setDate(date.getDate() - days);
+  return date;
+}
+// LearnLLM: chapter 00 finished (it has no browser run, so four steps), chapter 01 opened today.
+const llm = {
+  version: 1,
+  updatedAt: daysAgo(0).toISOString(),
+  chapters: {
+    "00": { readAt: daysAgo(2).toISOString(), codeAt: daysAgo(2).toISOString(), quizPassedAt: daysAgo(1).toISOString(), quizRevision: "r1", note: "先跑通环境再读第一章。", noteAt: daysAgo(1).toISOString() },
+    "01": { readAt: daysAgo(0).toISOString() },
+  },
+};
+// Two design-patterns questions due, one not yet, and one never answered (new work, not a review).
+const patternsReview = {
+  version: 1,
+  updatedAt: daysAgo(4).getTime(),
+  questions: {
+    a: { contentVersion: "a:1", box: 1, streak: 1, attempts: 1, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() - 3600000, lastCorrect: true },
+    b: { contentVersion: "b:1", box: 0, streak: 0, attempts: 2, lapses: 1, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() - 60000, lastCorrect: false },
+    c: { contentVersion: "c:1", box: 3, streak: 3, attempts: 3, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() + 86400000, lastCorrect: true },
+    d: { dueAt: Date.now() - 60000 },
+  },
+};
+const frontendReview = {
+  app: "issueflow-learning-review",
+  schemaVersion: 1,
+  records: {
+    "w05-q01": { stage: 2, lastCorrect: true, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(Date.now() + 86400000).toISOString(), attempts: 2 },
+    "w04-q02": { stage: 0, lastCorrect: false, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(Date.now() - 86400000).toISOString(), attempts: 1 },
+  },
+};
+// One unit verified a month ago whose review came due an hour ago.
+const reviewing = {
+  schemaVersion: 4,
+  generation: 0,
+  revision: 3,
+  units: {
+    "core-linear-structures": {
+      evidenceIds: ["invariant", "test", "transfer"], evidenceRevision: 1, selfTestPassedAt: daysAgo(30).getTime(), selfTestRevision: 1,
+      verifiedAt: daysAgo(30).getTime(), verifiedRevision: 1, nextReviewAt: Date.now() - 3600000, reviewRound: 0,
+      startedAt: daysAgo(31).getTime(), updatedAt: daysAgo(30).getTime(),
+    },
+  },
+  deleted: {},
+};
+
 // Writes the record the way the course does (database version 1, store "progress", key "current").
 function seedAlgorithms(record) {
   return new Promise((resolve, reject) => {
@@ -151,7 +203,12 @@ try {
     assert.equal(await page.locator(".entry[data-record]").count(), 0);
     assert.equal(await page.locator(".entry[aria-current]").count(), 0);
     assert.equal(await page.locator("#resume-go").isVisible(), false);
-    assert.deepEqual(await page.locator("[data-ring] span").allTextContents(), ["0%", "0%", "0%", "0%"]);
+    assert.deepEqual(await page.locator("[data-ring] span").allTextContents(), ["0%", "0%", "0%", "0%", "0%"]);
+    assert.equal(await page.locator("#stat-due").textContent(), "0");
+    assert.equal(await page.locator("#stat-streak").textContent(), "0 天");
+    assert.equal(await page.locator("#review-empty").isVisible(), true);
+    assert.equal(await page.locator("#review-list").isVisible(), false);
+    assert.equal(await page.locator("#restore-preview").isVisible(), false);
     assert.equal(await page.locator('a[href="/LightGBM-NativeCUDA/"]').count(), 1);
     // Looking for the algorithms course's record must not create its database.
     assert.deepEqual(await page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), []);
@@ -208,14 +265,14 @@ try {
     assert.equal(await card.locator("[data-ring]").getAttribute("aria-label"), "完成 5%");
     assert.equal(await card.locator("[data-ring] span").textContent(), "5%");
     assert.equal(await card.locator("[data-state]").textContent(), "1 / 22 单元");
-    assert.match(await card.locator("[data-place]").textContent(), /^数组模式、Span 与二分查找 · 今天$/u);
+    assert.match(await card.locator("[data-place]").textContent(), /^数组模式、Span 与二分查找 · 第 2 步：看代码 · 今天$/u);
     assert.equal(await card.getAttribute("aria-current"), "true", "the unit touched today is the place to continue");
     assert.equal(await page.locator(".entry[data-record]").count(), 4);
     assert.equal(await page.locator("#stat-done").textContent(), "5");
     assert.equal(await page.locator("#stat-active").textContent(), "4");
-    assert.equal(await page.locator("#stat-when").textContent(), "今天");
+    assert.equal(await page.locator("#stat-due").textContent(), "0", "a review due tomorrow is not due today");
     const link = page.locator("#resume-line a");
-    assert.equal(await link.textContent(), "算法研习室 · 数组模式、Span 与二分查找");
+    assert.equal(await link.textContent(), "算法研习室 · 数组模式、Span 与二分查找 · 第 2 步：看代码");
     const href = "/DataStructureAndAlgorithm/学习单元.html#unit-core-array-search";
     assert.equal(await link.getAttribute("href"), href);
     assert.equal(await page.locator("#resume-go").getAttribute("href"), href);
@@ -246,7 +303,7 @@ try {
     const legacy = await open(browser, { seed: { "dsa-learning-progress-v1": JSON.stringify(["core-sorting", "unknown-unit"]) } });
     const legacyCard = legacy.page.locator('.entry[data-course="algorithms"]');
     assert.equal(await legacyCard.locator("[data-state]").textContent(), "0 / 22 单元");
-    assert.match(await legacyCard.locator("[data-place]").textContent(), /^比较排序与非比较排序 · 今天$/u);
+    assert.match(await legacyCard.locator("[data-place]").textContent(), /^比较排序与非比较排序 · 第 2 步：看代码 · 今天$/u);
     assert.deepEqual(await legacy.page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), []);
     assert.deepEqual(legacy.errors, []);
     await legacy.context.close();
@@ -259,11 +316,124 @@ try {
         "csharp-design-patterns-progress-v3": "{not json",
         "issueflow:frontend-learning-project:progress:v1": JSON.stringify({ schemaVersion: 2 }),
         "learn-dotnet-csharp-learning-data-v1": "null",
+        "learn-llm-progress-v1": "[]",
+        "csharp-design-patterns-review-v1": JSON.stringify({ version: 1, questions: "x" }),
+        "issueflow:frontend-learning-project:review:v1": "{not json",
       },
     });
     assert.match(await page.locator("#resume-line").textContent(), /还没有学习记录/u);
+    assert.equal(await page.locator("#stat-due").textContent(), "0");
     assert.deepEqual(errors, []);
     await context.close();
+  }
+
+  // Today's reviews, LearnLLM's record and the streak. Reviews come from three courses, only questions answered
+  // before and due by now count, and the streak runs back from today over the days any course recorded work.
+  {
+    const seed = {
+      ...records,
+      "learn-llm-progress-v1": JSON.stringify(llm),
+      "csharp-design-patterns-review-v1": JSON.stringify(patternsReview),
+      "issueflow:frontend-learning-project:review:v1": JSON.stringify(frontendReview),
+    };
+    const { context, page, errors } = await open(browser, { seed, database: reviewing });
+    const rows = page.locator("#review-list .review-item");
+    assert.deepEqual(await rows.locator(".review-count").allTextContents(), ["2 题", "1 题", "1 个单元"]);
+    assert.deepEqual(await rows.locator(".review-label").allTextContents(), [
+      "C# 设计模式 · 辨析训练 · 到期题",
+      "IssueFlow · 第 4 周周测",
+      "算法研习室 · 链表、栈、队列与双端队列 · 掌握复习",
+    ]);
+    assert.deepEqual(await rows.locator("a").evaluateAll((links) => links.map((link) => link.getAttribute("href"))), [
+      "/CSharp_Implementation_of_DesignPatterns/quiz.html",
+      "/frontend-learning-project/90-days/review-center.html",
+      "/DataStructureAndAlgorithm/学习单元.html#unit-core-linear-structures",
+    ]);
+    assert.equal(await page.locator("#review-empty").isVisible(), false);
+    assert.equal(await page.locator("#stat-due").textContent(), "4");
+    assert.equal(await page.locator("#stat-streak").textContent(), "3 天", "today, yesterday and the day before; four days ago is past a gap");
+
+    const card = page.locator('.entry[data-course="llm"]');
+    assert.equal(await card.locator("[data-state]").textContent(), "1 / 9 章");
+    assert.equal(await card.locator("[data-ring] span").textContent(), "11%");
+    assert.match(await card.locator("[data-place]").textContent(), /^01 数学与 PyTorch 基础 · 第 2 步：看代码 · 今天$/u);
+    assert.equal(await card.getAttribute("aria-current"), "true", "the chapter opened today is the newest record");
+    const link = page.locator("#resume-line a");
+    assert.equal(await link.textContent(), "LearnLLM · 01 数学与 PyTorch 基础 · 第 2 步：看代码");
+    assert.equal(await link.getAttribute("href"), "/LearnLLM/" + encodeURIComponent("01_数学与PyTorch基础") + "/");
+    assert.match(await page.locator('.entry[data-course="algorithms"] [data-place]').textContent(), /^链表、栈、队列与双端队列 · 复习到期/u);
+
+    const before = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
+    await page.reload();
+    await settled(page);
+    assert.equal(await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort())), before, "reading reviews writes nothing");
+    await assertAccessible(page, "reviews");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // Backup all, then restore into an empty browser. Nothing is written until the reader has seen the file's
+  // contents and pressed 覆盖并恢复; files that are not a desk backup are refused with a reason.
+  {
+    const seed = { ...records, "learn-llm-progress-v1": JSON.stringify(llm), "site-theme": "dark" };
+    const { context, page, errors } = await open(browser, { seed, database: algorithms });
+    const [download] = await Promise.all([page.waitForEvent("download"), page.locator("#backup-all").click()]);
+    assert.match(download.suggestedFilename(), /^learning-backup-\d{4}-\d{2}-\d{2}\.json$/u);
+    const file = await download.path();
+    // The download goes away with its context, so keep the bytes.
+    const text = await readFile(file, "utf8");
+    const backupFile = { name: download.suggestedFilename(), mimeType: "application/json", buffer: Buffer.from(text) };
+    const backup = JSON.parse(text);
+    assert.equal(backup.format, "yuweiyang9611-learning-backup");
+    assert.equal(backup.version, 1);
+    assert.deepEqual(Object.keys(backup.localStorage).sort(), Object.keys(seed).filter((key) => key !== "site-theme").sort(), "every course key and no preference");
+    assert.equal(backup.localStorage["learn-llm-progress-v1"], seed["learn-llm-progress-v1"]);
+    assert.deepEqual(backup.indexedDB["dsa-learning-progress"].progress.current, algorithms);
+    assert.match(await page.locator("#backup-status").textContent(), /^已备份 5 条记录，涉及 5 门课/u);
+    assert.deepEqual(errors, []);
+    await context.close();
+
+    const fresh = await open(browser);
+    const status = fresh.page.locator("#backup-status");
+    const nothingWritten = async () => {
+      assert.equal(await fresh.page.evaluate(() => localStorage.length), 0, "nothing in localStorage yet");
+      assert.deepEqual(await fresh.page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), [], "no database yet");
+    };
+    await fresh.page.locator("#restore-file").setInputFiles({ name: "llm.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ format: "learn-llm-progress", version: 1, progress: llm })) });
+    assert.match(await status.textContent(), /不是学习台的备份文件/u);
+    await fresh.page.locator("#restore-file").setInputFiles({ name: "broken.json", mimeType: "application/json", buffer: Buffer.from("{not json") });
+    assert.match(await status.textContent(), /不是 JSON/u);
+    assert.equal(await fresh.page.locator("#restore-preview").isVisible(), false);
+
+    const [chooser] = await Promise.all([fresh.page.waitForEvent("filechooser"), fresh.page.locator("#restore-pick").click()]);
+    await chooser.setFiles(backupFile);
+    await fresh.page.locator("#restore-preview").waitFor();
+    assert.match(await fresh.page.locator("#restore-summary").textContent(), /里面有 5 门课的记录/u);
+    assert.deepEqual((await fresh.page.locator("#restore-list li").allTextContents()).sort(), [
+      "C# 设计模式 · 1 条", "IssueFlow 学习站 · 1 条", "LearnDotnetCSharp · 1 条", "LearnLLM · 1 条", "算法研习室 · 1 条",
+    ].sort());
+    assert.equal(await fresh.page.evaluate(() => document.activeElement.id), "restore-confirm");
+    await nothingWritten();
+    await assertAccessible(fresh.page, "restore preview");
+
+    await fresh.page.locator("#restore-cancel").click();
+    assert.match(await status.textContent(), /已取消/u);
+    assert.equal(await fresh.page.locator("#restore-preview").isVisible(), false);
+    await nothingWritten();
+
+    await fresh.page.locator("#restore-file").setInputFiles(backupFile);
+    await Promise.all([fresh.page.waitForEvent("load"), fresh.page.locator("#restore-confirm").click()]);
+    await settled(fresh.page);
+    assert.match(await status.textContent(), /^恢复了 5 条记录/u);
+    assert.equal(new URL(fresh.page.url()).hash, "#backup");
+    const restored = await fresh.page.evaluate(() => Object.fromEntries(Object.entries(localStorage)));
+    assert.deepEqual(restored, backup.localStorage);
+    assert.equal(await fresh.page.evaluate(readAlgorithms), JSON.stringify(algorithms));
+    assert.equal(await fresh.page.locator('.entry[data-course="algorithms"] [data-state]').textContent(), "1 / 22 单元");
+    assert.equal(await fresh.page.locator('.entry[data-course="llm"] [data-state]').textContent(), "1 / 9 章");
+    assert.equal(await fresh.page.locator(".entry[data-record]").count(), 5);
+    assert.deepEqual(fresh.errors, []);
+    await fresh.context.close();
   }
 
   // Blocked storage leaves the page working.
@@ -322,7 +492,9 @@ try {
 
   // Phone width
   {
-    const { context, page, errors } = await open(browser, { seed: records, viewport: { width: 390, height: 844 } });
+    const seed = { ...records, "csharp-design-patterns-review-v1": JSON.stringify(patternsReview), "issueflow:frontend-learning-project:review:v1": JSON.stringify(frontendReview) };
+    const { context, page, errors } = await open(browser, { seed, viewport: { width: 390, height: 844 } });
+    assert.equal(await page.locator("#review-list .review-item").count(), 2);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(overflow, false, "no horizontal scrolling on a phone");
     const heights = await page.locator(".filter").evaluateAll((items) => items.map((item) => item.getBoundingClientRect().height));
