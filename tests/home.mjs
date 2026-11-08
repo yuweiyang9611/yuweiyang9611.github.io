@@ -24,10 +24,13 @@ function browserExecutable() {
   return executable;
 }
 
+// The index loads LearnLLM's question bank from the course's path on the same origin; here a stand-in answers there.
+const llmQuizBankPath = "/LearnLLM/javascripts/quiz-bank.js";
+
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, "http://localhost").pathname);
-    let file = resolve(join(root, pathname));
+    let file = pathname === llmQuizBankPath ? join(root, "tests", "fixtures", "learnllm-quiz-bank.js") : resolve(join(root, pathname));
     if (file !== root && !file.startsWith(root + sep)) throw new Error("outside root");
     if ((await stat(file)).isDirectory()) file = join(file, "index.html");
     response.writeHead(200, { "content-type": types[extname(file)] ?? "application/octet-stream" });
@@ -158,8 +161,9 @@ async function readAlgorithms() {
   });
 }
 
-async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", init } = {}) {
+async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", init, prepare, waitUntil = "load" } = {}) {
   const context = await browser.newContext({ viewport, colorScheme });
+  if (prepare) await prepare(context);
   if (seed) {
     await context.addInitScript((data) => {
       for (const [key, value] of Object.entries(data)) localStorage.setItem(key, value);
@@ -170,7 +174,7 @@ async function open(browser, { seed, database, viewport = { width: 1440, height:
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   page.on("console", (message) => { if (message.type() === "error") errors.push(message.text()); });
-  await page.goto(baseUrl);
+  await page.goto(baseUrl, { waitUntil });
   if (database) {
     // IndexedDB has to be written on the origin, so the record goes in after a first load and the page is opened again.
     await page.evaluate(seedAlgorithms, database);
@@ -383,6 +387,81 @@ try {
     await assertAccessible(page, "reviews");
     assert.deepEqual(errors, []);
     await context.close();
+  }
+
+  // LearnLLM's quiz against the course's question bank. A pass counts only at the chapter's current revision; the
+  // bank is loaded once and only for a record with a passed quiz, and a bank that fails or hangs never stops the
+  // page: the pass then counts, as it does on the course without its bank.
+  {
+    // The card's 昨天 counts whole 24-hour spans back from now, so these times are whole days and a minute back,
+    // not noon in this time zone, and the label does not depend on the hour the checks run.
+    const before = (days) => new Date(Date.now() - days * 86400000 - 60000).toISOString();
+    const chapter00 = (revision) => ({
+      version: 1,
+      updatedAt: before(1),
+      chapters: { "00": { readAt: before(2), codeAt: before(2), quizPassedAt: before(1), quizRevision: revision, note: "环境检查通过。", noteAt: before(1) } },
+    });
+    const bankScripts = (page) => page.locator(`script[src="${llmQuizBankPath}"]`).count();
+    const card = (page) => page.locator('.entry[data-course="llm"]');
+    const quizPage = "/LearnLLM/" + encodeURIComponent("00_学习路线与环境") + "/#llm-quiz";
+    const nextChapter = "/LearnLLM/" + encodeURIComponent("01_数学与PyTorch基础") + "/";
+
+    // Passed before the questions changed: the chapter waits at the quiz again, as the course's band does.
+    const stale = await open(browser, { seed: { "learn-llm-progress-v1": JSON.stringify(chapter00("r0")) } });
+    assert.equal(await card(stale.page).locator("[data-state]").textContent(), "0 / 9 章");
+    assert.equal(await card(stale.page).locator("[data-place]").textContent(), "00 学习路线与环境 · 第 4 步：自测 · 昨天");
+    assert.equal(await stale.page.locator("#resume-line a").getAttribute("href"), quizPage);
+    assert.equal(await bankScripts(stale.page), 1, "the bank is loaded once");
+    assert.equal(await stale.page.evaluate(() => typeof window.LlmQuizBank.revision), "function");
+    assert.deepEqual(stale.errors, []);
+    await stale.context.close();
+
+    // Passed at the current revision: the chapter is finished and the place moves on.
+    const current = await open(browser, { seed: { "learn-llm-progress-v1": JSON.stringify(chapter00("r1")) } });
+    assert.equal(await card(current.page).locator("[data-state]").textContent(), "1 / 9 章");
+    assert.equal(await card(current.page).locator("[data-place]").textContent(), "01 数学与 PyTorch 基础 · 第 1 步：读 · 昨天");
+    assert.equal(await current.page.locator("#resume-line a").getAttribute("href"), nextChapter);
+    assert.deepEqual(current.errors, []);
+    await current.context.close();
+
+    // No passed quiz in the record: the bank is never asked for.
+    const unasked = await open(browser, { seed: { "learn-llm-progress-v1": JSON.stringify({ version: 1, chapters: { "00": { readAt: daysAgo(0).toISOString() } } }) } });
+    assert.equal(await card(unasked.page).locator("[data-place]").textContent(), "00 学习路线与环境 · 第 2 步：看代码 · 今天");
+    assert.equal(await bankScripts(unasked.page), 0);
+    assert.equal(await unasked.page.evaluate(() => "LlmQuizBank" in window), false);
+    assert.deepEqual(unasked.errors, []);
+    await unasked.context.close();
+
+    // The bank cannot be loaded: the pass counts, even a stale one, and the page carries on at once rather than
+    // sitting out the three-second wait (the whole page waits for this reader). Time is counted from the page's
+    // navigation, so starting the browser context does not count.
+    const failed = await open(browser, {
+      seed: { "learn-llm-progress-v1": JSON.stringify(chapter00("r0")) },
+      prepare: (context) => context.route("**" + llmQuizBankPath, (route) => route.abort()),
+    });
+    const painted = await failed.page.evaluate(() => performance.now());
+    assert.ok(painted < 2000, `a failed bank held the page for ${Math.round(painted)} ms`);
+    assert.equal(await card(failed.page).locator("[data-state]").textContent(), "1 / 9 章");
+    assert.equal(await card(failed.page).locator("[data-place]").textContent(), "01 数学与 PyTorch 基础 · 第 1 步：读 · 昨天");
+    assert.deepEqual(failed.errors.filter((message) => !/Failed to load resource/u.test(message)), []);
+    await failed.context.close();
+
+    // The bank never answers: the page waits a few seconds at most, then counts the pass. (A script still loading
+    // holds back the window's load event, so this check waits for the document instead.)
+    let pending = null;
+    const started = Date.now();
+    const hung = await open(browser, {
+      seed: { "learn-llm-progress-v1": JSON.stringify(chapter00("r0")) },
+      prepare: (context) => context.route("**" + llmQuizBankPath, (route) => { pending = route; }),
+      waitUntil: "domcontentloaded",
+    });
+    const waited = Date.now() - started;
+    assert.ok(pending, "the bank was asked for");
+    assert.ok(waited < 15000, `the page waited ${waited} ms for a bank that never answers`);
+    assert.equal(await card(hung.page).locator("[data-state]").textContent(), "1 / 9 章");
+    assert.deepEqual(hung.errors, []);
+    await pending.abort().catch(() => {});
+    await hung.context.close();
   }
 
   // Backup all, then restore into an empty browser. Nothing is written until the reader has seen the file's

@@ -216,16 +216,18 @@ const courses = {
 
   // LearnLLM keeps one record (learn-llm-progress-v1) with a time per band step and chapter. This mirrors its
   // progress.js: a chapter is finished when every step it has is done, and the place to continue is the earliest
-  // chapter with a step still to do. The site also checks a passed quiz against its current question bank; the
-  // index cannot see the bank, so a quiz passed before the bank changed still counts here.
-  llm() {
+  // chapter with a step still to do. A passed quiz counts only while its revision matches the chapter's current
+  // questions, which the course's own question bank tells (see llmQuizBank).
+  async llm() {
     const record = readRecord("learn-llm-progress-v1");
     if (record?.version !== 1 || !object(record.chapters)) return null;
     const chapters = record.chapters;
     if (!llmChapters.some(([id]) => object(chapters[id]))) return null;
+    const bank = llmChapters.some(([id]) => object(chapters[id]) && chapters[id].quizPassedAt) ? await llmQuizBank() : null;
+    const quizCurrent = (id, entry) => Boolean(entry.quizPassedAt) && (!bank || entry.quizRevision === bank.revision(id));
     const nextStep = ([id, , , panel, run]) => {
       const entry = object(chapters[id]) ? chapters[id] : {};
-      const done = [entry.readAt, entry.codeAt, entry.ranAt, entry.quizPassedAt, typeof entry.note === "string" && entry.note.trim()];
+      const done = [entry.readAt, entry.codeAt, entry.ranAt, quizCurrent(id, entry), typeof entry.note === "string" && entry.note.trim()];
       const lacks = [false, !panel, !run, false, false];
       return loopSteps.findIndex((step, index) => !lacks[index] && !done[index]);
     };
@@ -247,6 +249,38 @@ const courses = {
 
 // Where each band step lives on a LearnLLM chapter page, from the course's loop-site.js.
 const llmStepAnchors = ["", "#llm-source", "#llm-source", "#llm-quiz", "#llm-notepad"];
+
+// LearnLLM stores a passed quiz with the revision of the chapter's questions, a hash its quiz-bank.js computes, and
+// a changed question asks for the quiz again. Rather than copy hashes that go stale with every edit to the bank,
+// the index loads the course's own file, once and only when the record holds a passed quiz, and asks it as the
+// course does (window.LlmQuizBank.revision). When the file cannot be loaded in time the pass counts, as it does on
+// the course without its bank. The index paints only once every reader has answered, so while the file loads the
+// whole page waits, not just the LearnLLM card: a failed request answers at once, and one that never answers holds
+// the page for three seconds at most.
+const llmQuizBankUrl = "/LearnLLM/javascripts/quiz-bank.js";
+const llmQuizBankWait = 3000;
+let llmQuizBankLoad = null;
+
+function llmQuizBank() {
+  llmQuizBankLoad ??= new Promise((resolve) => {
+    const ready = () => (typeof window.LlmQuizBank?.revision === "function" ? window.LlmQuizBank : null);
+    if (ready()) {
+      resolve(ready());
+      return;
+    }
+    const script = document.createElement("script");
+    const finish = () => {
+      clearTimeout(timer);
+      resolve(ready());
+    };
+    const timer = setTimeout(finish, llmQuizBankWait);
+    script.src = llmQuizBankUrl;
+    script.addEventListener("load", finish);
+    script.addEventListener("error", finish);
+    document.head.append(script);
+  });
+  return llmQuizBankLoad;
+}
 
 // LearnLLM's nine chapters: id, title, page, whether the chapter has a code panel and a script that runs in the
 // browser. Copied from the course's mkdocs.yml and docs/javascripts/progress.js.
@@ -582,7 +616,8 @@ async function showProgress() {
   let active = 0;
 
   // Every record is read before anything is painted, so the stats, the banner, the reviews and the stopped card
-  // agree. The algorithms reader is asynchronous; the others resolve at once.
+  // agree. Two readers are asynchronous: the algorithms reader (IndexedDB) and LearnLLM's, which waits up to three
+  // seconds for the course's question bank when the record holds a passed quiz. The others resolve at once.
   const read = await settle(entries.map((entry) => courses[entry.dataset.course]));
   const due = (await settle(Object.values(reviews))).filter(Boolean).sort((left, right) => right.count - left.count);
   showReviews(due);
