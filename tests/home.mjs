@@ -265,15 +265,15 @@ try {
     assert.equal(await card.locator("[data-ring]").getAttribute("aria-label"), "完成 5%");
     assert.equal(await card.locator("[data-ring] span").textContent(), "5%");
     assert.equal(await card.locator("[data-state]").textContent(), "1 / 22 单元");
-    assert.match(await card.locator("[data-place]").textContent(), /^数组模式、Span 与二分查找 · 第 2 步：看代码 · 今天$/u);
-    assert.equal(await card.getAttribute("aria-current"), "true", "the unit touched today is the place to continue");
+    assert.match(await card.locator("[data-place]").textContent(), /^链表、栈、队列与双端队列 · 第 2 步：看代码 · 今天$/u, "the earliest touched unit whose band has a step to do, as the course says");
+    assert.equal(await card.getAttribute("aria-current"), "true", "the course touched today is the place to continue");
     assert.equal(await page.locator(".entry[data-record]").count(), 4);
     assert.equal(await page.locator("#stat-done").textContent(), "5");
     assert.equal(await page.locator("#stat-active").textContent(), "4");
     assert.equal(await page.locator("#stat-due").textContent(), "0", "a review due tomorrow is not due today");
     const link = page.locator("#resume-line a");
-    assert.equal(await link.textContent(), "算法研习室 · 数组模式、Span 与二分查找 · 第 2 步：看代码");
-    const href = "/DataStructureAndAlgorithm/学习单元.html#unit-core-array-search";
+    assert.equal(await link.textContent(), "算法研习室 · 链表、栈、队列与双端队列 · 第 2 步：看代码");
+    const href = "/DataStructureAndAlgorithm/学习单元.html#unit-core-linear-structures";
     assert.equal(await link.getAttribute("href"), href);
     assert.equal(await page.locator("#resume-go").getAttribute("href"), href);
 
@@ -289,16 +289,24 @@ try {
     await context.close();
   }
 
-  // The course's own fallbacks: with every unit verified the card is done, and the next unit is the first whose
-  // prerequisites are verified; a record from before IndexedDB is still read from localStorage.
+  // The course's own fallbacks: a verified unit whose band still has a step to do is still the place to continue;
+  // once both bands are done the next unit is the first whose prerequisites are verified; a record from before
+  // IndexedDB is still read from localStorage.
   {
     const verified = Object.fromEntries(["core-linear-structures", "core-array-search"].map((id) => [id, algorithms.units["core-linear-structures"]]));
     const { context, page, errors } = await open(browser, { database: { ...algorithms, units: verified } });
     const card = page.locator('.entry[data-course="algorithms"]');
     assert.equal(await card.locator("[data-state]").textContent(), "2 / 22 单元");
-    assert.match(await card.locator("[data-place]").textContent(), /^比较排序与非比较排序 · 下一个单元 · 7 天前$/u);
+    assert.match(await card.locator("[data-place]").textContent(), /^链表、栈、队列与双端队列 · 第 2 步：看代码 · 7 天前$/u);
     assert.deepEqual(errors, []);
     await context.close();
+
+    const band = { sourceOpenedAt: today - 7 * 86400000, ranAt: today - 7 * 86400000, note: "不变量写在纸上了。" };
+    const finished = Object.fromEntries(Object.entries(verified).map(([id, record]) => [id, { ...record, ...band }]));
+    const done = await open(browser, { database: { ...algorithms, units: finished } });
+    assert.match(await done.page.locator('.entry[data-course="algorithms"] [data-place]').textContent(), /^比较排序与非比较排序 · 下一个单元 · 7 天前$/u);
+    assert.deepEqual(done.errors, []);
+    await done.context.close();
 
     const legacy = await open(browser, { seed: { "dsa-learning-progress-v1": JSON.stringify(["core-sorting", "unknown-unit"]) } });
     const legacyCard = legacy.page.locator('.entry[data-course="algorithms"]');
@@ -360,7 +368,7 @@ try {
     assert.equal(await card.getAttribute("aria-current"), "true", "the chapter opened today is the newest record");
     const link = page.locator("#resume-line a");
     assert.equal(await link.textContent(), "LearnLLM · 01 数学与 PyTorch 基础 · 第 2 步：看代码");
-    assert.equal(await link.getAttribute("href"), "/LearnLLM/" + encodeURIComponent("01_数学与PyTorch基础") + "/");
+    assert.equal(await link.getAttribute("href"), "/LearnLLM/" + encodeURIComponent("01_数学与PyTorch基础") + "/#llm-source");
     assert.match(await page.locator('.entry[data-course="algorithms"] [data-place]').textContent(), /^链表、栈、队列与双端队列 · 复习到期/u);
 
     const before = await page.evaluate(() => JSON.stringify(Object.entries(localStorage).sort()));
@@ -424,6 +432,7 @@ try {
     await fresh.page.locator("#restore-file").setInputFiles(backupFile);
     await Promise.all([fresh.page.waitForEvent("load"), fresh.page.locator("#restore-confirm").click()]);
     await settled(fresh.page);
+    await fresh.page.waitForFunction(() => document.activeElement?.id === "backup-status");
     assert.match(await status.textContent(), /^恢复了 5 条记录/u);
     assert.equal(new URL(fresh.page.url()).hash, "#backup");
     const restored = await fresh.page.evaluate(() => Object.fromEntries(Object.entries(localStorage)));
@@ -434,6 +443,152 @@ try {
     assert.equal(await fresh.page.locator(".entry[data-record]").count(), 5);
     assert.deepEqual(fresh.errors, []);
     await fresh.context.close();
+  }
+
+  // What the cards read from records that do not fit the simple case: IssueFlow with work but no finished day, its
+  // due questions from two weeks, a .NET title saved with its heading anchor and a self-test as its newest work, a
+  // design patterns item already finished.
+  {
+    // Exact multiples of a day, so "N 天前" does not depend on the hour the checks run.
+    const ago = (days) => new Date(Date.now() - days * 86400000);
+    const seed = {
+      "csharp-design-patterns-progress-v3": JSON.stringify({
+        version: 3,
+        updatedAt: ago(3).toISOString(),
+        items: { "pattern:strategy": { completed: { read: ago(3).toISOString(), run: ago(3).toISOString(), change: ago(3).toISOString(), verify: ago(3).toISOString() }, updatedAt: ago(3).toISOString() } },
+        resume: { itemId: "pattern:strategy", taskId: "verify", updatedAt: ago(3).toISOString() },
+      }),
+      "issueflow:frontend-learning-project:progress:v1": JSON.stringify({
+        app: "issueflow-learning-progress",
+        schemaVersion: 1,
+        exportedAt: daysAgo(0).toISOString(),
+        days: [{ day: 1, completed: false, completedAt: null, minutes: 90, note: "读完了第一天的 HTTP 部分。", evidence: [] }, { day: 2, completed: false, completedAt: null, minutes: 0, note: "", evidence: [] }],
+      }),
+      "issueflow:frontend-learning-project:visits:v1": JSON.stringify({ app: "issueflow-learning-visits", schemaVersion: 1, pages: { "90-days/week-01-foundations": { readAt: ago(5).toISOString() } } }),
+      "issueflow:frontend-learning-project:review:v1": JSON.stringify({
+        app: "issueflow-learning-review",
+        schemaVersion: 1,
+        records: Object.fromEntries(["w05-q01", "w01-q03", "w05-q02"].map((id) => [id, { stage: 0, lastCorrect: false, lastAnsweredAt: ago(5).toISOString(), dueAt: ago(4).toISOString(), attempts: 1 }])),
+      }),
+      "learn-dotnet-csharp-learning-data-v1": JSON.stringify({
+        version: 1, experiments: [], assessments: {}, copies: [], visited: [], sourceViews: [], runs: {},
+        lastReading: { title: "#4.2 值类型与引用类型", url: "guide/chapter-04/#x" },
+        quizzes: { "chapter-04": { revision: "r1", passedAt: daysAgo(0).toISOString() } },
+      }),
+    };
+    const { context, page, errors } = await open(browser, { seed });
+    const frontendCard = page.locator('.entry[data-course="frontend"]');
+    assert.equal(await frontendCard.getAttribute("data-record"), "started", "work and visits are a record before any day is finished");
+    assert.equal(await frontendCard.locator("[data-state]").textContent(), "0 / 2 天");
+    assert.equal(await frontendCard.locator("[data-place]").textContent(), "第 1 天 · 5 天前", "the newest visit or answer, not the save time");
+    assert.deepEqual(await page.locator("#review-list .review-label").allTextContents(), ["IssueFlow · 第 1、5 周周测"]);
+    const dotnetCard = page.locator('.entry[data-course="dotnet"]');
+    assert.equal(await dotnetCard.locator("[data-place]").textContent(), "4.2 值类型与引用类型 · 今天");
+    assert.equal(await dotnetCard.getAttribute("aria-current"), "true", "a self-test passed today is the newest work");
+    assert.equal(await page.locator('.entry[data-course="patterns"] [data-place]').textContent(), "Strategy 已完成，下一项见课程首页 · 3 天前");
+    assert.equal(await page.locator("#stat-active").textContent(), "3");
+    assert.equal(await page.locator("#stat-streak").textContent(), "1 天");
+    assert.deepEqual(errors, []);
+    await context.close();
+
+    // IssueFlow rewrites exportedAt whenever its progress page is opened, so that time is not a study day.
+    const opened = await open(browser, {
+      seed: {
+        "issueflow:frontend-learning-project:progress:v1": JSON.stringify({
+          app: "issueflow-learning-progress", schemaVersion: 1, exportedAt: daysAgo(0).toISOString(),
+          days: [{ day: 1, completed: true, completedAt: daysAgo(10).toISOString(), minutes: 120, note: "第一天的环境和地图都做完了。", evidence: ["https://example.test/1"] }],
+        }),
+        "dsa-learning-progress-v1": JSON.stringify(["core-sorting"]),
+      },
+    });
+    assert.equal(await opened.page.locator("#stat-streak").textContent(), "0 天", "neither a save time nor the old algorithms list is a study day");
+    assert.deepEqual(opened.errors, []);
+    await opened.context.close();
+  }
+
+  // Empty and malformed records never travel: a browser that only opened course pages has nothing to back up, and a
+  // file's empty or malformed record is skipped instead of overwriting real progress.
+  {
+    const emptyStore = { schemaVersion: 4, generation: 0, revision: 0, units: {}, deleted: {} };
+    const emptyDotnet = { version: 1, experiments: [], assessments: {}, copies: [], lastReading: null, visited: [], sourceViews: [], runs: {}, quizzes: {} };
+    const blank = await open(browser, { seed: { "learn-dotnet-csharp-learning-data-v1": JSON.stringify(emptyDotnet) }, database: emptyStore });
+    let downloaded = false;
+    blank.page.on("download", () => { downloaded = true; });
+    await blank.page.locator("#backup-all").click();
+    await blank.page.waitForFunction(() => document.querySelector("#backup-status").textContent !== "");
+    assert.match(await blank.page.locator("#backup-status").textContent(), /还没有学习记录/u);
+    await blank.page.waitForTimeout(300);
+    assert.equal(downloaded, false, "nothing to save");
+    await blank.context.close();
+
+    const backupFile = (localStorage, store) => ({
+      name: "hand-made.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({ format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date().toISOString(), localStorage, indexedDB: { "dsa-learning-progress": { progress: { current: store } } } })),
+    });
+    const { context, page, errors } = await open(browser, { database: algorithms });
+    await page.locator("#restore-file").setInputFiles(backupFile({ "learn-llm-progress-v1": JSON.stringify(llm), "learn-dotnet-csharp-learning-data-v1": JSON.stringify(emptyDotnet) }, emptyStore));
+    assert.deepEqual(await page.locator("#restore-list li").allTextContents(), ["LearnLLM · 1 条"]);
+    assert.match(await page.locator("#backup-status").textContent(), /有 2 条是空记录/u);
+    await page.locator("#restore-cancel").click();
+    const malformed = { ...algorithms, units: { ...algorithms.units, "core-sorting": null } };
+    await page.locator("#restore-file").setInputFiles(backupFile({ "learn-llm-progress-v1": JSON.stringify(llm) }, malformed));
+    assert.deepEqual(await page.locator("#restore-list li").allTextContents(), ["LearnLLM · 1 条"]);
+    await Promise.all([page.waitForEvent("load"), page.locator("#restore-confirm").click()]);
+    await settled(page);
+    assert.equal(await page.evaluate(readAlgorithms), JSON.stringify(algorithms), "the real algorithms record is untouched");
+    assert.equal(await page.locator('.entry[data-course="llm"] [data-state]').textContent(), "1 / 9 章");
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // A restore writes a course's current key before its older ones, so an open course tab never migrates the old key
+  // over the restored record; after the reload the result is focused for a screen reader.
+  {
+    const { context, page, errors } = await open(browser);
+    const file = {
+      name: "order.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({
+        format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date().toISOString(),
+        localStorage: { "csharp-design-patterns-progress-v1": JSON.stringify(["strategy"]), "csharp-design-patterns-progress-v2": JSON.stringify({ version: 2, items: { strategy: 2 } }), "csharp-design-patterns-progress-v3": records["csharp-design-patterns-progress-v3"] },
+        indexedDB: {},
+      })),
+    };
+    await page.locator("#restore-file").setInputFiles(file);
+    await page.evaluate(() => {
+      const write = Storage.prototype.setItem;
+      localStorage.setItem = (key, value) => {
+        write.call(sessionStorage, "write-order", (sessionStorage.getItem("write-order") ?? "") + key + "\n");
+        write.call(localStorage, key, value);
+      };
+    });
+    await Promise.all([page.waitForEvent("load"), page.locator("#restore-confirm").click()]);
+    await settled(page);
+    const order = (await page.evaluate(() => sessionStorage.getItem("write-order"))).trim().split("\n");
+    assert.deepEqual(order, ["csharp-design-patterns-progress-v3", "csharp-design-patterns-progress-v2", "csharp-design-patterns-progress-v1"]);
+    await page.waitForFunction(() => document.activeElement?.id === "backup-status");
+    assert.match(await page.locator("#backup-status").textContent(), /^恢复了 3 条记录/u);
+    assert.deepEqual(errors, []);
+    await context.close();
+  }
+
+  // With site data blocked nothing can be written: the page says so where the reader is and does not reload.
+  {
+    const { context, page, errors } = await open(browser, {
+      init: () => { Storage.prototype.setItem = () => { throw new DOMException("Blocked", "SecurityError"); }; },
+    });
+    await page.locator("#restore-file").setInputFiles({
+      name: "llm.json",
+      mimeType: "application/json",
+      buffer: Buffer.from(JSON.stringify({ format: "yuweiyang9611-learning-backup", version: 1, localStorage: { "learn-llm-progress-v1": JSON.stringify(llm) }, indexedDB: {} })),
+    });
+    await page.locator("#restore-confirm").click();
+    await page.waitForFunction(() => /一条记录也没写进去/u.test(document.querySelector("#backup-status").textContent));
+    assert.equal(new URL(page.url()).hash, "", "no reload");
+    assert.equal(await page.evaluate(() => document.activeElement.id), "backup-status");
+    assert.deepEqual(errors, []);
+    await context.close();
   }
 
   // Blocked storage leaves the page working.

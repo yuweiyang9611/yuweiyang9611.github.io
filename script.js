@@ -106,11 +106,14 @@ const courses = {
     let place = itemId ? titleFromId(itemId) : "继续学习";
     let href = base;
     if (itemId?.startsWith("pattern:")) {
-      href = base + "patterns/" + encodeURIComponent(itemId.slice(8)) + ".html";
       const next = patternTasks.find(([id]) => !record.items[itemId]?.completed?.[id]);
       if (next) {
         place += " · " + next[1];
-        href += "#evidence-" + next[0];
+        href = base + "patterns/" + encodeURIComponent(itemId.slice(8)) + ".html#evidence-" + next[0];
+      } else {
+        // The course moves on from a finished item to the first unfinished one in its catalog, which the index does
+        // not copy; the course's home page shows that place.
+        place += " 已完成，下一项见课程首页";
       }
     }
     return {
@@ -124,21 +127,34 @@ const courses = {
     };
   },
 
+  // IssueFlow keeps three records: the 91 days, lesson visits and weekly-check answers. Like the course's home page
+  // (CourseHome.vue), the card has a record once any day has work, any lesson was visited or any question answered,
+  // and its time is the newest of all three.
   frontend() {
     const record = readRecord("issueflow:frontend-learning-project:progress:v1");
-    if (record?.schemaVersion !== 1) return null;
-    const days = plural(record.days);
+    const visits = readRecord("issueflow:frontend-learning-project:visits:v1");
+    const review = readRecord("issueflow:frontend-learning-project:review:v1");
+    const days = record?.schemaVersion === 1 ? plural(record.days) : [];
+    const pages = visits?.app === "issueflow-learning-visits" && visits.schemaVersion === 1 && object(visits.pages) ? Object.values(visits.pages) : [];
+    const answers = review?.app === "issueflow-learning-review" && review.schemaVersion === 1 && object(review.records) ? Object.values(review.records) : [];
+    const worked = (day) => day?.completed === true || Number(day?.minutes) > 0 || (typeof day?.note === "string" && day.note.trim() !== "") || plural(day?.evidence).length > 0;
+    if (!days.some(worked) && pages.length === 0 && answers.length === 0) return null;
     const done = days.filter((day) => day?.completed === true);
-    if (done.length === 0) return null;
+    const total = days.length || 91;
     const next = days.find((day) => day?.completed !== true);
+    const times = [
+      ...done.map((day) => timestamp(day.completedAt)),
+      ...pages.flatMap((page) => (object(page) ? ["readAt", "codeAt", "ranAt"].map((field) => timestamp(page[field])) : [])),
+      ...answers.map((answer) => timestamp(answer?.lastAnsweredAt)),
+    ];
     return {
       course: "IssueFlow",
-      place: next ? "第 " + next.day + " 天" : "全部完成",
+      place: next ? "第 " + next.day + " 天" : days.length ? "全部完成" : "第 1 天",
       href: "/frontend-learning-project/",
-      state: done.length + " / " + days.length + " 天",
+      state: done.length + " / " + total + " 天",
       done: done.length,
-      fraction: done.length / days.length,
-      at: Math.max(...done.map((day) => timestamp(day.completedAt))),
+      fraction: done.length / total,
+      at: Math.max(0, ...times),
     };
   },
 
@@ -148,22 +164,25 @@ const courses = {
     const experiments = plural(record.experiments).length;
     const reading = typeof record.lastReading?.title === "string" ? record.lastReading : null;
     if (experiments === 0 && !reading) return null;
+    const quizzes = object(record.quizzes) ? Object.values(record.quizzes) : [];
     return {
       course: "LearnDotnetCSharp",
-      place: reading ? reading.title : "实验目录",
+      // Positions saved before 2026-11-03 kept the heading's # anchor in the title; the course strips it too.
+      place: reading ? reading.title.replace(/^#\s*/u, "") : "实验目录",
       href: "/LearnDotnetCSharp/" + (typeof reading?.url === "string" ? reading.url : ""),
       state: experiments + " / 53 实验",
       done: experiments,
       fraction: experiments / 53,
-      at: Math.max(0, ...Object.values(object(record.runs) ? record.runs : {}).map((run) => timestamp(run?.ranAt))),
+      at: Math.max(0, ...Object.values(object(record.runs) ? record.runs : {}).map((run) => timestamp(run?.ranAt)), ...quizzes.map((quiz) => timestamp(quiz?.passedAt))),
     };
   },
 
   // The algorithms course keeps its record in IndexedDB (database dsa-learning-progress, store
-  // progress, key current). This mirrors the course's own read-only reader, readRecord.ts: a unit
-  // counts once verified at the current mastery revision, and the place to continue is the unit
-  // touched last and not finished, else the earliest review due, else the first unit whose
-  // prerequisites are all verified. A unit in progress also names the first step of its band still to do.
+  // progress, key current). This mirrors the course's own reader, readCourse in record.ts: a unit
+  // counts once verified at the current mastery revision, and the place to continue is the earliest
+  // touched unit in course order whose loop band still has a step to do (whatever its status), else
+  // the first unit still to verify, else the earliest review due, else the first unit whose
+  // prerequisites are all verified.
   async algorithms() {
     const store = await algorithmsStore();
     const units = object(store?.units) ? store.units : {};
@@ -173,20 +192,16 @@ const courses = {
     const status = (id) => algorithmStatus(units[id], now);
     const mastered = (id) => status(id) === "verified" || status(id) === "review";
     const verified = algorithmUnits.filter(([id]) => mastered(id)).length;
-    const learning = algorithmUnits
-      .filter(([id]) => status(id) === "learning")
-      .sort(([left], [right]) => (Number(units[right]?.updatedAt) || 0) - (Number(units[left]?.updatedAt) || 0))[0];
+    const stopped = algorithmUnits.find(([id]) => object(units[id]) && algorithmStep(units[id]) >= 0);
+    const unverified = algorithmUnits.find(([id]) => status(id) === "learning");
     const due = algorithmDue(units, now)[0];
     const next = algorithmUnits.find(([id, , prerequisites]) => status(id) === "not-started" && prerequisites.every(mastered));
-    const stop = learning ?? due ?? next;
+    const stop = stopped ?? unverified ?? due ?? next;
     const base = "/DataStructureAndAlgorithm/学习单元.html";
     let place = "全部完成";
-    if (learning) {
-      const record = units[learning[0]];
-      const done = [record?.startedAt, record?.sourceOpenedAt, record?.ranAt, record?.selfTestPassedAt, typeof record?.note === "string" && record.note.trim()];
-      const index = done.findIndex((value) => !value);
-      place = learning[1] + " · " + (index < 0 ? "验证掌握" : stepText(index));
-    } else if (due) place = due[1] + " · 复习到期";
+    if (stopped) place = stopped[1] + " · " + (status(stopped[0]) === "review" ? "复习到期 · " : "") + stepText(algorithmStep(units[stopped[0]]));
+    else if (unverified) place = unverified[1] + " · 验证掌握";
+    else if (due) place = due[1] + " · 复习到期";
     else if (next) place = next[1] + " · 下一个单元";
     return {
       course: "算法研习室",
@@ -221,7 +236,7 @@ const courses = {
     return {
       course: "LearnLLM",
       place: stop ? stop[0] + " " + stop[1] + " · " + stepText(nextStep(stop)) : "全部完成",
-      href: stop ? base + encodeURIComponent(stop[2]) + "/" : base,
+      href: stop ? base + encodeURIComponent(stop[2]) + "/" + llmStepAnchors[nextStep(stop)] : base,
       state: finished + " / 9 章",
       done: finished,
       fraction: finished / 9,
@@ -229,6 +244,9 @@ const courses = {
     };
   },
 };
+
+// Where each band step lives on a LearnLLM chapter page, from the course's loop-site.js.
+const llmStepAnchors = ["", "#llm-source", "#llm-source", "#llm-quiz", "#llm-notepad"];
 
 // LearnLLM's nine chapters: id, title, page, whether the chapter has a code panel and a script that runs in the
 // browser. Copied from the course's mkdocs.yml and docs/javascripts/progress.js.
@@ -281,6 +299,13 @@ function algorithmStatus(record, now) {
   const complete = algorithmEvidence.every((id) => evidence.includes(id));
   if (!record.verifiedAt || record.verifiedRevision !== algorithmRevision || !complete) return "learning";
   return record.nextReviewAt && record.nextReviewAt <= now ? "review" : "verified";
+}
+
+// The first step of a unit's loop band still to do (band.ts: read, code, run, a self-check passed at the current
+// revision, a note), or -1 when all five are done.
+function algorithmStep(record) {
+  const done = [record?.startedAt, record?.sourceOpenedAt, record?.ranAt, record?.selfTestPassedAt && record.selfTestRevision === algorithmRevision, typeof record?.note === "string" && record.note.trim()];
+  return done.findIndex((value) => !value);
 }
 
 // Units whose mastery review is due, earliest first.
@@ -347,7 +372,7 @@ function legacyAlgorithmsStore() {
       for (const entry of entries) {
         if (typeof entry?.id === "string" && entry.record && typeof entry.record === "object") units[entry.id] = entry.record;
       }
-      return { units };
+      return { units, synthetic: true };
     }
     const now = Date.now();
     for (const id of plural(readRecord("dsa-learning-progress-v1"))) {
@@ -358,7 +383,8 @@ function legacyAlgorithmsStore() {
   } catch {
     // Storage can be disabled.
   }
-  return { units };
+  // Made up here from the old lists, with today's time on every unit: the streak must not count it.
+  return { units, synthetic: true };
 }
 
 // Today's reviews: the three courses that schedule them. Only questions already answered once count; a question
@@ -382,13 +408,15 @@ const reviews = {
       .filter(([, question]) => object(question) && typeof question.dueAt === "string" && question.dueAt <= now)
       .sort(([, left], [, right]) => (left.dueAt < right.dueAt ? -1 : 1));
     if (due.length === 0) return null;
-    const week = /^w(\d+)-/u.exec(due[0][0]);
+    const weeks = [...new Set(due.map(([id]) => Number(/^w(\d+)-/u.exec(id)?.[1])).filter(Number.isFinite))].sort((left, right) => left - right);
+    let label = "错题复习";
+    if (weeks.length) label = "第 " + weeks.slice(0, 3).join("、") + (weeks.length > 3 ? " 等" : "") + " 周周测";
     return {
       course: "IssueFlow",
       hue: "green",
       count: due.length,
       unit: "题",
-      label: week ? "第 " + Number(week[1]) + " 周周测" : "错题复习",
+      label,
       href: "/frontend-learning-project/90-days/review-center.html",
     };
   },
@@ -419,6 +447,33 @@ const recordPrefixes = [
   ["learn-llm-", "LearnLLM"],
 ];
 
+// Courses write records that hold nothing when a page is merely opened (the algorithms units page stores an empty
+// store, the .NET course an empty record). Such a record is not progress: a backup leaves it out and a restore skips
+// it, so it can never overwrite real progress in another browser. Bookkeeping fields do not count as content.
+const bookkeeping = new Set(["version", "schemaVersion", "app", "format", "exportedAt", "updatedAt", "generation", "revision", "day"]);
+function holdsProgress(value) {
+  if (value === null || value === undefined || value === "" || value === 0 || value === false) return false;
+  if (Array.isArray(value)) return value.some(holdsProgress);
+  if (typeof value === "object") return Object.entries(value).some(([key, child]) => !bookkeeping.has(key) && holdsProgress(child));
+  return true;
+}
+
+function rawHoldsProgress(raw) {
+  try {
+    return holdsProgress(JSON.parse(raw));
+  } catch {
+    return typeof raw === "string" && raw.trim() !== "";
+  }
+}
+
+// A course migrates an older key (…-v1, …-v2) into its current one when it finds no current key, and an open course
+// tab reacts to the storage event. So the restore writes the newest version of a key first, and the older ones
+// after, when the tab can already see the current record.
+function writeOrder([left], [right]) {
+  const version = (key) => Number(/-v(\d+)(?=:|$)/u.exec(key)?.[1] ?? 0);
+  return version(right) - version(left) || (left < right ? -1 : 1);
+}
+
 function courseOfKey(key) {
   return recordPrefixes.find(([prefix]) => key.startsWith(prefix))?.[1] ?? null;
 }
@@ -443,7 +498,8 @@ function dayKey(time) {
 
 // The streak counts the days, in this browser's time zone, on which any course recorded something: a time under a
 // key ending in At (readAt, ranAt, completedAt, lastAnsweredAt, updatedAt…) or a finished task in the design
-// patterns record. Times in the future (dueAt, nextReviewAt) are plans, not work, and are skipped.
+// patterns record. Times in the future (dueAt, nextReviewAt) are plans, not work, and are skipped, and so is
+// exportedAt, a save time that IssueFlow rewrites just because its progress page was opened.
 function activityDays(records) {
   const days = new Set();
   const earliest = Date.UTC(2020, 0, 1);
@@ -458,7 +514,7 @@ function activityDays(records) {
       for (const [childKey, child] of Object.entries(value)) walk(child, childKey, key, depth + 1);
       return;
     }
-    if (/^(due|nextReview)/iu.test(key)) return;
+    if (/^(due|nextReview)/iu.test(key) || key === "exportedAt") return;
     if (/At$/u.test(key) || parent === "completed") add(value);
   };
   for (const record of records) walk(record, "", "", 0);
@@ -538,7 +594,7 @@ async function showProgress() {
     } catch {
       return null;
     }
-  }), store]);
+  }), store?.synthetic ? null : store]);
   document.querySelector("#stat-streak").textContent = streakOf(days) + " 天";
 
   entries.forEach((entry, index) => {
@@ -601,13 +657,14 @@ function say(text, state = "") {
 }
 
 async function backupAll() {
-  const local = storedRecords();
+  const local = storedRecords().filter(([, value]) => rawHoldsProgress(value));
   let store = null;
   try {
     store = await readAlgorithmsStore();
   } catch {
     store = null;
   }
+  if (!holdsProgress(store)) store = null;
   if (local.length === 0 && !store) {
     say("这个浏览器里还没有学习记录，没有可备份的内容。");
     return;
@@ -649,11 +706,13 @@ function parseBackup(text) {
   const local = [];
   let ignored = 0;
   for (const [key, value] of Object.entries(object(data.localStorage) ? data.localStorage : {})) {
-    if (courseOfKey(key) && typeof value === "string" && value.length <= 2 * 1024 * 1024) local.push([key, value]);
+    if (courseOfKey(key) && typeof value === "string" && value.length <= 2 * 1024 * 1024 && rawHoldsProgress(value)) local.push([key, value]);
     else ignored += 1;
   }
   let store = data.indexedDB?.[algorithmDatabase]?.progress?.current ?? null;
-  if (store !== null && !(object(store) && Number.isInteger(store.schemaVersion) && store.schemaVersion >= 3 && object(store.units))) {
+  // The course reads every unit as an object and stops rendering its units page on anything else.
+  const wellFormed = object(store) && Number.isInteger(store.schemaVersion) && store.schemaVersion >= 3 && object(store.units) && Object.values(store.units).every(object);
+  if (store !== null && !(wellFormed && holdsProgress(store))) {
     store = null;
     ignored += 1;
   }
@@ -674,7 +733,7 @@ function showRestore(parsed) {
   }));
   pendingRestore = parsed;
   restorePreview.hidden = false;
-  say(parsed.ignored ? "有 " + parsed.ignored + " 条不是课程记录或格式不对，恢复时会跳过。" : "");
+  say(parsed.ignored ? "有 " + parsed.ignored + " 条是空记录、不是课程记录或格式不对，恢复时会跳过。" : "");
   document.querySelector("#restore-confirm").focus();
 }
 
@@ -706,14 +765,6 @@ async function restore() {
   const { local, store } = pendingRestore;
   let written = 0;
   const failed = [];
-  for (const [key, value] of local) {
-    try {
-      localStorage.setItem(key, value);
-      written += 1;
-    } catch {
-      failed.push(courseOfKey(key));
-    }
-  }
   if (store) {
     try {
       await writeAlgorithmsStore(store);
@@ -722,16 +773,33 @@ async function restore() {
       failed.push("算法研习室");
     }
   }
+  for (const [key, value] of [...local].sort(writeOrder)) {
+    try {
+      localStorage.setItem(key, value);
+      written += 1;
+    } catch {
+      failed.push(courseOfKey(key));
+    }
+  }
   pendingRestore = null;
   restorePreview.hidden = true;
+  const state = failed.length ? "wrong" : "done";
+  if (written === 0) {
+    say("一条记录也没写进去：浏览器不让这个网站保存数据，或者存储已满。", "wrong");
+    backupStatus.focus();
+    return;
+  }
   const note = failed.length
     ? "恢复了 " + written + " 条记录；" + [...new Set(failed)].join("、") + " 的记录没写进去，可能是浏览器存储已满或被禁用。"
-    : "恢复了 " + written + " 条记录。已经打开的课程页刷新后能看到。";
+    : "恢复了 " + written + " 条记录。已经打开的课程页要刷新才看得到。";
   // Reloading reads every record again from scratch, so the cards, the banner and the reviews show what was restored.
+  // The note crosses the reload in sessionStorage; when that is refused, the page says it here and does not reload.
   try {
-    sessionStorage.setItem(restoreNoteKey, JSON.stringify({ note, state: failed.length ? "wrong" : "done" }));
+    sessionStorage.setItem(restoreNoteKey, JSON.stringify({ note, state }));
   } catch {
-    // The note is lost, the restore is not.
+    say(note + "刷新页面能看到恢复后的进度。", state);
+    backupStatus.focus();
+    return;
   }
   location.hash = "backup";
   location.reload();
@@ -768,7 +836,13 @@ document.querySelector("#restore-cancel").addEventListener("click", () => {
 try {
   const restored = JSON.parse(sessionStorage.getItem(restoreNoteKey));
   sessionStorage.removeItem(restoreNoteKey);
-  if (restored?.note) say(restored.note, restored.state);
+  // Text already present at load is not announced, so the note arrives a moment later and takes focus.
+  if (restored?.note) {
+    setTimeout(() => {
+      say(restored.note, restored.state);
+      backupStatus.focus();
+    }, 300);
+  }
 } catch {
   // No note to show.
 }
