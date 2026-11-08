@@ -393,10 +393,13 @@ try {
   // bank is loaded once and only for a record with a passed quiz, and a bank that fails or hangs never stops the
   // page: the pass then counts, as it does on the course without its bank.
   {
+    // The card's 昨天 counts whole 24-hour spans back from now, so these times are whole days and a minute back,
+    // not noon in this time zone, and the label does not depend on the hour the checks run.
+    const before = (days) => new Date(Date.now() - days * 86400000 - 60000).toISOString();
     const chapter00 = (revision) => ({
       version: 1,
-      updatedAt: daysAgo(1).toISOString(),
-      chapters: { "00": { readAt: daysAgo(2).toISOString(), codeAt: daysAgo(2).toISOString(), quizPassedAt: daysAgo(1).toISOString(), quizRevision: revision, note: "环境检查通过。", noteAt: daysAgo(1).toISOString() } },
+      updatedAt: before(1),
+      chapters: { "00": { readAt: before(2), codeAt: before(2), quizPassedAt: before(1), quizRevision: revision, note: "环境检查通过。", noteAt: before(1) } },
     });
     const bankScripts = (page) => page.locator(`script[src="${llmQuizBankPath}"]`).count();
     const card = (page) => page.locator('.entry[data-course="llm"]');
