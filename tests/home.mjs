@@ -161,8 +161,8 @@ async function readAlgorithms() {
   });
 }
 
-async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", init, prepare, waitUntil = "load" } = {}) {
-  const context = await browser.newContext({ viewport, colorScheme });
+async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", timezoneId, init, prepare, waitUntil = "load" } = {}) {
+  const context = await browser.newContext({ viewport, colorScheme, ...(timezoneId ? { timezoneId } : {}) });
   if (prepare) await prepare(context);
   if (seed) {
     await context.addInitScript((data) => {
@@ -393,13 +393,10 @@ try {
   // bank is loaded once and only for a record with a passed quiz, and a bank that fails or hangs never stops the
   // page: the pass then counts, as it does on the course without its bank.
   {
-    // The card's 昨天 counts whole 24-hour spans back from now, so these times are whole days and a minute back,
-    // not noon in this time zone, and the label does not depend on the hour the checks run.
-    const before = (days) => new Date(Date.now() - days * 86400000 - 60000).toISOString();
     const chapter00 = (revision) => ({
       version: 1,
-      updatedAt: before(1),
-      chapters: { "00": { readAt: before(2), codeAt: before(2), quizPassedAt: before(1), quizRevision: revision, note: "环境检查通过。", noteAt: before(1) } },
+      updatedAt: daysAgo(1).toISOString(),
+      chapters: { "00": { readAt: daysAgo(2).toISOString(), codeAt: daysAgo(2).toISOString(), quizPassedAt: daysAgo(1).toISOString(), quizRevision: revision, note: "环境检查通过。", noteAt: daysAgo(1).toISOString() } },
     });
     const bankScripts = (page) => page.locator(`script[src="${llmQuizBankPath}"]`).count();
     const card = (page) => page.locator('.entry[data-course="llm"]');
@@ -462,6 +459,36 @@ try {
     assert.deepEqual(hung.errors, []);
     await pending.abort().catch(() => {});
     await hung.context.close();
+  }
+
+  // 今天, 昨天 and N 天前 count calendar days in the browser's time zone, the days the streak counts, not 24-hour
+  // spans: 23:00 last night is 昨天 at 08:00, and a minute before midnight is 昨天 a minute after it. These checks pin
+  // the browser's clock and time zone, so they mean the same on any machine and at any hour.
+  {
+    const read = (iso) => JSON.stringify({ version: 1, chapters: { "00": { readAt: iso } } });
+    const pinned = (now, timezoneId) => ({ timezoneId, prepare: (context) => context.clock.setFixedTime(new Date(now)) });
+    const place = (page) => page.locator('.entry[data-course="llm"] [data-place]').textContent();
+    const label = "00 学习路线与环境 · 第 2 步：看代码 · ";
+
+    const lastNight = await open(browser, { seed: { "learn-llm-progress-v1": read("2026-11-07T23:00:00+08:00") }, ...pinned("2026-11-08T08:00:00+08:00", "Asia/Shanghai") });
+    assert.equal(await place(lastNight.page), label + "昨天", "nine hours ago, but on the day before");
+    assert.equal(await lastNight.page.locator("#resume-line .resume-meta").textContent(), "0 / 9 章 · 昨天");
+    assert.equal(await lastNight.page.locator("#stat-streak").textContent(), "1 天", "the streak counts the same day");
+    assert.deepEqual(lastNight.errors, []);
+    await lastNight.context.close();
+
+    const midnight = await open(browser, { seed: { "learn-llm-progress-v1": read("2026-11-07T23:59:30+08:00") }, ...pinned("2026-11-08T00:00:30+08:00", "Asia/Shanghai") });
+    assert.equal(await place(midnight.page), label + "昨天", "a minute ago, across midnight");
+    await midnight.context.close();
+
+    const days = await open(browser, { seed: { "learn-llm-progress-v1": read("2026-11-05T23:59:00+08:00") }, ...pinned("2026-11-08T08:00:00+08:00", "Asia/Shanghai") });
+    assert.equal(await place(days.page), label + "3 天前", "three midnights back, though only 56 hours");
+    await days.context.close();
+
+    // The same two moments in Los Angeles fall on one day there: 07:00 and 16:00 on 7 November.
+    const elsewhere = await open(browser, { seed: { "learn-llm-progress-v1": read("2026-11-07T23:00:00+08:00") }, ...pinned("2026-11-08T08:00:00+08:00", "America/Los_Angeles") });
+    assert.equal(await place(elsewhere.page), label + "今天", "the browser's own calendar decides");
+    await elsewhere.context.close();
   }
 
   // Backup all, then restore into an empty browser. Nothing is written until the reader has seen the file's

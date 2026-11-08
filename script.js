@@ -568,9 +568,18 @@ function streakOf(days) {
   return streak;
 }
 
+// A time's calendar day in this browser's time zone as a whole number, so two days subtract to the number of
+// midnights between them. Date.UTC over the local date keeps daylight-saving shifts out of the count.
+function dayNumber(time) {
+  const date = new Date(time);
+  return Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / 86400000;
+}
+
+// How long ago, in calendar days in this browser's time zone, the same days the streak counts: anything since
+// midnight is 今天 and anything on the day before is 昨天, however few hours ago it was.
 function whenText(time) {
   if (!time) return "";
-  const days = Math.floor((Date.now() - time) / 86400000);
+  const days = dayNumber(Date.now()) - dayNumber(time);
   if (days <= 0) return "今天";
   return days === 1 ? "昨天" : days + " 天前";
 }
