@@ -386,7 +386,7 @@ Components are plain: words, lines and the occasional box. Words do the job of i
 
 - **Shape (`.nb-card`):** A 14px rounded sheet, clipped, with no border or shadow. The card takes `data-hue` for its group.
 - **Head (`.nb-card-head`):** Filled with the hue; eyebrow (`.nb-card-eyebrow`, .8125rem, the group word and a count, such as 工程 · 23 种模式), then the title at 1.1875rem 600 as the link, in paper with no underline until hover. The progress ring sits at the right.
-- **Body (`.nb-card-body`):** One sentence in Soft Ink at .9375rem, then a figure row (`.nb-card-meta`) pushed to the bottom: the state on the left (0 / 120 任务) and the place on the right (Abstract Factory · 运行并核对输出 · 昨天), in tabular figures.
+- **Body (`.nb-card-body`):** One sentence in Soft Ink at .9375rem, then a figure row (`.nb-card-meta`) pushed to the bottom: the state on the left (0 / 120 任务) and the place on the right (Abstract Factory · 运行并核对输出 · 昨天), in tabular figures. The closing 今天, 昨天 or N 天前, here and in the continue banner, counts calendar days in the browser's time zone, the same days the streak counts, not 24-hour spans: work at 23:00 last night is 昨天 at 08:00.
 - **Stopped:** The newest record's card gets `aria-current`, a 3px outline in its hue, a 停在这里 label in the hue at the top of its body, and on the index it spans two columns.
 - **Done:** The state turns green at weight 600 and the ring reaches 100%.
 - **Link:** The title is the link, stretched over the whole card on the index. Hover underlines the title; nothing else changes.
