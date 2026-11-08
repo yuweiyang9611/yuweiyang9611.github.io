@@ -177,13 +177,13 @@
       <div class="restore-preview" id="restore-preview" hidden>
         <p id="restore-summary"></p>
         <ul class="restore-list" id="restore-list"></ul>
-        <p class="restore-warning">恢复会用文件里的记录覆盖这个浏览器里同名的记录，文件里没有的记录不动。要留住现在的记录，先点「备份全部」。</p>
+        <p class="restore-warning">恢复会用文件里的记录覆盖这个浏览器里同名的记录，文件里没有的记录不动。先关掉其他已打开的课程页：那些页面还拿着旧记录，下次保存会把恢复的记录盖回去。要留住现在的记录，先点「备份全部」。</p>
         <div class="backup-actions">
           <button class="nb-button nb-button--solid" type="button" id="restore-confirm">覆盖并恢复</button>
           <button class="nb-button" type="button" id="restore-cancel">取消</button>
         </div>
       </div>
-      <p class="backup-status" id="backup-status" role="status"></p>
+      <p class="backup-status" id="backup-status" role="status" tabindex="-1"></p>
     </section>
 
     <section class="about" id="about" aria-labelledby="about-title">

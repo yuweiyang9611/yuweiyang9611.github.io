@@ -44,7 +44,9 @@
 .restore-list { margin: .375rem 0 .5rem; padding-left: 1.25rem; list-style: disc; }
 .restore-warning { color: var(--nb-ink-soft); font-size: .875rem; }
 .backup-status { margin-top: .75rem; color: var(--nb-ink-soft); font-size: .9375rem; }
-.backup-status:empty { display: none; }
+/* An empty status stays in the page, so a screen reader is already watching it when a message arrives. */
+.backup-status:empty { margin-top: 0; }
+.backup-status:focus { outline: none; }
 .backup-status[data-state="done"] { color: var(--nb-done); }
 .backup-status[data-state="wrong"] { color: var(--nb-wrong); }
 
