@@ -506,6 +506,30 @@ try {
     await opened.context.close();
   }
 
+  // A finished design patterns item sends the reader to the course home, which knows the next item; with all 120
+  // tasks done the place is simply finished.
+  {
+    const finished = { read: "2026-11-01T10:00:00.000Z", run: "2026-11-01T10:00:00.000Z", change: "2026-11-01T10:00:00.000Z", verify: "2026-11-01T10:00:00.000Z" };
+    const record = (items) => JSON.stringify({ version: 3, updatedAt: daysAgo(0).toISOString(), items, resume: { itemId: "pattern:strategy", taskId: "verify", updatedAt: daysAgo(0).toISOString() } });
+    const one = await open(browser, { seed: { "csharp-design-patterns-progress-v3": record({ "pattern:strategy": { completed: finished } }) } });
+    const link = one.page.locator("#resume-line a");
+    assert.equal(await link.textContent(), "C# 设计模式 · Strategy 已完成，下一项见课程首页");
+    assert.equal(await link.getAttribute("href"), "/CSharp_Implementation_of_DesignPatterns/");
+    assert.equal(await one.page.locator("#resume-go").getAttribute("href"), "/CSharp_Implementation_of_DesignPatterns/");
+    assert.deepEqual(one.errors, []);
+    await one.context.close();
+
+    // 29 other items of four tasks plus Strategy: all 120 tasks.
+    const rest = Object.fromEntries(Array.from({ length: 29 }, (_, index) => ["item:" + index, { completed: finished }]));
+    const every = await open(browser, { seed: { "csharp-design-patterns-progress-v3": record({ ...rest, "pattern:strategy": { completed: finished } }) } });
+    const card = every.page.locator('.entry[data-course="patterns"]');
+    assert.equal(await card.locator("[data-state]").textContent(), "120 / 120 任务");
+    assert.equal(await card.locator("[data-place]").textContent(), "全部完成 · 今天");
+    assert.equal(await card.getAttribute("data-record"), "done");
+    assert.deepEqual(every.errors, []);
+    await every.context.close();
+  }
+
   // Empty and malformed records never travel: a browser that only opened course pages has nothing to back up, and a
   // file's empty or malformed record is skipped instead of overwriting real progress.
   {

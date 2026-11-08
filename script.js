@@ -112,8 +112,8 @@ const courses = {
         href = base + "patterns/" + encodeURIComponent(itemId.slice(8)) + ".html#evidence-" + next[0];
       } else {
         // The course moves on from a finished item to the first unfinished one in its catalog, which the index does
-        // not copy; the course's home page shows that place.
-        place += " 已完成，下一项见课程首页";
+        // not copy; the course's home page shows that place. With every task done there is no next item.
+        place = done >= 120 ? "全部完成" : place + " 已完成，下一项见课程首页";
       }
     }
     return {
