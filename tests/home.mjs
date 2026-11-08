@@ -185,6 +185,11 @@ function settled(page) {
   return page.locator('body[data-progress="read"]').waitFor({ state: "attached" });
 }
 
+// Picking a file is read asynchronously (file.text()), so a check waits for the status line instead of reading it at once.
+function statusSays(page, pattern) {
+  return page.waitForFunction((source) => new RegExp(source, "u").test(document.querySelector("#backup-status").textContent), pattern.source);
+}
+
 async function assertAccessible(page, label) {
   await page.addScriptTag({ content: axe.source });
   const { violations } = await page.evaluate(() => window.axe.run(document, { resultTypes: ["violations"] }));
@@ -408,9 +413,9 @@ try {
       assert.deepEqual(await fresh.page.evaluate(async () => (await indexedDB.databases()).map((database) => database.name)), [], "no database yet");
     };
     await fresh.page.locator("#restore-file").setInputFiles({ name: "llm.json", mimeType: "application/json", buffer: Buffer.from(JSON.stringify({ format: "learn-llm-progress", version: 1, progress: llm })) });
-    assert.match(await status.textContent(), /不是学习台的备份文件/u);
+    await statusSays(fresh.page, /不是学习台的备份文件/u);
     await fresh.page.locator("#restore-file").setInputFiles({ name: "broken.json", mimeType: "application/json", buffer: Buffer.from("{not json") });
-    assert.match(await status.textContent(), /不是 JSON/u);
+    await statusSays(fresh.page, /不是 JSON/u);
     assert.equal(await fresh.page.locator("#restore-preview").isVisible(), false);
 
     const [chooser] = await Promise.all([fresh.page.waitForEvent("filechooser"), fresh.page.locator("#restore-pick").click()]);
@@ -552,11 +557,13 @@ try {
     });
     const { context, page, errors } = await open(browser, { database: algorithms });
     await page.locator("#restore-file").setInputFiles(backupFile({ "learn-llm-progress-v1": JSON.stringify(llm), "learn-dotnet-csharp-learning-data-v1": JSON.stringify(emptyDotnet) }, emptyStore));
+    await page.locator("#restore-preview").waitFor();
     assert.deepEqual(await page.locator("#restore-list li").allTextContents(), ["LearnLLM · 1 条"]);
     assert.match(await page.locator("#backup-status").textContent(), /有 2 条是空记录/u);
     await page.locator("#restore-cancel").click();
     const malformed = { ...algorithms, units: { ...algorithms.units, "core-sorting": null } };
     await page.locator("#restore-file").setInputFiles(backupFile({ "learn-llm-progress-v1": JSON.stringify(llm) }, malformed));
+    await page.locator("#restore-preview").waitFor();
     assert.deepEqual(await page.locator("#restore-list li").allTextContents(), ["LearnLLM · 1 条"]);
     await Promise.all([page.waitForEvent("load"), page.locator("#restore-confirm").click()]);
     await settled(page);
