@@ -254,7 +254,9 @@ const llmStepAnchors = ["", "#llm-source", "#llm-source", "#llm-quiz", "#llm-not
 // a changed question asks for the quiz again. Rather than copy hashes that go stale with every edit to the bank,
 // the index loads the course's own file, once and only when the record holds a passed quiz, and asks it as the
 // course does (window.LlmQuizBank.revision). When the file cannot be loaded in time the pass counts, as it does on
-// the course without its bank, so a slow or missing file never holds up the page for long.
+// the course without its bank. The index paints only once every reader has answered, so while the file loads the
+// whole page waits, not just the LearnLLM card: a failed request answers at once, and one that never answers holds
+// the page for three seconds at most.
 const llmQuizBankUrl = "/LearnLLM/javascripts/quiz-bank.js";
 const llmQuizBankWait = 3000;
 let llmQuizBankLoad = null;
@@ -614,7 +616,8 @@ async function showProgress() {
   let active = 0;
 
   // Every record is read before anything is painted, so the stats, the banner, the reviews and the stopped card
-  // agree. The algorithms reader is asynchronous; the others resolve at once.
+  // agree. Two readers are asynchronous: the algorithms reader (IndexedDB) and LearnLLM's, which waits up to three
+  // seconds for the course's question bank when the record holds a passed quiz. The others resolve at once.
   const read = await settle(entries.map((entry) => courses[entry.dataset.course]));
   const due = (await settle(Object.values(reviews))).filter(Boolean).sort((left, right) => right.count - left.count);
   showReviews(due);

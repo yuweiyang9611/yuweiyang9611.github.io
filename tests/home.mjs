@@ -432,11 +432,15 @@ try {
     assert.deepEqual(unasked.errors, []);
     await unasked.context.close();
 
-    // The bank cannot be loaded: the pass counts, even a stale one, and the page carries on.
+    // The bank cannot be loaded: the pass counts, even a stale one, and the page carries on at once rather than
+    // sitting out the three-second wait (the whole page waits for this reader). Time is counted from the page's
+    // navigation, so starting the browser context does not count.
     const failed = await open(browser, {
       seed: { "learn-llm-progress-v1": JSON.stringify(chapter00("r0")) },
       prepare: (context) => context.route("**" + llmQuizBankPath, (route) => route.abort()),
     });
+    const painted = await failed.page.evaluate(() => performance.now());
+    assert.ok(painted < 2000, `a failed bank held the page for ${Math.round(painted)} ms`);
     assert.equal(await card(failed.page).locator("[data-state]").textContent(), "1 / 9 章");
     assert.equal(await card(failed.page).locator("[data-place]").textContent(), "01 数学与 PyTorch 基础 · 第 1 步：读 · 昨天");
     assert.deepEqual(failed.errors.filter((message) => !/Failed to load resource/u.test(message)), []);
