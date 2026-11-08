@@ -43,16 +43,26 @@ const server = createServer(async (request, response) => {
 await new Promise((ready) => server.listen(0, "127.0.0.1", ready));
 const baseUrl = `http://127.0.0.1:${server.address().port}/`;
 
+// The suite runs at one fixed moment: noon today in this machine's time zone. open() sets every browser context's
+// clock to it and every record time below counts back from it, so 今天, 昨天, N 天前, due reviews and the streak read
+// the same whatever hour the checks start and however long they take, even across midnight. Noon also keeps a whole
+// number of days back on the right calendar day in a daylight-saving week.
+const suiteNow = (() => {
+  const date = new Date();
+  date.setHours(12, 0, 0, 0);
+  return date.getTime();
+})();
+
 const patterns = {
   version: 3,
-  updatedAt: new Date(Date.now() - 2 * 86400000).toISOString(),
+  updatedAt: new Date(suiteNow - 2 * 86400000).toISOString(),
   items: { "pattern:factory-method": { completed: { read: "t" }, updatedAt: "t" } },
-  resume: { itemId: "pattern:factory-method", taskId: "read", updatedAt: new Date(Date.now() - 2 * 86400000).toISOString() },
+  resume: { itemId: "pattern:factory-method", taskId: "read", updatedAt: new Date(suiteNow - 2 * 86400000).toISOString() },
 };
 const frontend = {
   app: "issueflow-learning-progress",
   schemaVersion: 1,
-  days: [{ day: 1, completed: true, completedAt: new Date(Date.now() - 9 * 86400000).toISOString() }, { day: 2, completed: false, completedAt: null }],
+  days: [{ day: 1, completed: true, completedAt: new Date(suiteNow - 9 * 86400000).toISOString() }, { day: 2, completed: false, completedAt: null }],
 };
 const dotnet = { version: 1, experiments: ["a", "b"], assessments: {}, copies: [], lastReading: { title: "第 4 章", url: "guide/" } };
 const records = {
@@ -62,7 +72,7 @@ const records = {
 };
 // The algorithms course's record as its progressRepository.ts writes it: schema 3, one entry per
 // touched unit. One unit verified a week ago, one started today with a single piece of evidence.
-const today = Date.now();
+const today = suiteNow;
 const algorithms = {
   schemaVersion: 3,
   generation: 0,
@@ -78,12 +88,11 @@ const algorithms = {
   deleted: {},
 };
 
-// Times a whole number of days back, at noon in this time zone, so the streak does not depend on the hour the
-// checks run. "Now" stays a second in the past so it is never a future time.
+// Times a whole number of calendar days back from the suite's noon, at noon. "Now" stays a second in the past so it
+// is never a future time.
 function daysAgo(days) {
-  if (days === 0) return new Date(Date.now() - 1000);
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
+  if (days === 0) return new Date(suiteNow - 1000);
+  const date = new Date(suiteNow);
   date.setDate(date.getDate() - days);
   return date;
 }
@@ -101,18 +110,18 @@ const patternsReview = {
   version: 1,
   updatedAt: daysAgo(4).getTime(),
   questions: {
-    a: { contentVersion: "a:1", box: 1, streak: 1, attempts: 1, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() - 3600000, lastCorrect: true },
-    b: { contentVersion: "b:1", box: 0, streak: 0, attempts: 2, lapses: 1, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() - 60000, lastCorrect: false },
-    c: { contentVersion: "c:1", box: 3, streak: 3, attempts: 3, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: Date.now() + 86400000, lastCorrect: true },
-    d: { dueAt: Date.now() - 60000 },
+    a: { contentVersion: "a:1", box: 1, streak: 1, attempts: 1, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: suiteNow - 3600000, lastCorrect: true },
+    b: { contentVersion: "b:1", box: 0, streak: 0, attempts: 2, lapses: 1, lastAnsweredAt: daysAgo(4).getTime(), dueAt: suiteNow - 60000, lastCorrect: false },
+    c: { contentVersion: "c:1", box: 3, streak: 3, attempts: 3, lapses: 0, lastAnsweredAt: daysAgo(4).getTime(), dueAt: suiteNow + 86400000, lastCorrect: true },
+    d: { dueAt: suiteNow - 60000 },
   },
 };
 const frontendReview = {
   app: "issueflow-learning-review",
   schemaVersion: 1,
   records: {
-    "w05-q01": { stage: 2, lastCorrect: true, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(Date.now() + 86400000).toISOString(), attempts: 2 },
-    "w04-q02": { stage: 0, lastCorrect: false, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(Date.now() - 86400000).toISOString(), attempts: 1 },
+    "w05-q01": { stage: 2, lastCorrect: true, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(suiteNow + 86400000).toISOString(), attempts: 2 },
+    "w04-q02": { stage: 0, lastCorrect: false, lastAnsweredAt: daysAgo(4).toISOString(), dueAt: new Date(suiteNow - 86400000).toISOString(), attempts: 1 },
   },
 };
 // One unit verified a month ago whose review came due an hour ago.
@@ -123,7 +132,7 @@ const reviewing = {
   units: {
     "core-linear-structures": {
       evidenceIds: ["invariant", "test", "transfer"], evidenceRevision: 1, selfTestPassedAt: daysAgo(30).getTime(), selfTestRevision: 1,
-      verifiedAt: daysAgo(30).getTime(), verifiedRevision: 1, nextReviewAt: Date.now() - 3600000, reviewRound: 0,
+      verifiedAt: daysAgo(30).getTime(), verifiedRevision: 1, nextReviewAt: suiteNow - 3600000, reviewRound: 0,
       startedAt: daysAgo(31).getTime(), updatedAt: daysAgo(30).getTime(),
     },
   },
@@ -163,6 +172,8 @@ async function readAlgorithms() {
 
 async function open(browser, { seed, database, viewport = { width: 1440, height: 900 }, colorScheme = "light", timezoneId, init, prepare, waitUntil = "load" } = {}) {
   const context = await browser.newContext({ viewport, colorScheme, ...(timezoneId ? { timezoneId } : {}) });
+  // Date in the page reads the suite's moment; timers still run in real time. A check's prepare may set another.
+  await context.clock.setFixedTime(suiteNow);
   if (prepare) await prepare(context);
   if (seed) {
     await context.addInitScript((data) => {
@@ -466,7 +477,7 @@ try {
   // the browser's clock and time zone, so they mean the same on any machine and at any hour.
   {
     const read = (iso) => JSON.stringify({ version: 1, chapters: { "00": { readAt: iso } } });
-    const pinned = (now, timezoneId) => ({ timezoneId, prepare: (context) => context.clock.setFixedTime(new Date(now)) });
+    const pinned = (moment, timezoneId) => ({ timezoneId, prepare: (context) => context.clock.setFixedTime(new Date(moment)) });
     const place = (page) => page.locator('.entry[data-course="llm"] [data-place]').textContent();
     const label = "00 学习路线与环境 · 第 2 步：看代码 · ";
 
@@ -560,8 +571,8 @@ try {
   // due questions from two weeks, a .NET title saved with its heading anchor and a self-test as its newest work, a
   // design patterns item already finished.
   {
-    // Exact multiples of a day, so "N 天前" does not depend on the hour the checks run.
-    const ago = (days) => new Date(Date.now() - days * 86400000);
+    // Whole days back from the suite's noon.
+    const ago = (days) => new Date(suiteNow - days * 86400000);
     const seed = {
       "csharp-design-patterns-progress-v3": JSON.stringify({
         version: 3,
@@ -659,7 +670,7 @@ try {
     const backupFile = (localStorage, store) => ({
       name: "hand-made.json",
       mimeType: "application/json",
-      buffer: Buffer.from(JSON.stringify({ format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date().toISOString(), localStorage, indexedDB: { "dsa-learning-progress": { progress: { current: store } } } })),
+      buffer: Buffer.from(JSON.stringify({ format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date(suiteNow).toISOString(), localStorage, indexedDB: { "dsa-learning-progress": { progress: { current: store } } } })),
     });
     const { context, page, errors } = await open(browser, { database: algorithms });
     await page.locator("#restore-file").setInputFiles(backupFile({ "learn-llm-progress-v1": JSON.stringify(llm), "learn-dotnet-csharp-learning-data-v1": JSON.stringify(emptyDotnet) }, emptyStore));
@@ -687,7 +698,7 @@ try {
       name: "order.json",
       mimeType: "application/json",
       buffer: Buffer.from(JSON.stringify({
-        format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date().toISOString(),
+        format: "yuweiyang9611-learning-backup", version: 1, exportedAt: new Date(suiteNow).toISOString(),
         localStorage: { "csharp-design-patterns-progress-v1": JSON.stringify(["strategy"]), "csharp-design-patterns-progress-v2": JSON.stringify({ version: 2, items: { strategy: 2 } }), "csharp-design-patterns-progress-v3": records["csharp-design-patterns-progress-v3"] },
         indexedDB: {},
       })),
