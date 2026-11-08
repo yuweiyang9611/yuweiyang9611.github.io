@@ -47,8 +47,9 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-// All the sites share this origin, so the index can read their progress. It must only ever read:
-// each course owns its key and format.
+// All the sites share this origin, so the index can read their progress. It only ever reads, with one
+// exception the reader asks for and confirms: restoring a backup file (see the end of this file).
+// Each course owns its key and format.
 function readRecord(key) {
   try {
     const value = JSON.parse(localStorage.getItem(key));
@@ -67,6 +68,10 @@ function plural(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function object(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
 function titleFromId(id) {
   return id
     .replace(/^[a-z]+:/u, "")
@@ -81,6 +86,14 @@ const patternTasks = [
   ["change", "制造一个最小变化"],
   ["verify", "验证并解释取舍"],
 ];
+
+// The loop band every course draws at the top of a lesson (kit .nb-steps). A step's number counts the
+// steps a lesson lacks too, because the band keeps all five pills and dashes the missing ones.
+const loopSteps = [["read", "读"], ["code", "看代码"], ["run", "跑"], ["quiz", "自测"], ["note", "记一笔"]];
+
+function stepText(index) {
+  return "第 " + (index + 1) + " 步：" + loopSteps[index][1];
+}
 
 const courses = {
   patterns() {
@@ -142,7 +155,7 @@ const courses = {
       state: experiments + " / 53 实验",
       done: experiments,
       fraction: experiments / 53,
-      at: 0,
+      at: Math.max(0, ...Object.values(object(record.runs) ? record.runs : {}).map((run) => timestamp(run?.ranAt))),
     };
   },
 
@@ -150,16 +163,10 @@ const courses = {
   // progress, key current). This mirrors the course's own read-only reader, readRecord.ts: a unit
   // counts once verified at the current mastery revision, and the place to continue is the unit
   // touched last and not finished, else the earliest review due, else the first unit whose
-  // prerequisites are all verified.
+  // prerequisites are all verified. A unit in progress also names the first step of its band still to do.
   async algorithms() {
-    let store = null;
-    try {
-      store = await readAlgorithmsStore();
-    } catch {
-      store = null;
-    }
-    if (!(store?.revision > 0 || store?.generation > 0)) store = legacyAlgorithmsStore();
-    const units = store?.units && typeof store.units === "object" ? store.units : {};
+    const store = await algorithmsStore();
+    const units = object(store?.units) ? store.units : {};
     const ids = Object.keys(units);
     if (ids.length === 0) return null;
     const now = Date.now();
@@ -169,15 +176,17 @@ const courses = {
     const learning = algorithmUnits
       .filter(([id]) => status(id) === "learning")
       .sort(([left], [right]) => (Number(units[right]?.updatedAt) || 0) - (Number(units[left]?.updatedAt) || 0))[0];
-    const due = algorithmUnits
-      .filter(([id]) => status(id) === "review")
-      .sort(([left], [right]) => (Number(units[left]?.nextReviewAt) || 0) - (Number(units[right]?.nextReviewAt) || 0))[0];
+    const due = algorithmDue(units, now)[0];
     const next = algorithmUnits.find(([id, , prerequisites]) => status(id) === "not-started" && prerequisites.every(mastered));
     const stop = learning ?? due ?? next;
     const base = "/DataStructureAndAlgorithm/学习单元.html";
     let place = "全部完成";
-    if (learning) place = learning[1];
-    else if (due) place = due[1] + " · 复习到期";
+    if (learning) {
+      const record = units[learning[0]];
+      const done = [record?.startedAt, record?.sourceOpenedAt, record?.ranAt, record?.selfTestPassedAt, typeof record?.note === "string" && record.note.trim()];
+      const index = done.findIndex((value) => !value);
+      place = learning[1] + " · " + (index < 0 ? "验证掌握" : stepText(index));
+    } else if (due) place = due[1] + " · 复习到期";
     else if (next) place = next[1] + " · 下一个单元";
     return {
       course: "算法研习室",
@@ -189,7 +198,51 @@ const courses = {
       at: Math.max(0, ...ids.map((id) => Number(units[id]?.updatedAt) || 0)),
     };
   },
+
+  // LearnLLM keeps one record (learn-llm-progress-v1) with a time per band step and chapter. This mirrors its
+  // progress.js: a chapter is finished when every step it has is done, and the place to continue is the earliest
+  // chapter with a step still to do. The site also checks a passed quiz against its current question bank; the
+  // index cannot see the bank, so a quiz passed before the bank changed still counts here.
+  llm() {
+    const record = readRecord("learn-llm-progress-v1");
+    if (record?.version !== 1 || !object(record.chapters)) return null;
+    const chapters = record.chapters;
+    if (!llmChapters.some(([id]) => object(chapters[id]))) return null;
+    const nextStep = ([id, , , panel, run]) => {
+      const entry = object(chapters[id]) ? chapters[id] : {};
+      const done = [entry.readAt, entry.codeAt, entry.ranAt, entry.quizPassedAt, typeof entry.note === "string" && entry.note.trim()];
+      const lacks = [false, !panel, !run, false, false];
+      return loopSteps.findIndex((step, index) => !lacks[index] && !done[index]);
+    };
+    const finished = llmChapters.filter((chapter) => nextStep(chapter) < 0).length;
+    const stop = llmChapters.find((chapter) => nextStep(chapter) >= 0);
+    const base = "/LearnLLM/";
+    const times = Object.values(chapters).flatMap((entry) => (object(entry) ? ["readAt", "codeAt", "ranAt", "quizPassedAt", "noteAt"].map((field) => timestamp(entry[field])) : []));
+    return {
+      course: "LearnLLM",
+      place: stop ? stop[0] + " " + stop[1] + " · " + stepText(nextStep(stop)) : "全部完成",
+      href: stop ? base + encodeURIComponent(stop[2]) + "/" : base,
+      state: finished + " / 9 章",
+      done: finished,
+      fraction: finished / 9,
+      at: Math.max(0, ...times),
+    };
+  },
 };
+
+// LearnLLM's nine chapters: id, title, page, whether the chapter has a code panel and a script that runs in the
+// browser. Copied from the course's mkdocs.yml and docs/javascripts/progress.js.
+const llmChapters = [
+  ["00", "学习路线与环境", "00_学习路线与环境", true, false],
+  ["01", "数学与 PyTorch 基础", "01_数学与PyTorch基础", true, false],
+  ["02", "Tokenizer 与语言模型", "02_Tokenizer与语言模型", true, true],
+  ["03", "注意力与 Transformer", "03_注意力与Transformer", true, false],
+  ["04", "模型家族与训练生命周期", "04_模型家族与训练生命周期", false, false],
+  ["05", "迷你 GPT 预训练与生成", "05_迷你GPT预训练与生成", true, false],
+  ["06", "SFT、LoRA 与对齐", "06_SFT_LoRA与对齐", true, false],
+  ["07", "评测、RAG 与 Agent", "07_评测_RAG与Agent", true, true],
+  ["08", "结课项目", "08_结课项目", true, false],
+];
 
 // The course's 22 units in the order its units page teaches them (stage order, corrected so no unit
 // comes before a prerequisite), each with its prerequisites. Copied from learningUnits.ts and record.ts.
@@ -230,10 +283,32 @@ function algorithmStatus(record, now) {
   return record.nextReviewAt && record.nextReviewAt <= now ? "review" : "verified";
 }
 
+// Units whose mastery review is due, earliest first.
+function algorithmDue(units, now) {
+  return algorithmUnits
+    .filter(([id]) => algorithmStatus(units[id], now) === "review")
+    .sort(([left], [right]) => (Number(units[left]?.nextReviewAt) || 0) - (Number(units[right]?.nextReviewAt) || 0));
+}
+
+// The record is read once per page load and shared by the card, the reviews and the streak.
+let algorithmsRead = null;
+function algorithmsStore() {
+  algorithmsRead ??= (async () => {
+    let store = null;
+    try {
+      store = await readAlgorithmsStore();
+    } catch {
+      store = null;
+    }
+    return store?.revision > 0 || store?.generation > 0 ? store : legacyAlgorithmsStore();
+  })();
+  return algorithmsRead;
+}
+
 // Opening a database that does not exist would create an empty one without the course's object
 // store and break its units page. So the index asks for the list of databases first, opens the
 // course's only when it is already there, at the course's own version, with no upgrade handler,
-// and only ever reads from it.
+// and only ever reads from it here.
 async function readAlgorithmsStore() {
   const factory = globalThis.indexedDB;
   if (typeof factory?.databases !== "function") return null;
@@ -286,6 +361,123 @@ function legacyAlgorithmsStore() {
   return { units };
 }
 
+// Today's reviews: the three courses that schedule them. Only questions already answered once count; a question
+// never answered is new work, not a review.
+const reviews = {
+  patterns() {
+    const record = readRecord("csharp-design-patterns-review-v1");
+    if (record?.version !== 1 || !object(record.questions)) return null;
+    const now = Date.now();
+    const count = Object.values(record.questions)
+      .filter((question) => object(question) && Number.isFinite(question.lastAnsweredAt) && Number.isFinite(question.dueAt) && question.dueAt <= now)
+      .length;
+    return count ? { course: "C# 设计模式", hue: "purple", count, unit: "题", label: "辨析训练 · 到期题", href: "/CSharp_Implementation_of_DesignPatterns/quiz.html" } : null;
+  },
+
+  frontend() {
+    const record = readRecord("issueflow:frontend-learning-project:review:v1");
+    if (record?.app !== "issueflow-learning-review" || record.schemaVersion !== 1 || !object(record.records)) return null;
+    const now = new Date().toISOString();
+    const due = Object.entries(record.records)
+      .filter(([, question]) => object(question) && typeof question.dueAt === "string" && question.dueAt <= now)
+      .sort(([, left], [, right]) => (left.dueAt < right.dueAt ? -1 : 1));
+    if (due.length === 0) return null;
+    const week = /^w(\d+)-/u.exec(due[0][0]);
+    return {
+      course: "IssueFlow",
+      hue: "green",
+      count: due.length,
+      unit: "题",
+      label: week ? "第 " + Number(week[1]) + " 周周测" : "错题复习",
+      href: "/frontend-learning-project/90-days/review-center.html",
+    };
+  },
+
+  async algorithms() {
+    const store = await algorithmsStore();
+    const due = algorithmDue(object(store?.units) ? store.units : {}, Date.now());
+    if (due.length === 0) return null;
+    return {
+      course: "算法研习室",
+      hue: "cyan",
+      count: due.length,
+      unit: "个单元",
+      label: due[0][1] + " · 掌握复习",
+      href: "/DataStructureAndAlgorithm/学习单元.html#unit-" + due[0][0],
+    };
+  },
+};
+
+// Every key a course keeps on this origin starts with its own prefix. Backups cover exactly these keys plus the
+// algorithms course's IndexedDB record; the scheme choice (site-theme) is a preference, not a record, and stays out.
+const recordPrefixes = [
+  ["csharp-design-patterns-", "C# 设计模式"],
+  ["dsa-learning-progress", "算法研习室"],
+  ["issueflow:", "IssueFlow 学习站"],
+  ["issueflow-", "IssueFlow 学习站"],
+  ["learn-dotnet-csharp-", "LearnDotnetCSharp"],
+  ["learn-llm-", "LearnLLM"],
+];
+
+function courseOfKey(key) {
+  return recordPrefixes.find(([prefix]) => key.startsWith(prefix))?.[1] ?? null;
+}
+
+function storedRecords() {
+  const records = [];
+  try {
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key !== null && courseOfKey(key)) records.push([key, localStorage.getItem(key)]);
+    }
+  } catch {
+    // Storage can be disabled.
+  }
+  return records.sort(([left], [right]) => (left < right ? -1 : 1));
+}
+
+function dayKey(time) {
+  const date = new Date(time);
+  return date.getFullYear() + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0");
+}
+
+// The streak counts the days, in this browser's time zone, on which any course recorded something: a time under a
+// key ending in At (readAt, ranAt, completedAt, lastAnsweredAt, updatedAt…) or a finished task in the design
+// patterns record. Times in the future (dueAt, nextReviewAt) are plans, not work, and are skipped.
+function activityDays(records) {
+  const days = new Set();
+  const earliest = Date.UTC(2020, 0, 1);
+  const latest = Date.now() + 60000;
+  const add = (value) => {
+    const time = typeof value === "number" ? value : typeof value === "string" && /^\d{4}-\d{2}-\d{2}T/u.test(value) ? Date.parse(value) : NaN;
+    if (Number.isFinite(time) && time > earliest && time <= latest) days.add(dayKey(time));
+  };
+  const walk = (value, key, parent, depth) => {
+    if (value === null || value === undefined || depth > 8) return;
+    if (typeof value === "object") {
+      for (const [childKey, child] of Object.entries(value)) walk(child, childKey, key, depth + 1);
+      return;
+    }
+    if (/^(due|nextReview)/iu.test(key)) return;
+    if (/At$/u.test(key) || parent === "completed") add(value);
+  };
+  for (const record of records) walk(record, "", "", 0);
+  return days;
+}
+
+function streakOf(days) {
+  const cursor = new Date();
+  cursor.setHours(12, 0, 0, 0);
+  // Today still counts as kept until it ends, so a streak runs from yesterday when today has no record yet.
+  if (!days.has(dayKey(cursor))) cursor.setDate(cursor.getDate() - 1);
+  let streak = 0;
+  while (days.has(dayKey(cursor))) {
+    streak += 1;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  return streak;
+}
+
 function whenText(time) {
   if (!time) return "";
   const days = Math.floor((Date.now() - time) / 86400000);
@@ -293,21 +485,61 @@ function whenText(time) {
   return days === 1 ? "昨天" : days + " 天前";
 }
 
-async function showProgress() {
-  let latest = null;
-  let doneUnits = 0;
-  let active = 0;
-
-  // Every record is read before any card is painted, so the stats, the banner and the stopped
-  // card agree. The algorithms reader is asynchronous; the others resolve at once.
-  const read = await Promise.all(entries.map(async (entry) => {
-    const reader = courses[entry.dataset.course];
+async function settle(readers) {
+  return Promise.all(readers.map(async (reader) => {
     try {
       return reader ? await reader() : null;
     } catch {
       return null;
     }
   }));
+}
+
+function showReviews(due) {
+  const list = document.querySelector("#review-list");
+  const empty = document.querySelector("#review-empty");
+  const total = due.reduce((sum, item) => sum + item.count, 0);
+  document.querySelector("#stat-due").textContent = String(total);
+  list.replaceChildren(...due.map((item) => {
+    const row = document.createElement("li");
+    row.className = "review-item nb-stat";
+    row.dataset.hue = item.hue;
+    const count = document.createElement("p");
+    count.className = "review-count";
+    count.textContent = item.count + " " + item.unit;
+    const link = document.createElement("a");
+    link.href = item.href;
+    link.textContent = item.course;
+    const label = document.createElement("p");
+    label.className = "review-label";
+    label.append(link, " · " + item.label);
+    row.append(count, label);
+    return row;
+  }));
+  list.hidden = due.length === 0;
+  empty.hidden = due.length !== 0;
+}
+
+async function showProgress() {
+  let latest = null;
+  let doneUnits = 0;
+  let active = 0;
+
+  // Every record is read before anything is painted, so the stats, the banner, the reviews and the stopped card
+  // agree. The algorithms reader is asynchronous; the others resolve at once.
+  const read = await settle(entries.map((entry) => courses[entry.dataset.course]));
+  const due = (await settle(Object.values(reviews))).filter(Boolean).sort((left, right) => right.count - left.count);
+  showReviews(due);
+
+  const store = await algorithmsStore();
+  const days = activityDays([...storedRecords().map(([, value]) => {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return null;
+    }
+  }), store]);
+  document.querySelector("#stat-streak").textContent = streakOf(days) + " 天";
 
   entries.forEach((entry, index) => {
     const progress = read[index];
@@ -332,7 +564,6 @@ async function showProgress() {
   if (!latest) return;
   document.querySelector("#stat-done").textContent = String(doneUnits);
   document.querySelector("#stat-active").textContent = String(active);
-  document.querySelector("#stat-when").textContent = whenText(latest.progress.at) || "有记录";
 
   const { entry, progress } = latest;
   entry.setAttribute("aria-current", "true");
@@ -352,6 +583,194 @@ async function showProgress() {
   const go = document.querySelector("#resume-go");
   go.href = progress.href;
   go.hidden = false;
+}
+
+// Backup and restore. One file holds every course's localStorage keys (as the strings the courses wrote) and the
+// algorithms course's IndexedDB record. Restoring is the one place the index writes another site's record, and it
+// does so only after the reader has seen what the file holds and pressed 覆盖并恢复.
+const backupFormat = "yuweiyang9611-learning-backup";
+const backupStatus = document.querySelector("#backup-status");
+const restoreFile = document.querySelector("#restore-file");
+const restorePreview = document.querySelector("#restore-preview");
+const restoreNoteKey = "learning-desk-restored";
+let pendingRestore = null;
+
+function say(text, state = "") {
+  backupStatus.textContent = text;
+  backupStatus.dataset.state = state;
+}
+
+async function backupAll() {
+  const local = storedRecords();
+  let store = null;
+  try {
+    store = await readAlgorithmsStore();
+  } catch {
+    store = null;
+  }
+  if (local.length === 0 && !store) {
+    say("这个浏览器里还没有学习记录，没有可备份的内容。");
+    return;
+  }
+  const payload = {
+    format: backupFormat,
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    site: "https://yuweiyang9611.github.io/",
+    localStorage: Object.fromEntries(local),
+    indexedDB: store ? { [algorithmDatabase]: { progress: { current: store } } } : {},
+  };
+  const name = "learning-backup-" + dayKey(Date.now()) + ".json";
+  const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2) + "\n"], { type: "application/json" }));
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  const courseCount = new Set([...local.map(([key]) => courseOfKey(key)), ...(store ? ["算法研习室"] : [])]).size;
+  say("已备份 " + (local.length + (store ? 1 : 0)) + " 条记录，涉及 " + courseCount + " 门课，文件名 " + name + "。", "done");
+}
+
+// Reads a backup file into what would be written, or says why it cannot be used. Keys outside the courses'
+// prefixes and records of the wrong shape are left out and counted, never written.
+function parseBackup(text) {
+  let data;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    return { error: "这个文件不是 JSON，没法恢复。" };
+  }
+  if (!object(data) || data.format !== backupFormat) {
+    return { error: "这不是学习台的备份文件。某一门课自己导出的备份，请到那门课的页面里恢复。" };
+  }
+  if (data.version !== 1) return { error: "这份备份的版本是 " + String(data.version) + "，这个页面只认识版本 1。" };
+  const local = [];
+  let ignored = 0;
+  for (const [key, value] of Object.entries(object(data.localStorage) ? data.localStorage : {})) {
+    if (courseOfKey(key) && typeof value === "string" && value.length <= 2 * 1024 * 1024) local.push([key, value]);
+    else ignored += 1;
+  }
+  let store = data.indexedDB?.[algorithmDatabase]?.progress?.current ?? null;
+  if (store !== null && !(object(store) && Number.isInteger(store.schemaVersion) && store.schemaVersion >= 3 && object(store.units))) {
+    store = null;
+    ignored += 1;
+  }
+  if (local.length === 0 && !store) return { error: "备份文件里没有学习记录。" };
+  return { local, store, ignored, exportedAt: timestamp(data.exportedAt) };
+}
+
+function showRestore(parsed) {
+  const counts = new Map();
+  for (const [key] of parsed.local) counts.set(courseOfKey(key), (counts.get(courseOfKey(key)) ?? 0) + 1);
+  if (parsed.store) counts.set("算法研习室", (counts.get("算法研习室") ?? 0) + 1);
+  const when = parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleString("zh-CN", { dateStyle: "medium", timeStyle: "short" }) : "时间不明";
+  document.querySelector("#restore-summary").textContent = "这份备份做于 " + when + "，里面有 " + counts.size + " 门课的记录：";
+  document.querySelector("#restore-list").replaceChildren(...[...counts].map(([course, count]) => {
+    const item = document.createElement("li");
+    item.textContent = course + " · " + count + " 条";
+    return item;
+  }));
+  pendingRestore = parsed;
+  restorePreview.hidden = false;
+  say(parsed.ignored ? "有 " + parsed.ignored + " 条不是课程记录或格式不对，恢复时会跳过。" : "");
+  document.querySelector("#restore-confirm").focus();
+}
+
+// The course's own upgrade, from progressRepository.ts: version 1 with one object store. It only runs when the
+// database does not exist yet, which is the case in a fresh browser.
+async function writeAlgorithmsStore(record) {
+  const database = await new Promise((resolve, reject) => {
+    const request = indexedDB.open(algorithmDatabase, 1);
+    request.onupgradeneeded = () => request.result.createObjectStore("progress");
+    request.onerror = () => reject(request.error);
+    request.onblocked = () => reject(new Error("blocked"));
+    request.onsuccess = () => resolve(request.result);
+  });
+  try {
+    await new Promise((resolve, reject) => {
+      const transaction = database.transaction("progress", "readwrite");
+      transaction.objectStore("progress").put(record, "current");
+      transaction.oncomplete = resolve;
+      transaction.onerror = () => reject(transaction.error);
+      transaction.onabort = () => reject(transaction.error);
+    });
+  } finally {
+    database.close();
+  }
+}
+
+async function restore() {
+  if (!pendingRestore) return;
+  const { local, store } = pendingRestore;
+  let written = 0;
+  const failed = [];
+  for (const [key, value] of local) {
+    try {
+      localStorage.setItem(key, value);
+      written += 1;
+    } catch {
+      failed.push(courseOfKey(key));
+    }
+  }
+  if (store) {
+    try {
+      await writeAlgorithmsStore(store);
+      written += 1;
+    } catch {
+      failed.push("算法研习室");
+    }
+  }
+  pendingRestore = null;
+  restorePreview.hidden = true;
+  const note = failed.length
+    ? "恢复了 " + written + " 条记录；" + [...new Set(failed)].join("、") + " 的记录没写进去，可能是浏览器存储已满或被禁用。"
+    : "恢复了 " + written + " 条记录。已经打开的课程页刷新后能看到。";
+  // Reloading reads every record again from scratch, so the cards, the banner and the reviews show what was restored.
+  try {
+    sessionStorage.setItem(restoreNoteKey, JSON.stringify({ note, state: failed.length ? "wrong" : "done" }));
+  } catch {
+    // The note is lost, the restore is not.
+  }
+  location.hash = "backup";
+  location.reload();
+}
+
+document.querySelector("#backup-all").addEventListener("click", () => {
+  backupAll().catch(() => say("备份没有完成：浏览器拒绝了读取或下载。", "wrong"));
+});
+document.querySelector("#restore-pick").addEventListener("click", () => restoreFile.click());
+restoreFile.addEventListener("change", async () => {
+  const file = restoreFile.files?.[0];
+  restoreFile.value = "";
+  if (!file) return;
+  restorePreview.hidden = true;
+  pendingRestore = null;
+  if (file.size > 10 * 1024 * 1024) {
+    say("文件超过 10 MB，不像是学习台的备份。", "wrong");
+    return;
+  }
+  const parsed = parseBackup(await file.text());
+  if (parsed.error) say(parsed.error, "wrong");
+  else showRestore(parsed);
+});
+document.querySelector("#restore-confirm").addEventListener("click", () => {
+  restore().catch(() => say("恢复没有完成：浏览器拒绝了写入。", "wrong"));
+});
+document.querySelector("#restore-cancel").addEventListener("click", () => {
+  pendingRestore = null;
+  restorePreview.hidden = true;
+  say("已取消，没有改动任何记录。");
+  document.querySelector("#restore-pick").focus();
+});
+
+try {
+  const restored = JSON.parse(sessionStorage.getItem(restoreNoteKey));
+  sessionStorage.removeItem(restoreNoteKey);
+  if (restored?.note) say(restored.note, restored.state);
+} catch {
+  // No note to show.
 }
 
 updateEntries();
