@@ -46,7 +46,7 @@ Constraints:
 
 - Existing URLs and browser storage keys must not change, or the owner loses their place and their progress.
 - Static hosting on GitHub Pages only: no backend.
-- Running code means WebAssembly in the browser (the C# course ships a Roslyn and .NET 10 runtime, about 70 MB, loaded on the first run) or nothing. Nothing executes on a server.
+- Running code means WebAssembly in the browser (the C# course ships a Roslyn and .NET 11 runtime, about 70 MB, loaded on the first run) or nothing. Nothing executes on a server.
 - Each site's existing site tests and CI checks must keep passing.
 - Some repositories reject email addresses in commit messages and PR text.
 
